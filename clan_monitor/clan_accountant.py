@@ -18,15 +18,12 @@ def load_json(path):
 
 CONF = load_json(CONFIG_FILE)
 if not CONF:
-    print(f"CRITICAL: {CONFIG_FILE} not found!")
+    print("CRITICAL: config.json not found!")
     sys.exit(1)
 
-USER_ID = CONF['USER_ID']
-AUTH_KEY = CONF['AUTH_KEY']
-VERSION = CONF['VERSION']
+USER_ID, AUTH_KEY, VERSION = CONF['USER_ID'], CONF['AUTH_KEY'], CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
-# PATHS
 SNAPSHOTS_DIR = 'snapshots'
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_ROOT = os.path.join(REPO_ROOT, 'clan', 'ORDA')
@@ -69,102 +66,93 @@ def run_git_push():
 
 def generate_web_report(hier, users):
     now_utc = datetime.now(timezone.utc)
-    
-    # DB Update
     names_map = load_json(MEMBERS_DB)
     for u in users: names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier"}
-    
     curr_pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
     for s in hier['slots']: curr_pts[str(s['member']['userId'])] = int(s['member']['points'])
-    
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
         json.dump(curr_pts, f)
 
     def get_monday(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     
-    # Process history
     all_snaps = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
-    raw_history = []
+    snaps_data = []
     for fs in all_snaps:
-        match = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
-        if not match: continue
-        dt = datetime.strptime(f"{match.group(1)}_{match.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
-        with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as jf:
-            data = json.load(jf)
-            if len(data) > 5: raw_history.append({"time": dt, "pts": {k: int(v) for k,v in data.items() if k.isdigit()}})
+        m = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
+        if not m: continue
+        dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
+        with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as f:
+            d = json.load(f)
+            if len(d) > 5: snaps_data.append({"time": dt, "pts": {k: int(v) for k,v in d.items() if k.isdigit()}})
 
     adj_db = load_json(ADJUSTMENTS_FILE)
     weeks = {}
-    for entry in raw_history:
-        mon_dt = get_monday(entry['time'])
-        wkey = mon_dt.strftime("%Y_W%W")
-        if wkey not in weeks:
-            weeks[wkey] = {"monday": mon_dt, "label": f"{mon_dt.strftime('%d.%m')} - {(mon_dt+timedelta(days=6)).strftime('%d.%m')}", "daily": {}}
-        dkey = entry['time'].strftime("%Y-%m-%d")
-        if dkey not in weeks[wkey]["daily"]: weeks[wkey]["daily"][dkey] = []
-        weeks[wkey]["daily"][dkey].append(entry)
+    for e in snaps_data:
+        m_dt = get_monday(e['time'])
+        wk = m_dt.strftime("%Y_W%W")
+        if wk not in weeks:
+            weeks[wk] = {"monday": m_dt, "label": f"{m_dt.strftime('%d.%m')} - {(m_dt+timedelta(days=6)).strftime('%d.%m')}", "days": {}}
+        dk = e['time'].strftime("%Y-%m-%d")
+        if dk not in weeks[wk]["days"]: weeks[wk]["days"][dk] = []
+        weeks[wk]["days"][dk].append(e)
 
-    all_week_keys = sorted(weeks.keys())
-    for cur_wk in all_week_keys:
-        week = weeks[cur_wk]
+    for w_key in sorted(weeks.keys()):
+        week = weeks[w_key]
         players = set()
-        for d in week["daily"].values():
+        for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
         
-        player_results = {}
+        pl_results = {}
         for uid in players:
             growths = []
             total_acc = 0
-            last_p_global = 0 
-            mon = week["monday"]
+            last_pts_yesterday = 0 # Baseline for Today
             
+            mon = week["monday"]
             for i in range(7):
                 d_dt = mon + timedelta(days=i)
                 d_str = d_dt.strftime("%Y-%m-%d")
-                snaps = week["daily"].get(d_str, [])
+                d_snaps = week["days"].get(d_str, [])
                 
-                # Logic: Find the highest point seen today before any potential reset
-                # And calculate growth relative to the end of yesterday.
-                d_day_start = last_p_global
-                d_day_best = d_day_start
-                d_after_reset_growth = 0
+                # Formula: (Exit - YesterdayLast) + Current
+                # Get manual exits list
+                exits = adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(exits, list): exits = [exits] # Compatibility
                 
-                # Check ALL snapshots of this day
-                for s in snaps:
-                    curr = s['pts'].get(uid, 0)
-                    if curr >= d_day_best:
-                        d_day_best = curr
+                day_growth = 0
+                reference = last_pts_yesterday
+                
+                for ex_val in exits:
+                    day_growth += (ex_val - reference)
+                    reference = 0 # After exit you join with 0
+                
+                # Finally add current points from the latest snapshot
+                if d_snaps:
+                    final_day_pts = d_snaps[-1]['pts'].get(uid, 0)
+                    # If we don't know the user exited, but the points dropped significantly, 
+                    # we could auto-detect, but user wants "special record". 
+                    # For now, stay strict:
+                    if final_day_pts < reference and not exits:
+                         # Auto-detect jump if points drop and no manual exit recorded
+                         # This handles the case where user forgot the manual record
+                         day_growth += final_day_pts
                     else:
-                        # CLAN EXIT DETECTED
-                        # Save progress before exit
-                        d_after_reset_growth += curr # Current is new progress
-                        d_day_best = curr # Reset peak for tracking further growth
-                
-                # Check manual peak for this day
-                m_peak = adj_db.get(d_str, {}).get(uid)
-                if m_peak and m_peak > d_day_best:
-                    d_day_best = m_peak
+                        day_growth += (final_day_pts - reference)
+                    
+                    last_pts_yesterday = final_day_pts
+                else:
+                    last_pts_yesterday = last_pts_yesterday # No change
 
-                # Final Day Growth = (BestPointToday - YesterdayLast) + AllProgressAfterResets
-                # IMPORTANT: If it's Monday, YesterdayLast is 0
-                if i == 0: day_total_growth = d_day_best + d_after_reset_growth
-                else: day_total_growth = (d_day_best - d_day_start) + d_after_reset_growth
-                
-                # Sanity: growth can't be negative in this game's weekly cycle
-                if day_total_growth < 0: day_total_growth = 0
-                
-                growths.append(day_total_growth)
-                total_acc += day_total_growth
-                # Update global carrying points to the LAST snapshot seen today
-                if snaps: last_p_global = snaps[-1]['pts'].get(uid, 0)
-                else: last_p_global = last_p_global
+                if day_growth < 0: day_growth = 0
+                growths.append(day_growth)
+                total_acc += day_growth
 
-            player_results[uid] = {"growths": growths, "total": total_acc}
+            pl_results[uid] = {"growths": growths, "total": total_acc}
 
-        clan_growths = [sum(p["growths"][ev] for p in player_results.values()) for ev in range(7)]
-        sorted_ids = sorted(players, key=lambda x: player_results[x]['total'], reverse=True)
-        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==cur_wk else ""}">{weeks[wk]["label"]}</a>' for wk in all_week_keys])
+        clan_growths = [sum(p["growths"][i] for p in pl_results.values()) for i in range(7)]
+        sorted_ids = sorted(players, key=lambda x: pl_results[x]['total'], reverse=True)
+        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
@@ -220,7 +208,7 @@ def generate_web_report(hier, users):
     <tbody>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"})
-            res = player_results[uid]
+            res = pl_results[uid]
             html += f"<tr><td class='num-col'>{count}</td>"
             html += f"<td class='t-left'><span class='nick'>{p['nick']}</span></td><td class='t-left'><span class='role'>{p['role']}</span></td>"
             html += f"<td class='t-center'><span class='main-score'>{res['total']:,}</span></td>"
@@ -229,7 +217,7 @@ def generate_web_report(hier, users):
                 else: html += "<td class='t-center no-growth'>0</td>"
             html += "</tr>"
         html += "</tbody></table></div></div></body></html>"
-        with open(os.path.join(REPORTS_DIR, f"report_{cur_wk}.html"), 'w', encoding='utf-8') as f: f.write(html)
+        with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
 
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         latest_wk = sorted(weeks.keys())[-1]
