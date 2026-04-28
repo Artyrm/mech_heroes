@@ -24,11 +24,16 @@ if not CONF:
 USER_ID, AUTH_KEY, VERSION = CONF['USER_ID'], CONF['AUTH_KEY'], CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
+# PATHS - ALIGNED WITH USER BROWSER LOCATION
 SNAPSHOTS_DIR = 'snapshots'
-REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUTPUT_ROOT = os.path.join(REPO_ROOT, 'clan', 'ORDA')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# Target: mech_heroes/clan_monitor/clan/ORDA/
+OUTPUT_ROOT = os.path.join(SCRIPT_DIR, 'clan', 'ORDA')
 REPORTS_DIR = os.path.join(OUTPUT_ROOT, 'reports')
 MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'index.html')
+# Repo root (one level up from clan_monitor)
+REPO_ROOT = os.path.dirname(SCRIPT_DIR)
+
 MEMBERS_DB = 'members_name_db.json'
 AUTO_PUSH = True 
 
@@ -80,7 +85,8 @@ def fetch_data():
 
 def run_git_push():
     try:
-        subprocess.run(["git", "add", "."], cwd=REPO_ROOT, check=True, capture_output=True)
+        # Use -A to handle deletions properly
+        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True)
         subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
     except: pass
@@ -88,22 +94,16 @@ def run_git_push():
 def generate_web_report(hier, users):
     now_utc = datetime.now(timezone.utc)
     names_map = load_json(MEMBERS_DB)
-    
     for u in users:
         acc = u.get("avatarConfiguration", {})
         traits = filter(None, [translate_acc(acc.get('top')), translate_acc(acc.get('front')), translate_acc(acc.get('down'))])
-        names_map[str(u['userId'])] = {
-            "nick": u['nickname'], 
-            "role": "Soldier",
-            "traits": ", ".join(traits)
-        }
+        names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": ", ".join(traits)}
     
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "LEADER"
     for s in hier['slots']: 
         uid = str(s['member']['userId'])
         if uid in names_map: names_map[uid]["role"] = s['role']
-
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
     curr_pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
@@ -133,7 +133,8 @@ def generate_web_report(hier, users):
         if dk not in weeks[wk]["days"]: weeks[wk]["days"][dk] = []
         weeks[wk]["days"][dk].append(e)
 
-    for w_key in sorted(weeks.keys()):
+    all_w_sorted = sorted(weeks.keys())
+    for w_key in all_w_sorted:
         week = weeks[w_key]
         players = set()
         for d in week["days"].values():
@@ -143,7 +144,8 @@ def generate_web_report(hier, users):
         for uid in players:
             growths, total_acc, last_ref = [], 0, 0
             for i in range(7):
-                d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
+                d_dt = week["monday"] + timedelta(days=i)
+                d_str = d_dt.strftime("%Y-%m-%d")
                 d_snaps = week["days"].get(d_str, [])
                 exits = adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(exits, list): exits = [exits]
@@ -161,7 +163,7 @@ def generate_web_report(hier, users):
 
         clan_growths = [sum(p["growths"][ev] for p in pl_results.values()) for ev in range(7)]
         sorted_ids = sorted(players, key=lambda x: pl_results[x]['total'], reverse=True)
-        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
+        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_w_sorted])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
@@ -215,14 +217,11 @@ def generate_web_report(hier, users):
             p_nick = p_data.get('nick', f"ID:{uid}")
             p_traits = p_data.get('traits', '')
             p_role = p_data.get('role', 'Soldier')
-            
             res = pl_results[uid]
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p_nick}</span>"
             if p_traits: nick_sec += f"<span class='trait'>{p_traits}</span>"
             nick_sec += "</div>"
-            
-            html += f"<tr><td class='num-col'>{count}</td>"
-            html += f"<td class='t-left'>{nick_sec}</td><td class='t-left'><span class='role'>{p_role}</span></td>"
+            html += f"<tr><td class='num-col'>{count}</td><td class='t-left'>{nick_sec}</td><td class='t-left'><span class='role'>{p_role}</span></td>"
             html += f"<td class='t-center'><span class='main-score'>{res['total']:,}</span></td>"
             for g in res['growths']:
                 if g > 0: html += f"<td class='t-center'><span class='day-growth'>+{g:,}</span></td>"
@@ -232,8 +231,7 @@ def generate_web_report(hier, users):
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
 
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
-        latest_wk = sorted(weeks.keys())[-1]
-        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{latest_wk}.html"></head></html>')
+        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_w_sorted[-1]}.html"></head></html>')
     if AUTO_PUSH: run_git_push()
 
 if __name__ == "__main__":
