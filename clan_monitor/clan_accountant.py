@@ -103,8 +103,13 @@ def fetch_data():
 
 def run_git_push():
     try:
-        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
-    except: pass
+        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True, timeout=30)
+        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True, timeout=30)
+        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True, timeout=30)
+    except subprocess.TimeoutExpired:
+        print("GIT PUSH TIMEOUT ERROR: Git prompt hang detected.")
+    except Exception as e:
+        print(f"GIT EXCEPTION: {e}")
 
 def generate_web_report(hier, users, current_rating):
     now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
