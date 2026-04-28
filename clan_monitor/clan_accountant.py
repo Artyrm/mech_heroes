@@ -19,45 +19,65 @@ def load_json(path):
     with open(path, 'r', encoding='utf-8') as f: return json.load(f)
 
 CONF = load_json(CONFIG_FILE)
-if not CONF:
-    print("CRITICAL: config.json not found!")
-    sys.exit(1)
-
 USER_ID, AUTH_KEY, VERSION = CONF['USER_ID'], CONF['AUTH_KEY'], CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
-SNAPSHOTS_DIR = 'snapshots'
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+SNAPSHOTS_DIR, SCRIPT_DIR = 'snapshots', os.path.dirname(os.path.abspath(__file__))
 OUTPUT_ROOT = os.path.join(SCRIPT_DIR, 'clan', 'ORDA')
-REPORTS_DIR = os.path.join(OUTPUT_ROOT, 'reports')
-MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'index.html')
-REPO_ROOT = os.path.dirname(SCRIPT_DIR)
-MEMBERS_DB = 'members_name_db.json'
+REPORTS_DIR, MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'reports'), os.path.join(OUTPUT_ROOT, 'index.html')
+REPO_ROOT, MEMBERS_DB = os.path.dirname(SCRIPT_DIR), 'members_name_db.json'
 AUTO_PUSH = True 
+
+# MANUAL DICTIONARY FOR GAME SLUGS
+MANUAL_DICT = {
+    "visor": "Монокль",
+    "glasses": "Очки",
+    "glasses_yellow": "Желтые очки",
+    "cyber_glasses": "Кибер-очки",
+    "glasses_1": "Черные очки",
+    "glasses_2": "Прозрачные очки",
+    "scar": "Шрам",
+    "vr": "VR-шлем",
+    "goatee_blond": "Светлая бородка",
+    "bristle_blond": "Светлая щетина",
+    "bristle_black": "Черная щетина",
+    "goatee_red": "Рыжая бородка",
+    "goatee_brown": "Каштановая бородка",
+    "short_hair_brown": "Шатен",
+    "short_hair_red": "Рыжий",
+    "short_hair_blond": "Блонд",
+    "short_hair_black": "Брюнет",
+    "bald": "Лысый",
+    "helper": "Рабочая спецовка",
+    "tornado": "Костюм 'Торнадо'",
+    "spark": "Костюм 'Искра'",
+    "kanika": "Броня 'Каника'",
+    "markata": "Костюм 'Марката'",
+    "square_blond": "Блонд-каре",
+    "hair_blond": "Светлые волосы"
+}
 
 for d in [SNAPSHOTS_DIR, REPORTS_DIR]:
     if not os.path.exists(d): os.makedirs(d)
 
 TRANS_CACHE = load_json(TRANS_CACHE_FILE)
 
-# REFINED TRANSLATOR
-def translate_traits_batch(traits_list):
-    if not traits_list: return ""
-    # Join into a single string for context-aware translation
-    full_str = ", ".join(traits_list).replace("_", " ")
-    if full_str in TRANS_CACHE: return TRANS_CACHE[full_str]
+def translate_phrase(slug):
+    if not slug or slug.lower() == "none": return ""
+    low_slug = slug.lower()
+    if low_slug in MANUAL_DICT: return MANUAL_DICT[low_slug]
+    
+    clean = slug.replace("_", " ").title()
+    if clean in TRANS_CACHE: return TRANS_CACHE[clean]
     
     try:
-        # We use a custom manual mapping for problematic words before translating
-        manual_fix = full_str.replace("Blond", "Blonde").replace("blond", "blonde").replace("Goatee", "Beard")
-        translated = GoogleTranslator(source='en', target='ru').translate(manual_fix)
-        # Final polish
-        translated = translated.replace("блондинка", "блонд").replace("Блондинка", "Блонд").replace("эспаньолка", "бородка")
-        TRANS_CACHE[full_str] = translated
+        translated = GoogleTranslator(source='en', target='ru').translate(clean)
+        # Post-process to make it sound like a trait
+        translated = translated.replace("Блондинка", "Светлый").replace("блондинка", "блонд")
+        TRANS_CACHE[clean] = translated
         with open(TRANS_CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
         return translated
-    except:
-        return full_str
+    except: return clean
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -88,24 +108,21 @@ def generate_web_report(hier, users):
     now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
     for u in users:
         ac = u.get("avatarConfiguration", {})
-        # Combine TOP (hair), MIDDLE (glasses/accessories), DOWN (beard)
-        raw_list = []
-        for key in ['top', 'middle', 'down']:
-            val = ac.get(key)
-            if val and val != "none": raw_list.append(val.replace("_", " ").title())
+        parts = []
+        # Logical order: Top -> Middle -> Down
+        for k in ['top', 'middle', 'down']:
+            txt = translate_phrase(ac.get(k))
+            if txt: parts.append(txt)
         
-        translated = translate_traits_batch(raw_list)
-        
-        # Add Background/AvatarID if present
+        final_traits = ", ".join(parts)
         aid = u.get("avatarId")
         if aid and aid != "default":
-            bg_text = f"Фон: {aid}"
-            translated = f"{translated} | {bg_text}" if translated else bg_text
-            
-        names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": translated}
+            final_traits = f"{final_traits} | Фон: {aid}" if final_traits else f"Фон: {aid}"
+        
+        names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": final_traits}
     
     l_id = str(hier['leader']['member']['userId'])
-    if l_id in names_map: names_map[l_id]["role"] = "LEADER"
+    if l_id in names_map: names_map[l_id]["role"] = "ЛИДЕР"
     for s in hier['slots']: 
         uid = str(s['member']['userId'])
         if uid in names_map: names_map[uid]["role"] = s['role']
@@ -142,14 +159,13 @@ def generate_web_report(hier, users):
         for uid in players:
             growths, total_acc, last_ref = [], 0, 0
             for i in range(7):
-                d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
-                snapshots, exits = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(exits, list): exits = [exits]
+                d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d"); sn, ex = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(ex, list): ex = [ex]
                 day_growth, reference = 0, last_ref
-                for ev in exits: day_growth += max(0, ev - reference); reference = 0
-                if snapshots:
-                    final = snapshots[-1]['pts'].get(uid, 0)
-                    day_growth += (final if final < reference and not exits else max(0, final - reference)); last_ref = final
+                for ev in ex: day_growth += max(0, ev - reference); reference = 0
+                if sn:
+                    final = sn[-1]['pts'].get(uid, 0)
+                    day_growth += (final if final < reference and not ex else max(0, final - reference)); last_ref = final
                 growths.append(day_growth); total_acc += day_growth
             pl_results[uid] = {"growths": growths, "total": total_acc}
 
@@ -174,7 +190,6 @@ def generate_web_report(hier, users):
     .table-container {{ background: var(--card); border-radius: 24px; border: 1px solid var(--border); margin-bottom: 50px; overflow: hidden; }}
     table {{ width: 100%; border-collapse: separate; border-spacing: 0; }}
     .summary-row td {{ padding: 30px 20px; color: var(--accent); font-weight: 700; border-bottom: 3px solid var(--accent); }}
-    .clan-score {{ font-size: 1.6rem; font-family: 'Roboto Mono'; display: block; }}
     th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; border-bottom: 1px solid var(--border); }}
     td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.5); }}
     td:last-child {{ border-right: none; }}
@@ -197,7 +212,7 @@ def generate_web_report(hier, users):
             p_n, p_t, p_r = p.get('nick', f"ID:{uid}"), p.get('traits', ''), p.get('role', 'Soldier')
             res = pl_results[uid]
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p_n}</span>"
-            if p_n in dupes: nick_sec += f"<span class='trait'>({p_t if p_t else 'Пустая аватарка'})</span>"
+            if p_n in dupes: nick_sec += f"<span class='trait'>({p_t if p_t else 'Без особых примет'})</span>"
             nick_sec += "</div>"
             html += f"<tr><td class='num-col'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p_r}</span></td>"
             html += f"<td style='text-align:center'><span class='main-score'>{res['total']:,}</span></td>"
