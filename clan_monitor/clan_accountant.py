@@ -38,19 +38,26 @@ AUTO_PUSH = True
 for d in [SNAPSHOTS_DIR, REPORTS_DIR]:
     if not os.path.exists(d): os.makedirs(d)
 
-# TRANSLATOR WITH CACHE
 TRANS_CACHE = load_json(TRANS_CACHE_FILE)
-def translate_trait(text):
-    if not text or text.lower() == "none": return ""
-    clean = text.replace("_", " ").title()
-    if clean in TRANS_CACHE: return TRANS_CACHE[clean]
+
+# REFINED TRANSLATOR
+def translate_traits_batch(traits_list):
+    if not traits_list: return ""
+    # Join into a single string for context-aware translation
+    full_str = ", ".join(traits_list).replace("_", " ")
+    if full_str in TRANS_CACHE: return TRANS_CACHE[full_str]
+    
     try:
-        translated = GoogleTranslator(source='auto', target='ru').translate(clean)
-        TRANS_CACHE[clean] = translated
+        # We use a custom manual mapping for problematic words before translating
+        manual_fix = full_str.replace("Blond", "Blonde").replace("blond", "blonde").replace("Goatee", "Beard")
+        translated = GoogleTranslator(source='en', target='ru').translate(manual_fix)
+        # Final polish
+        translated = translated.replace("блондинка", "блонд").replace("Блондинка", "Блонд").replace("эспаньолка", "бородка")
+        TRANS_CACHE[full_str] = translated
         with open(TRANS_CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
         return translated
     except:
-        return clean
+        return full_str
 
 HEADERS = {
     "Content-Type": "application/json",
@@ -74,17 +81,28 @@ def fetch_data():
 
 def run_git_push():
     try:
-        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
+        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
     except: pass
 
 def generate_web_report(hier, users):
     now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
     for u in users:
-        acc = u.get("avatarConfiguration", {})
-        parts = filter(None, [translate_trait(acc.get('top')), translate_trait(acc.get('front')), translate_trait(acc.get('down'))])
-        names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": ", ".join(parts)}
+        ac = u.get("avatarConfiguration", {})
+        # Combine TOP (hair), MIDDLE (glasses/accessories), DOWN (beard)
+        raw_list = []
+        for key in ['top', 'middle', 'down']:
+            val = ac.get(key)
+            if val and val != "none": raw_list.append(val.replace("_", " ").title())
+        
+        translated = translate_traits_batch(raw_list)
+        
+        # Add Background/AvatarID if present
+        aid = u.get("avatarId")
+        if aid and aid != "default":
+            bg_text = f"Фон: {aid}"
+            translated = f"{translated} | {bg_text}" if translated else bg_text
+            
+        names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": translated}
     
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "LEADER"
@@ -98,9 +116,9 @@ def generate_web_report(hier, users):
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f: json.dump(curr_pts, f)
 
     def get_mon(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
-    snf = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
+    sn = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
     sd = []
-    for fs in snf:
+    for fs in sn:
         m = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
         if m:
             dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
@@ -116,8 +134,7 @@ def generate_web_report(hier, users):
         if dk not in weeks[wk]["days"]: weeks[wk]["days"][dk] = []
         weeks[wk]["days"][dk].append(e)
 
-    all_w_sorted = sorted(weeks.keys())
-    for w_key in all_w_sorted:
+    for w_key in sorted(weeks.keys()):
         week, players = weeks[w_key], set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
@@ -126,12 +143,12 @@ def generate_web_report(hier, users):
             growths, total_acc, last_ref = [], 0, 0
             for i in range(7):
                 d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
-                d_snaps, exits = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
+                snapshots, exits = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(exits, list): exits = [exits]
                 day_growth, reference = 0, last_ref
                 for ev in exits: day_growth += max(0, ev - reference); reference = 0
-                if d_snaps:
-                    final = d_snaps[-1]['pts'].get(uid, 0)
+                if snapshots:
+                    final = snapshots[-1]['pts'].get(uid, 0)
                     day_growth += (final if final < reference and not exits else max(0, final - reference)); last_ref = final
                 growths.append(day_growth); total_acc += day_growth
             pl_results[uid] = {"growths": growths, "total": total_acc}
@@ -141,7 +158,7 @@ def generate_web_report(hier, users):
         dupes = {n for n in all_nicks if all_nicks.count(n) > 1 and n}
         clan_growths = [sum(p["growths"][ev] for p in pl_results.values()) for ev in range(7)]
 
-        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_w_sorted])
+        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
@@ -191,9 +208,8 @@ def generate_web_report(hier, users):
         html += "</tbody></table></div></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
-        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_w_sorted[-1]}.html"></head></html>')
+        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{sorted(weeks.keys())[-1]}.html"></head></html>')
     if AUTO_PUSH: run_git_push()
-
 if __name__ == "__main__":
     h, u = fetch_data(); 
     if h: generate_web_report(h, u)
