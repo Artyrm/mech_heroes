@@ -21,8 +21,7 @@ def load_json(path):
 
 CONF = load_json(CONFIG_FILE)
 if not CONF:
-    print("CRITICAL: config.json not found!")
-    sys.exit(1)
+    print("CRITICAL: config.json not found!"); sys.exit(1)
 
 USER_ID, AUTH_KEY, VERSION = CONF['USER_ID'], CONF['AUTH_KEY'], CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
@@ -77,38 +76,30 @@ def fetch_data():
 
 def run_git_push():
     try:
-        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True)
-        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
+        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True); subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
     except: pass
 
 def generate_web_report(hier, users, current_rating):
     now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
     for u in users:
-        ac = u.get("avatarConfiguration", {}) or {}
-        raw_list = []
-        for key in ['top', 'middle', 'down']:
-            val = ac.get(key)
-            if val and val != "none": raw_list.append(val.replace("_", " ").title())
-        translated = translate_traits_batch(raw_list)
-        aid = u.get("avatarId")
-        if aid and aid != "default":
-            bg_text = f"Фон: {aid}"
-            translated = f"{translated} | {bg_text}" if translated else bg_text
+        ac = u.get("avatarConfiguration", {}) or {}; raw_list = []
+        for k in ['top', 'middle', 'down']:
+            v = ac.get(k)
+            if v and v != "none": raw_list.append(v.replace("_", " ").title())
+        translated = translate_traits_batch(raw_list); aid = u.get("avatarId")
+        if aid and aid != "default": translated = f"{translated} | Фон: {aid}" if translated else f"Фон: {aid}"
         names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier", "traits": translated}
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "ЛИДЕР"
     for s in hier['slots']: 
-        uid = str(s['member']['userId'])
+        uid = str(s['member']['userId']); 
         if uid in names_map: names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
-    # Save current state including Clan Rating
     pts_save = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
     for s in hier['slots']: pts_save[str(s['member']['userId'])] = int(s['member']['points'])
-    snap_data = {"pts": pts_save, "clanRating": current_rating}
-    with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
-        json.dump(snap_data, f)
+    snap_save = {"pts": pts_save, "clanRating": current_rating}
+    with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f: json.dump(snap_save, f)
 
     def get_mon(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     snf = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
@@ -118,9 +109,8 @@ def generate_web_report(hier, users, current_rating):
         if m:
             dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
             with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as f:
-                d = json.load(f)
-                pts_map = d.get("pts", d) # Support old format
-                sd.append({"time": dt, "pts": {k: int(v) for k,v in pts_map.items() if k.isdigit()}, "rating": d.get("clanRating")})
+                d = json.load(f); pts_m = d.get("pts", d)
+                sd.append({"time": dt, "pts": {k: int(v) for k,v in pts_m.items() if k.isdigit()}, "rating": d.get("clanRating")})
 
     adj_db, weeks = load_json(ADJUSTMENTS_FILE), {}
     for e in sd:
@@ -135,48 +125,50 @@ def generate_web_report(hier, users, current_rating):
         week, players = weeks[w_key], set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
-        
         pl_results, clan_ratings = {}, [None] * 7
         for uid in players:
             growths, total_acc, last_ref = [], 0, 0
             for i in range(7):
                 d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
-                snapshots, exits = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
+                sn, exits = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(exits, list): exits = [exits]
                 day_growth, reference = 0, last_ref
                 for ev in exits: day_growth += max(0, ev - reference); reference = 0
-                if snapshots:
-                    final = snapshots[-1]['pts'].get(uid, 0)
+                if sn:
+                    final = sn[-1]['pts'].get(uid, 0)
                     day_growth += (final if final < reference and not exits else max(0, final - reference)); last_ref = final
-                    # Also capture clan rating for this day
-                    if snapshots[-1]['rating']: clan_ratings[i] = snapshots[-1]['rating']
+                    if sn[-1].get('rating'): clan_ratings[i] = sn[-1]['rating']
                 growths.append(day_growth); total_acc += day_growth
             pl_results[uid] = {"growths": growths, "total": total_acc}
 
-        # CALCULATE CLAN-LEVEL METRICS
         clan_growths = [sum(p["growths"][ev] for p in pl_results.values()) for ev in range(7)]
-        clan_stats = [] # Each day: (Rating, FactChange, Burned)
-        prev_rating = None
-        # Try to find rating from previous week if Monday is current
-        mond_snap = week["days"].get(week["monday"].strftime("%Y-%m-%d"), [])
-        if mond_snap and mond_snap[0]['rating']: prev_rating = mond_snap[0]['rating'] # Rough start
-
+        clan_stats, prev_r = [], None
         for i in range(7):
             curr_r = clan_ratings[i]
-            if curr_r and prev_rating:
-                fact_change = curr_r - prev_rating
-                burned = max(0, clan_growths[i] - fact_change)
-                clan_stats.append({"rating": curr_r, "fact": fact_change, "burned": burned})
-                prev_rating = curr_r
+            if curr_r and prev_r:
+                f_ch = curr_r - prev_r; brn = max(0, clan_growths[i] - f_ch)
+                clan_stats.append({"rating": curr_r, "fact": f_ch, "burned": brn}); prev_r = curr_r
             else:
-                clan_stats.append({"rating": curr_r or 0, "fact": 0, "burned": 0})
-                if curr_r: prev_rating = curr_r
+                clan_stats.append({"rating": curr_r if curr_r else 0, "fact": 0, "burned": 0})
+                if curr_r: prev_r = curr_r
 
         sorted_ids = sorted(players, key=lambda x: pl_results[x]['total'], reverse=True)
         all_nicks = [names_map.get(u, {}).get('nick', '') for u in players]
         dupes = {n for n in all_nicks if all_nicks.count(n) > 1 and n}
+        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_w_sorted])
+        latest_r = current_rating if w_key == all_w_sorted[-1] else (next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0))
 
-        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
+        # FORMAT CLAN CELLS OUTSIDE F-STRING
+        clan_cells = []
+        for s in clan_stats:
+            if s["rating"]:
+                cell = f'<td style="text-align:center"><div class="fact-grow">+{s["fact"]:,}</div><div class="burned" title="Сгорело за день">🔥 -{s["burned"]:,}</div></td>'
+            else:
+                cell = '<td style="text-align:center">-</td>'
+            clan_cells.append(cell)
+        
+        sum_cells = [f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>' for cg in clan_growths]
+
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
@@ -211,14 +203,13 @@ def generate_web_report(hier, users, current_rating):
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
     <tbody>
     <tr class="clan-row"><td class="num-col">--</td><td colspan="2"><span style="text-transform:uppercase; letter-spacing:3px;">Исторический рейтинг</span></td>
-    <td style="text-align:center"><span class="main-score" style="color:#fff">{clan_stats[-1]['rating']:,}</span></td>
-    {" ".join([f'<td style="text-align:center"><div class="fact-grow">+{s["fact"]:,}</div><div class="burned" title="Сгорело за день">🔥 -{s["burned"]:,}</div></td>' for s in clan_stats])}</tr>
+    <td style="text-align:center"><span class="main-score" style="color:#fff">{latest_r:,}</span></td>
+    {" ".join(clan_cells)}</tr>
     <tr class="clan-row" style="background:#0d1117"><td class="num-col">--</td><td colspan="2"><span style="text-transform:uppercase; letter-spacing:3px; color:var(--green)">Суммарный приход (Грязь)</span></td>
     <td style="text-align:center"><span class="main-score" style="color:var(--green)">{sum(clan_growths):,}</span></td>
-    {" ".join([f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>' for cg in clan_growths])}</tr>"""
+    {" ".join(sum_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {})
-            p_n, p_t, p_r = p.get('nick', f"ID:{uid}"), p.get('traits', ''), p.get('role', 'Soldier')
+            p = names_map.get(uid, {}); p_n, p_t, p_r = p.get('nick', f"ID:{uid}"), p.get('traits', ''), p.get('role', 'Soldier')
             res = pl_results[uid]
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p_n}</span>"
             if p_n in dupes: nick_sec += f"<span class='trait'>({p_t if p_t else 'Без особых примет'})</span>"
