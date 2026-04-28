@@ -41,21 +41,39 @@ def translate_traits_batch(traits_list):
     if not traits_list: return ""
     full_str = ", ".join(traits_list).replace("_", " ")
     if full_str in TRANS_CACHE: return TRANS_CACHE[full_str]
-    try:
-        # Pre-fix common game terms to help the translator
-        m_fix = full_str.replace("Blond", "Blonde").replace("blond", "blonde").replace("Goatee", "Beard")
-        m_fix = m_fix.replace("Visor", "Monocle").replace("visor", "monocle")
-        
-        translated = GoogleTranslator(source='en', target='ru').translate(m_fix)
-        
-        # Post-fix grammar artifacts
-        translated = translated.replace("блондинка", "блонд").replace("Блондинка", "Блонд").replace("эспаньолка", "бородка")
-        translated = translated.replace("козырек", "монокль").replace("Козырек", "Монокль").replace("Козырёк", "Монокль").replace("козырёк", "монокль")
-        
-        TRANS_CACHE[full_str] = translated
-        with open(TRANS_CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
-        return translated
-    except: return full_str
+    
+    # Pre-translate known game components directly
+    m_dict = {
+        "Short Hair": "Короткие волосы", "Long Wavy": "Длинные волнистые волосы", "Long Straight": "Длинные прямые волосы",
+        "Square": "Площадка", "Tail Male": "Хвост", "Tail Female": "Хвост", "Shaved Temples Male": "Бритые виски",
+        "Afro": "Афро", "Bald": "Лысый", 
+        "Goatee 1 ": "Бородка ", "Goatee 2 ": "Бородка ", "Goatee": "Бородка", "Moustache": "Усы", "Thin Moustache": "Тонкие усы",
+        "Bristle": "Щетина", "Beard No Moustache": "Шкиперская бородка", "Scar": "Шрам", "Toxin": "Токсичный шрам",
+        "Glasses 1": "Черные очки", "Glasses Yellow": "Желтые очки", "Glasses": "Очки", "Visor": "Монокль",
+        "Cyber Glasses": "Киберочки", "Vr": "VR-шлем", "Camouflage": "Камуфляж", "Eye Line": "Макияж глаз",
+        "Lipstick Red": "Красная помада", "Cybernatic Mask Male": "Кибермаска", "Aviator Mask Male": "Маска авиатора",
+        "Aviator Mask Female": "Маска авиатора"
+    }
+    
+    color_dict = {
+        " Brown": " каштан", " Black": " брюнет", " Blond": " блонд", " Red": " рыжий", 
+        "Yellow": "желтый", "Male": "", "Female": ""
+    }
+    
+    res = []
+    for trait in traits_list:
+        t = trait.replace("_", " ")
+        for eng, rus in m_dict.items(): t = t.replace(eng, rus)
+        for eng, rus in color_dict.items(): t = t.replace(eng, rus)
+        res.append(t.strip().capitalize())
+    
+    translated = ", ".join(res)
+    # Cleanup possible double spaces from empty gender words
+    translated = translated.replace("  ", " ").replace(" ,", ",")
+    
+    TRANS_CACHE[full_str] = translated
+    with open(TRANS_CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
+    return translated
 
 HEADERS = {
     "Content-Type": "application/json",
