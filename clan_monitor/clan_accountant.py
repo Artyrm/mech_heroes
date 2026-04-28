@@ -7,25 +7,26 @@ import re
 from datetime import datetime, timedelta, timezone
 
 # ==============================================================================
-# IDENTITY & CONFIG (LOCKED - SENSITIVE DATA MOVED TO config.json)
+# IDENTITY & CONFIG
 # ==============================================================================
 CONFIG_FILE = 'config.json'
+ADJUSTMENTS_FILE = 'manual_adjustments.json'
 
-def load_config():
-    if not os.path.exists(CONFIG_FILE):
-        print(f"CRITICAL: {CONFIG_FILE} not found! Please create it with USER_ID and AUTH_KEY.")
-        sys.exit(1)
-    with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-        return json.load(f)
+def load_json(path):
+    if not os.path.exists(path): return {}
+    with open(path, 'r', encoding='utf-8') as f: return json.load(f)
 
-CONF = load_config()
+CONF = load_json(CONFIG_FILE)
+if not CONF:
+    print(f"CRITICAL: {CONFIG_FILE} not found!")
+    sys.exit(1)
+
 USER_ID = CONF['USER_ID']
 AUTH_KEY = CONF['AUTH_KEY']
 VERSION = CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
 # PATHS
-# Moved OUTPUT_ROOT up so it sits in the REPO ROOT /clan/ORDA
 SNAPSHOTS_DIR = 'snapshots'
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_ROOT = os.path.join(REPO_ROOT, 'clan', 'ORDA')
@@ -61,7 +62,6 @@ def fetch_data():
 
 def run_git_push():
     try:
-        # Run from REPO_ROOT
         subprocess.run(["git", "add", "."], cwd=REPO_ROOT, check=True, capture_output=True)
         subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True)
         subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
@@ -70,10 +70,8 @@ def run_git_push():
 def generate_web_report(hier, users):
     now_utc = datetime.now(timezone.utc)
     
-    # DB
-    names_map = {}
-    if os.path.exists(MEMBERS_DB):
-        with open(MEMBERS_DB, 'r', encoding='utf-8') as f: names_map = json.load(f)
+    # DB Update
+    names_map = load_json(MEMBERS_DB)
     for u in users: names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier"}
     
     curr_pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
@@ -84,78 +82,75 @@ def generate_web_report(hier, users):
         if uid in names_map: names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
+    # Save snapshot
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
         json.dump(curr_pts, f)
 
     def get_monday(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     
-    weekly_db = {}
     all_snaps = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
+    raw_history = []
     for fs in all_snaps:
-        try:
-            match = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
-            if not match: continue
-            day_str = match.group(1)
-            time_str = match.group(2)
-            dt = datetime.strptime(f"{day_str}_{time_str}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
-            monday = get_monday(dt)
-            wkey = monday.strftime("%Y_W%W")
-            if wkey not in weekly_db:
-                sun = monday + timedelta(days=6)
-                weekly_db[wkey] = {"monday": monday, "label": f"{monday.strftime('%d.%m')} - {sun.strftime('%d.%m')}", "days": {}}
-            if day_str not in weekly_db[wkey]["days"] or dt > weekly_db[wkey]["days"][day_str]["time"]:
-                with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as jf:
-                    data = json.load(jf)
-                    if len(data) > 5:
-                        weekly_db[wkey]["days"][day_str] = {"time": dt, "pts": {k: int(v) for k,v in data.items() if k.isdigit()}}
-        except: pass
+        match = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
+        if not match: continue
+        dt = datetime.strptime(f"{match.group(1)}_{match.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
+        with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as jf:
+            data = json.load(jf)
+            if len(data) > 5: raw_history.append({"time": dt, "pts": {k: int(v) for k,v in data.items() if k.isdigit()}})
 
-    all_keys = sorted(weekly_db.keys())
-    for wkey in all_keys:
-        week = weekly_db[wkey]
-        mon = week["monday"]
-        week_days = []
-        for i in range(7):
-            d = mon + timedelta(days=i)
-            d_key = d.strftime("%Y-%m-%d")
-            week_days.append({"label": d.strftime("%a %d.%m"), "pts": week["days"].get(d_key, {}).get("pts", {})})
+    adj_db = load_json(ADJUSTMENTS_FILE)
 
+    weeks = {}
+    for entry in raw_history:
+        monday = get_monday(entry['time'])
+        wkey = monday.strftime("%Y_W%W")
+        if wkey not in weeks:
+            sun = monday + timedelta(days=6)
+            weeks[wkey] = {"monday": monday, "label": f"{monday.strftime('%d.%m')} - {sun.strftime('%d.%m')}", "daily": {}}
+        dkey = entry['time'].strftime("%Y-%m-%d")
+        if dkey not in weeks[wkey]["daily"]: weeks[wkey]["daily"][dkey] = []
+        weeks[wkey]["daily"][dkey].append(entry)
+
+    all_week_keys = sorted(weeks.keys())
+    for cur_wk in all_week_keys:
+        week = weeks[cur_wk]
         players = set()
-        for d in week_days: players.update(d['pts'].keys())
+        for d in week["daily"].values():
+            for e in d: players.update(e['pts'].keys())
         
-        player_stats = {}
+        player_results = {}
         for uid in players:
-            growths = []
-            prev_pts = 0
-            max_pts = 0
-            for i, d in enumerate(week_days):
-                curr_p = d['pts'].get(uid, None)
-                if curr_p is not None:
-                    if i == 0: g = curr_p
-                    else: g = (curr_p - prev_pts) if curr_p >= prev_pts else curr_p
-                    growths.append(g)
-                    prev_pts = curr_p
-                    if curr_p > max_pts: max_pts = curr_p
-                else: growths.append(None)
-            player_stats[uid] = {"growths": growths, "total": max_pts}
+            daily_growths = []
+            total_acc = 0
+            last_p_seq = 0 
+            
+            mon = week["monday"]
+            for i in range(7):
+                d_str = (mon + timedelta(days=i)).strftime("%Y-%m-%d")
+                d_growth = 0
+                snaps = week["daily"].get(d_str, [])
+                
+                for s in snaps:
+                    curr = s['pts'].get(uid, 0)
+                    if curr > last_p_seq:
+                        d_growth += (curr - last_p_seq)
+                        last_p_seq = curr
+                    elif curr < last_p_seq and curr > 0:
+                        d_growth += curr
+                        last_p_seq = curr
+                
+                m_adj = adj_db.get(d_str, {}).get(uid)
+                if m_adj and m_adj > d_growth: d_growth = m_adj
+                
+                daily_growths.append(d_growth)
+                total_acc += d_growth
 
-        clan_growths = []
-        clan_totals = []
-        prev_clan_total = 0
-        for i in range(7):
-            day_map = week_days[i]['pts']
-            if day_map:
-                total = sum(day_map.values())
-                if i == 0: g = total
-                else: g = (total - prev_clan_total) if total >= prev_clan_total else total
-                clan_growths.append(g)
-                clan_totals.append(total)
-                prev_clan_total = total
-            else:
-                clan_growths.append(0)
-                clan_totals.append(prev_clan_total)
+            player_results[uid] = {"growths": daily_growths, "total": total_acc}
 
-        sorted_ids = sorted(players, key=lambda x: player_stats[x]['total'], reverse=True)
+        clan_growths = [sum(p["growths"][i] for p in player_results.values()) for i in range(7)]
+        sorted_ids = sorted(players, key=lambda x: player_results[x]['total'], reverse=True)
+
+        nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==cur_wk else ""}">{weeks[wk]["label"]}</a>' for wk in all_week_keys])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
@@ -164,7 +159,7 @@ def generate_web_report(hier, users):
     body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px; font-size: 16px; overflow-y: scroll; }}
     .container {{ max-width: 1500px; margin: 0 auto; }}
     header {{ text-align: center; margin-bottom: 50px; }}
-    h1 {{ font-family: 'Orbitron'; font-size: 3.5rem; color: #fff; margin: 0; letter-spacing: 12px; }}
+    h1 {{ font-family: 'Orbitron'; font-size: 4rem; color: #fff; margin: 0; letter-spacing: 12px; }}
     .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; font-weight: 500; }}
     nav {{ display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }}
     nav a {{ text-decoration: none; color: #8b949e; padding: 12px 24px; border-radius: 10px; background: var(--card); border: 2px solid var(--border); transition: 0.3s; }}
@@ -190,12 +185,12 @@ def generate_web_report(hier, users):
     .t-center {{ text-align: center; }}
     .t-left {{ text-align: left; }}
 </style></head><body><div class="container"><header><h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE</div></header>
-<nav>{" ".join([f'<a href="report_{k}.html" class="{"active" if k==wkey else ""}">{weekly_db[k]["label"]}</a>' for k in all_keys])}</nav>
+<nav>{nav_html}</nav>
 <div class="table-container"><table>
     <tr class="summary-row">
         <td class="num-col">--</td>
         <td colspan="2" class="t-left"><span style="text-transform:uppercase; letter-spacing:3px;">Итоги недели</span></td>
-        <td class="t-center"><span class="clan-score">{max(clan_totals) if clan_totals else 0:,}</span></td>
+        <td class="t-center"><span class="clan-score">{sum(clan_growths):,}</span></td>
         {" ".join([f'<td class="t-center"><span class="day-growth">+{cg:,}</span></td>' for cg in clan_growths])}
     </tr>
     <thead>
@@ -204,27 +199,26 @@ def generate_web_report(hier, users):
             <th class="t-left">Участник</th>
             <th class="t-left">Звание</th>
             <th class="t-center">Рейтинг</th>
-            {" ".join([f'<th>{dx["label"]}</th>' for dx in week_days])}
+            {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}
         </tr>
     </thead>
     <tbody>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"})
-            p_stats = player_stats[uid]
+            res = player_results[uid]
             html += f"<tr><td class='num-col'>{count}</td>"
             html += f"<td class='t-left'><span class='nick'>{p['nick']}</span></td><td class='t-left'><span class='role'>{p['role']}</span></td>"
-            html += f"<td class='t-center'><span class='main-score'>{p_stats['total']:,}</span></td>"
-            for i, g in enumerate(p_stats['growths']):
-                if g is not None:
-                    g_h = f"<span class='day-growth'>+{g:,}</span>" if g > 0 else "<span class='no-growth'>0</span>"
-                    html += f"<td class='t-center'>{g_h}</td>"
-                else: html += "<td class='t-center no-growth'>-</td>"
+            html += f"<td class='t-center'><span class='main-score'>{res['total']:,}</span></td>"
+            for g in res['growths']:
+                if g > 0: html += f"<td class='t-center'><span class='day-growth'>+{g:,}</span></td>"
+                else: html += "<td class='t-center no-growth'>0</td>"
             html += "</tr>"
         html += "</tbody></table></div></div></body></html>"
-        with open(os.path.join(REPORTS_DIR, f"report_{wkey}.html"), 'w', encoding='utf-8') as f: f.write(html)
+        with open(os.path.join(REPORTS_DIR, f"report_{cur_wk}.html"), 'w', encoding='utf-8') as f: f.write(html)
 
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
-        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_keys[-1]}.html"></head></html>')
+        latest_wk = sorted(weeks.keys())[-1]
+        f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{latest_wk}.html"></head></html>')
     if AUTO_PUSH: run_git_push()
 
 if __name__ == "__main__":
