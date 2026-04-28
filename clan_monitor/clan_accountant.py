@@ -42,9 +42,16 @@ def translate_traits_batch(traits_list):
     full_str = ", ".join(traits_list).replace("_", " ")
     if full_str in TRANS_CACHE: return TRANS_CACHE[full_str]
     try:
-        manual_fix = full_str.replace("Blond", "Blonde").replace("blond", "blonde").replace("Goatee", "Beard")
-        translated = GoogleTranslator(source='en', target='ru').translate(manual_fix)
+        # Pre-fix common game terms to help the translator
+        m_fix = full_str.replace("Blond", "Blonde").replace("blond", "blonde").replace("Goatee", "Beard")
+        m_fix = m_fix.replace("Visor", "Monocle").replace("visor", "monocle")
+        
+        translated = GoogleTranslator(source='en', target='ru').translate(m_fix)
+        
+        # Post-fix grammar artifacts
         translated = translated.replace("блондинка", "блонд").replace("Блондинка", "Блонд").replace("эспаньолка", "бородка")
+        translated = translated.replace("козырек", "монокль").replace("Козырек", "Монокль").replace("Козырёк", "Монокль").replace("козырёк", "монокль")
+        
         TRANS_CACHE[full_str] = translated
         with open(TRANS_CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
         return translated
@@ -205,6 +212,7 @@ def generate_web_report(hier, users, current_rating):
     .burned {{ color: var(--error); font-size: 0.7rem; font-family: 'Roboto Mono'; opacity: 0.8; }}
     .fact-grow {{ color: var(--accent); font-size: 0.9rem; font-family: 'Roboto Mono'; }}
     td {{ padding: 10px 12px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.3); }}
+    .nick-cell {{ display: flex; flex-direction: column; gap: 6px; }}
     .nick {{ color: #fff; font-weight: 700; font-size: 0.9rem; }}
     .trait {{ color: var(--gold); font-size: 0.68rem; font-weight: 500; font-style: italic; opacity: 0.7; }}
     .role {{ font-size: 0.58rem; color: #8b949e; border: 1px solid var(--border); padding: 1px 3px; border-radius: 3px; }}
