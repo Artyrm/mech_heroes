@@ -13,7 +13,7 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
-VERSION_NUM = "0.1.2"
+VERSION_NUM = "0.2.0"
 
 def load_json(path):
     if not os.path.exists(path): return {}
@@ -137,8 +137,7 @@ def generate_web_report(hier, users, current_rating):
             pl_res[uid] = {"growths": growths, "total": total_acc}
 
         clan_growths = [sum(p["growths"][ev] for p in pl_res.values()) for ev in range(7)]
-        clan_stats, prev_r = [], None
-        # FIND INITIAL RATING BEFORE MONDAY
+        clan_stats, prev_r = [], 11199931 # START FROM SUNDAY LATEST RATING
         for i in range(7):
             curr_r = clan_rats[i]
             if curr_r and prev_r:
@@ -159,7 +158,7 @@ def generate_web_report(hier, users, current_rating):
             if s["rating"]:
                 f_val = f"+{s['fact']:,}" if s['fact'] >= 0 else f"{s['fact']:,}"
                 c_cells.append(f'<td style="text-align:center"><div class="fact-grow">{f_val}</div><div class="burned">🔥 -{s["burned"]:,}</div></td>')
-            else: c_cells.append('<td style="text-align:center" class="no-growth">-</td>')
+            else: c_cells.append('<td style="text-align:center">-</td>')
         
         s_cells = [f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>' for cg in clan_growths]
 
@@ -167,36 +166,36 @@ def generate_web_report(hier, users, current_rating):
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
     :root {{ --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; --text: #c9d1d9; }}
-    body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 40px; font-size: 16px; }}
+    body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 40px; font-size: 16px; overflow-x: hidden; }}
     header {{ text-align: center; margin-bottom: 50px; }}
     h1 {{ font-family: 'Orbitron'; font-size: 4rem; color: #fff; margin: 0; letter-spacing: 12px; }}
     .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; font-weight: 500; }}
     nav {{ display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }}
     nav a {{ text-decoration: none; color: #8b949e; padding: 12px 24px; border-radius: 10px; background: var(--card); border: 2px solid var(--border); transition: 0.3s; }}
     nav a.active {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
-    .table-container {{ background: var(--card); border-radius: 24px; border: 1px solid var(--border); margin-bottom: 50px; overflow: hidden; }}
+    .table-container {{ background: var(--card); border-radius: 24px; border: 1px solid var(--border); margin-bottom: 50px; }}
     table {{ width: 100%; border-collapse: separate; border-spacing: 0; }}
-    th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid var(--border); }}
-    .clan-row {{ background: #1c2128; font-weight: 700; }}
-    .clan-row td {{ border-bottom: 2px solid var(--border); padding: 20px; }}
-    .burned {{ color: var(--error); font-size: 0.85rem; font-family: 'Roboto Mono'; margin-top: 4px; }}
-    .fact-grow {{ color: var(--accent); font-size: 1.05rem; font-family: 'Roboto Mono'; }}
-    td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.4); }}
-    .nick {{ color: #fff; font-weight: 700; font-size: 1.1rem; }}
-    .trait {{ color: var(--gold); font-size: 0.75rem; font-weight: 500; font-style: italic; }}
-    .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }}
-    .main-score {{ font-family: 'Roboto Mono'; font-size: 1.3rem; color: var(--gold); font-weight: 700; }}
-    .day-growth {{ font-family: 'Roboto Mono'; font-size: 1.1rem; color: var(--green); font-weight: 700; }}
+    th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; border-bottom: 1px solid var(--border); }}
+    .clan-row {{ background: #1c2128; font-weight: 700; height: 80px; }}
+    .clan-row td {{ border-bottom: 2px solid var(--border); padding: 15px 10px; }}
+    .burned {{ color: var(--error); font-size: 0.8rem; font-family: 'Roboto Mono'; opacity: 0.8; margin-top: 4px; }}
+    .fact-grow {{ color: var(--accent); font-size: 1rem; font-family: 'Roboto Mono'; }}
+    td {{ padding: 14px 15px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.4); }}
+    .nick {{ color: #fff; font-weight: 700; font-size: 1rem; }}
+    .trait {{ color: var(--gold); font-size: 0.72rem; font-weight: 500; font-style: italic; opacity: 0.8; }}
+    .role {{ font-size: 0.65rem; color: #8b949e; border: 1px solid var(--border); padding: 2px 5px; border-radius: 4px; }}
+    .main-score {{ font-family: 'Roboto Mono'; font-size: 1.2rem; color: var(--gold); font-weight: 700; }}
+    .day-growth {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--green); font-weight: 700; }}
 </style></head><body><div class="container"><header><h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
 <nav>{nav}</nav><div class="table-container"><table>
     <thead><tr><th style="width:40px">№</th><th>Участник</th><th>Звание</th><th style="text-align:center">Общий рейтинг</th>
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
     <tbody>
-    <tr class="clan-row"><td style="text-align:center">--</td><td colspan="2">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td>
+    <tr class="clan-row"><td style="text-align:center; color:#58a6ff">--</td><td colspan="2">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td>
     <td style="text-align:center"><span class="main-score" style="color:#fff">{target_r:,}</span></td>
     {" ".join(c_cells)}</tr>
-    <tr class="clan-row" style="background:#0d1117;"><td style="text-align:center">--</td><td colspan="2" style="color:var(--green)">СУММАРНЫЙ ПРИХОД (ГРЯЗЬ)</td>
-    <td style="text-align:center"><span class="main-score" style="color:var(--green)">{sum(clan_growths):,}</span></td>
+    <tr class="clan-row" style="background:#0d1117; height: 60px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.9rem;">ПРИХОД (ГРЯЗЬ)</td>
+    <td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 1.1rem;">{sum(clan_growths):,}</span></td>
     {" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {}); p_n, p_t, p_r = p.get('nick', f"ID:{uid}"), p.get('traits', ''), p.get('role', 'Soldier')
@@ -204,11 +203,11 @@ def generate_web_report(hier, users, current_rating):
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p_n}</span>"
             if p_n in dupes: nick_sec += f"<span class='trait'>({p_t if p_t else 'Без особых примет'})</span>"
             nick_sec += "</div>"
-            html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p_r}</span></td>"
+            html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.8rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p_r}</span></td>"
             html += f"<td style='text-align:center'><span class='main-score'>{res['total']:,}</span></td>"
             for g in res['growths']:
                 if g > 0: html += f"<td style='text-align:center'><span class='day-growth'>+{g:,}</span></td>"
-                else: html += "<td style='text-align:center; color:#484f58'>0</td>"
+                else: html += "<td style='text-align:center; color:#484f58; font-size: 0.9rem;'>0</td>"
             html += "</tr>"
         html += "</tbody></table></div></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
