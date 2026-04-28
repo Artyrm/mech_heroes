@@ -75,19 +75,15 @@ def generate_web_report(hier, users):
     for u in users: names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier"}
     
     curr_pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
-    names_map[str(hier['leader']['member']['userId'])]["role"] = "LEADER"
-    for s in hier['slots']: 
-        uid = str(s['member']['userId'])
-        curr_pts[uid] = int(s['member']['points'])
-        if uid in names_map: names_map[uid]["role"] = s['role']
-    with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
+    for s in hier['slots']: curr_pts[str(s['member']['userId'])] = int(s['member']['points'])
     
-    # Save snapshot
+    with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
         json.dump(curr_pts, f)
 
     def get_monday(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     
+    # Process history
     all_snaps = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
     raw_history = []
     for fs in all_snaps:
@@ -99,14 +95,12 @@ def generate_web_report(hier, users):
             if len(data) > 5: raw_history.append({"time": dt, "pts": {k: int(v) for k,v in data.items() if k.isdigit()}})
 
     adj_db = load_json(ADJUSTMENTS_FILE)
-
     weeks = {}
     for entry in raw_history:
-        monday = get_monday(entry['time'])
-        wkey = monday.strftime("%Y_W%W")
+        mon_dt = get_monday(entry['time'])
+        wkey = mon_dt.strftime("%Y_W%W")
         if wkey not in weeks:
-            sun = monday + timedelta(days=6)
-            weeks[wkey] = {"monday": monday, "label": f"{monday.strftime('%d.%m')} - {sun.strftime('%d.%m')}", "daily": {}}
+            weeks[wkey] = {"monday": mon_dt, "label": f"{mon_dt.strftime('%d.%m')} - {(mon_dt+timedelta(days=6)).strftime('%d.%m')}", "daily": {}}
         dkey = entry['time'].strftime("%Y-%m-%d")
         if dkey not in weeks[wkey]["daily"]: weeks[wkey]["daily"][dkey] = []
         weeks[wkey]["daily"][dkey].append(entry)
@@ -120,36 +114,56 @@ def generate_web_report(hier, users):
         
         player_results = {}
         for uid in players:
-            daily_growths = []
+            growths = []
             total_acc = 0
-            last_p_seq = 0 
-            
+            last_p_global = 0 
             mon = week["monday"]
+            
             for i in range(7):
-                d_str = (mon + timedelta(days=i)).strftime("%Y-%m-%d")
-                d_growth = 0
+                d_dt = mon + timedelta(days=i)
+                d_str = d_dt.strftime("%Y-%m-%d")
                 snaps = week["daily"].get(d_str, [])
                 
+                # Logic: Find the highest point seen today before any potential reset
+                # And calculate growth relative to the end of yesterday.
+                d_day_start = last_p_global
+                d_day_best = d_day_start
+                d_after_reset_growth = 0
+                
+                # Check ALL snapshots of this day
                 for s in snaps:
                     curr = s['pts'].get(uid, 0)
-                    if curr > last_p_seq:
-                        d_growth += (curr - last_p_seq)
-                        last_p_seq = curr
-                    elif curr < last_p_seq and curr > 0:
-                        d_growth += curr
-                        last_p_seq = curr
+                    if curr >= d_day_best:
+                        d_day_best = curr
+                    else:
+                        # CLAN EXIT DETECTED
+                        # Save progress before exit
+                        d_after_reset_growth += curr # Current is new progress
+                        d_day_best = curr # Reset peak for tracking further growth
                 
-                m_adj = adj_db.get(d_str, {}).get(uid)
-                if m_adj and m_adj > d_growth: d_growth = m_adj
+                # Check manual peak for this day
+                m_peak = adj_db.get(d_str, {}).get(uid)
+                if m_peak and m_peak > d_day_best:
+                    d_day_best = m_peak
+
+                # Final Day Growth = (BestPointToday - YesterdayLast) + AllProgressAfterResets
+                # IMPORTANT: If it's Monday, YesterdayLast is 0
+                if i == 0: day_total_growth = d_day_best + d_after_reset_growth
+                else: day_total_growth = (d_day_best - d_day_start) + d_after_reset_growth
                 
-                daily_growths.append(d_growth)
-                total_acc += d_growth
+                # Sanity: growth can't be negative in this game's weekly cycle
+                if day_total_growth < 0: day_total_growth = 0
+                
+                growths.append(day_total_growth)
+                total_acc += day_total_growth
+                # Update global carrying points to the LAST snapshot seen today
+                if snaps: last_p_global = snaps[-1]['pts'].get(uid, 0)
+                else: last_p_global = last_p_global
 
-            player_results[uid] = {"growths": daily_growths, "total": total_acc}
+            player_results[uid] = {"growths": growths, "total": total_acc}
 
-        clan_growths = [sum(p["growths"][i] for p in player_results.values()) for i in range(7)]
+        clan_growths = [sum(p["growths"][ev] for p in player_results.values()) for ev in range(7)]
         sorted_ids = sorted(players, key=lambda x: player_results[x]['total'], reverse=True)
-
         nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==cur_wk else ""}">{weeks[wk]["label"]}</a>' for wk in all_week_keys])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
@@ -175,12 +189,13 @@ def generate_web_report(hier, users):
     .summary-row td {{ padding: 30px 20px; color: var(--accent); font-weight: 700; border-bottom: 3px solid var(--accent); }}
     .clan-score {{ font-size: 1.6rem; font-family: 'Roboto Mono'; display: block; }}
     th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; border-bottom: 1px solid var(--border); }}
-    td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); }}
+    td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.5); }}
+    td:last-child {{ border-right: none; }}
     .num-col {{ color: #484f58; font-family: 'Roboto Mono'; width: 40px; font-size: 0.9rem; }}
     .nick {{ color: #fff; font-weight: 700; font-size: 1.1rem; }}
-    .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 3px 8px; border-radius: 4px; }}
+    .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }}
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1.3rem; color: var(--gold); font-weight: 700; }}
-    .day-growth {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--green); font-weight: 700; text-align: center; display: block; }}
+    .day-growth {{ font-family: 'Roboto Mono'; font-size: 1.1rem; color: var(--green); font-weight: 700; text-align: center; display: block; }}
     .no-growth {{ color: #484f58; opacity: 0.4; font-family: 'Roboto Mono'; text-align: center; }}
     .t-center {{ text-align: center; }}
     .t-left {{ text-align: left; }}
