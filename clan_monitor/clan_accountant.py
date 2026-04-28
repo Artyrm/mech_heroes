@@ -194,7 +194,7 @@ def generate_web_report(hier, users, current_rating):
     <tr class="clan-row"><td style="text-align:center; color:#58a6ff">--</td><td colspan="2">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td>
     <td style="text-align:center"><span class="main-score" style="color:#fff">{target_r:,}</span></td>
     {" ".join(c_cells)}</tr>
-    <tr class="clan-row" style="background:#0d1117; height: 60px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.9rem;">ПРИХОД (ГРЯЗЬ)</td>
+    <tr class="clan-row" style="background:#0d1117; height: 60px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.9rem;">СУММАРНЫЙ ЗАРАБОТОК</td>
     <td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 1.1rem;">{sum(clan_growths):,}</span></td>
     {" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
