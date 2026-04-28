@@ -1,0 +1,12 @@
+*.har
+*.user.js
+*.jpg
+*.txt
+.~lock.*
+__pycache__/
+snapshots/clan_2026-04-28.json
+snapshots/points_2026-04-28_*
+*.json
+!clan_monitor/*.json
+!**/members_name_db.json
+!**/snapshots/points_utc_*.json

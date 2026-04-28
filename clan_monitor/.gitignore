@@ -1,0 +1,25 @@
+# Старые данные и дампы
+*.har
+*.txt
+*.csv
+*.json
+!snapshots/*.json
+!members_db.json
+
+# Скрипты ботов (Tampermonkey)
+*.user.js
+
+# Скриншоты и медиа
+*.jpg
+*.png
+*.webp
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# Исключения (то что НАМ НУЖНО)
+!clan_accountant.py
+!index.html
