@@ -7,16 +7,28 @@ import re
 from datetime import datetime, timedelta, timezone
 
 # ==============================================================================
-# IDENTITY & CONFIG
+# IDENTITY & CONFIG (LOCKED - SENSITIVE DATA MOVED TO config.json)
 # ==============================================================================
-USER_ID = 227408
-AUTH_KEY = "2B8ADCBE7A00EE8AF838139813C3ABBB"
-VERSION = "1.23.0"
+CONFIG_FILE = 'config.json'
+
+def load_config():
+    if not os.path.exists(CONFIG_FILE):
+        print(f"CRITICAL: {CONFIG_FILE} not found! Please create it with USER_ID and AUTH_KEY.")
+        sys.exit(1)
+    with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+CONF = load_config()
+USER_ID = CONF['USER_ID']
+AUTH_KEY = CONF['AUTH_KEY']
+VERSION = CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
 # PATHS
+# Moved OUTPUT_ROOT up so it sits in the REPO ROOT /clan/ORDA
 SNAPSHOTS_DIR = 'snapshots'
-OUTPUT_ROOT = 'clan/ORDA'
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUTPUT_ROOT = os.path.join(REPO_ROOT, 'clan', 'ORDA')
 REPORTS_DIR = os.path.join(OUTPUT_ROOT, 'reports')
 MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'index.html')
 MEMBERS_DB = 'members_name_db.json'
@@ -49,9 +61,10 @@ def fetch_data():
 
 def run_git_push():
     try:
-        subprocess.run(["git", "add", "."], check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], check=True, capture_output=True)
-        subprocess.run(["git", "push"], check=True, capture_output=True)
+        # Run from REPO_ROOT
+        subprocess.run(["git", "add", "."], cwd=REPO_ROOT, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, capture_output=True)
+        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, capture_output=True)
     except: pass
 
 def generate_web_report(hier, users):
@@ -71,41 +84,30 @@ def generate_web_report(hier, users):
         if uid in names_map: names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
-    # Save current state (UTC naming)
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
         json.dump(curr_pts, f)
 
     def get_monday(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
     
     weekly_db = {}
-    # IMPORTANT: Only pick valid UTC snapshots to avoid "fake time" collisions
     all_snaps = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
-    
     for fs in all_snaps:
         try:
-            # Match YYYY-MM-DD_HH-MM
             match = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fs)
             if not match: continue
-            
             day_str = match.group(1)
             time_str = match.group(2)
             dt = datetime.strptime(f"{day_str}_{time_str}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
             monday = get_monday(dt)
             wkey = monday.strftime("%Y_W%W")
-            
             if wkey not in weekly_db:
                 sun = monday + timedelta(days=6)
                 weekly_db[wkey] = {"monday": monday, "label": f"{monday.strftime('%d.%m')} - {sun.strftime('%d.%m')}", "days": {}}
-            
             if day_str not in weekly_db[wkey]["days"] or dt > weekly_db[wkey]["days"][day_str]["time"]:
                 with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as jf:
                     data = json.load(jf)
-                    # Data validation: only accept full snapshots (e.g. > 10 players)
                     if len(data) > 5:
-                        weekly_db[wkey]["days"][day_str] = {
-                            "time": dt, 
-                            "pts": {k: int(v) for k,v in data.items() if k.isdigit()}
-                        }
+                        weekly_db[wkey]["days"][day_str] = {"time": dt, "pts": {k: int(v) for k,v in data.items() if k.isdigit()}}
         except: pass
 
     all_keys = sorted(weekly_db.keys())
@@ -130,13 +132,11 @@ def generate_web_report(hier, users):
                 curr_p = d['pts'].get(uid, None)
                 if curr_p is not None:
                     if i == 0: g = curr_p
-                    else: 
-                        g = (curr_p - prev_pts) if curr_p >= prev_pts else curr_p
+                    else: g = (curr_p - prev_pts) if curr_p >= prev_pts else curr_p
                     growths.append(g)
                     prev_pts = curr_p
                     if curr_p > max_pts: max_pts = curr_p
-                else: 
-                    growths.append(None)
+                else: growths.append(None)
             player_stats[uid] = {"growths": growths, "total": max_pts}
 
         clan_growths = []
@@ -157,7 +157,6 @@ def generate_web_report(hier, users):
 
         sorted_ids = sorted(players, key=lambda x: player_stats[x]['total'], reverse=True)
 
-        # GENERATE HTML
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
@@ -165,7 +164,7 @@ def generate_web_report(hier, users):
     body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px; font-size: 16px; overflow-y: scroll; }}
     .container {{ max-width: 1500px; margin: 0 auto; }}
     header {{ text-align: center; margin-bottom: 50px; }}
-    h1 {{ font-family: 'Orbitron'; font-size: 4rem; color: #fff; margin: 0; letter-spacing: 12px; }}
+    h1 {{ font-family: 'Orbitron'; font-size: 3.5rem; color: #fff; margin: 0; letter-spacing: 12px; }}
     .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; font-weight: 500; }}
     nav {{ display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }}
     nav a {{ text-decoration: none; color: #8b949e; padding: 12px 24px; border-radius: 10px; background: var(--card); border: 2px solid var(--border); transition: 0.3s; }}
