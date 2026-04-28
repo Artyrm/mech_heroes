@@ -42,6 +42,24 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
+# ACCESSORY MAPPING (TRANSLATION)
+ACC_MAP = {
+    "cap_black": "Черная кепка",
+    "glasses_2": "Очки",
+    "helper": "Спецовка",
+    "bristle_blond": "Блондин",
+    "none": "",
+    "glasses_1": "Черные очки",
+    "cap_red": "Красная кепка",
+    "mask_1": "Маска",
+    "hair_brown": "Шатен",
+    "helmet_1": "Шлем"
+}
+
+def translate_acc(val):
+    if not val or val == "none": return ""
+    return ACC_MAP.get(val, val.replace("_", " ").title())
+
 def fetch_data():
     try:
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
@@ -51,7 +69,7 @@ def fetch_data():
         sid = d.get("sessionID")
         hier = d.get("clanData", {}).get("clanState", {}).get("hierarchy")
         ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots']}
-        p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
+        p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
         r2 = requests.post(f"{BASE_URL}/directcommand?userid={USER_ID}", json=p2, headers=HEADERS).json()
         users = json.loads(r2["data"]["response"]).get("Users", [])
         return hier, users
@@ -67,15 +85,32 @@ def run_git_push():
 def generate_web_report(hier, users):
     now_utc = datetime.now(timezone.utc)
     names_map = load_json(MEMBERS_DB)
-    for u in users: names_map[str(u['userId'])] = {"nick": u['nickname'], "role": "Soldier"}
+    
+    # Store accessories
+    for u in users:
+        acc = u.get("avatarConfiguration", {})
+        traits = filter(None, [translate_acc(acc.get('top')), translate_acc(acc.get('front')), translate_acc(acc.get('down'))])
+        names_map[str(u['userId'])] = {
+            "nick": u['nickname'], 
+            "role": "Soldier",
+            "traits": ", ".join(traits)
+        }
+    
+    # Leader role set
+    l_id = str(hier['leader']['member']['userId'])
+    if l_id in names_map: names_map[l_id]["role"] = "LEADER"
+    for s in hier['slots']: 
+        uid = str(s['member']['userId'])
+        if uid in names_map: names_map[uid]["role"] = s['role']
+
+    with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
+    
     curr_pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
     for s in hier['slots']: curr_pts[str(s['member']['userId'])] = int(s['member']['points'])
-    with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     with open(os.path.join(SNAPSHOTS_DIR, f"points_utc_{now_utc.strftime('%Y-%m-%d_%H-%M')}.json"), 'w', encoding='utf-8') as f:
         json.dump(curr_pts, f)
 
     def get_monday(dt): return (dt - timedelta(days=dt.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
-    
     all_snaps = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_') and fs.endswith('.json')])
     snaps_data = []
     for fs in all_snaps:
@@ -105,53 +140,32 @@ def generate_web_report(hier, users):
         
         pl_results = {}
         for uid in players:
-            growths = []
-            total_acc = 0
-            last_pts_yesterday = 0 # Baseline for Today
-            
-            mon = week["monday"]
+            growths, total_acc, last_ref = [], 0, 0
             for i in range(7):
-                d_dt = mon + timedelta(days=i)
-                d_str = d_dt.strftime("%Y-%m-%d")
+                d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
                 d_snaps = week["days"].get(d_str, [])
-                
-                # Formula: (Exit - YesterdayLast) + Current
-                # Get manual exits list
                 exits = adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(exits, list): exits = [exits] # Compatibility
+                if not isinstance(exits, list): exits = [exits]
                 
-                day_growth = 0
-                reference = last_pts_yesterday
-                
-                for ex_val in exits:
-                    day_growth += (ex_val - reference)
-                    reference = 0 # After exit you join with 0
-                
-                # Finally add current points from the latest snapshot
+                day_growth, reference = 0, last_ref
+                for ev in exits:
+                    day_growth += max(0, ev - reference)
+                    reference = 0
                 if d_snaps:
-                    final_day_pts = d_snaps[-1]['pts'].get(uid, 0)
-                    # If we don't know the user exited, but the points dropped significantly, 
-                    # we could auto-detect, but user wants "special record". 
-                    # For now, stay strict:
-                    if final_day_pts < reference and not exits:
-                         # Auto-detect jump if points drop and no manual exit recorded
-                         # This handles the case where user forgot the manual record
-                         day_growth += final_day_pts
-                    else:
-                        day_growth += (final_day_pts - reference)
-                    
-                    last_pts_yesterday = final_day_pts
-                else:
-                    last_pts_yesterday = last_pts_yesterday # No change
-
-                if day_growth < 0: day_growth = 0
+                    final = d_snaps[-1]['pts'].get(uid, 0)
+                    day_growth += (final if final < reference and not exits else max(0, final - reference))
+                    last_ref = final
                 growths.append(day_growth)
                 total_acc += day_growth
-
             pl_results[uid] = {"growths": growths, "total": total_acc}
 
-        clan_growths = [sum(p["growths"][i] for p in pl_results.values()) for i in range(7)]
+        clan_growths = [sum(p["growths"][ev] for p in pl_results.values()) for ev in range(7)]
         sorted_ids = sorted(players, key=lambda x: pl_results[x]['total'], reverse=True)
+        
+        # Detect DUPLICATE NAMES
+        all_nicks = [names_map.get(uid, {}).get('nick', '') for uid in players]
+        dupes = {n for n in all_nicks if all_nicks.count(n) > 1 and n}
+
         nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
@@ -181,6 +195,7 @@ def generate_web_report(hier, users):
     td:last-child {{ border-right: none; }}
     .num-col {{ color: #484f58; font-family: 'Roboto Mono'; width: 40px; font-size: 0.9rem; }}
     .nick {{ color: #fff; font-weight: 700; font-size: 1.1rem; }}
+    .trait {{ color: #8b949e; font-size: 0.8rem; font-weight: 400; margin-left: 10px; opacity: 0.8; }}
     .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }}
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1.3rem; color: var(--gold); font-weight: 700; }}
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 1.1rem; color: var(--green); font-weight: 700; text-align: center; display: block; }}
@@ -207,10 +222,15 @@ def generate_web_report(hier, users):
     </thead>
     <tbody>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"})
+            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier", "traits": ""})
             res = pl_results[uid]
+            nick_display = f"<span class='nick'>{p['nick']}</span>"
+            # Show traits if name is duplicated
+            if p['nick'] in dupes and p['traits']:
+                nick_display += f"<span class='trait'>[{p['traits']}]</span>"
+            
             html += f"<tr><td class='num-col'>{count}</td>"
-            html += f"<td class='t-left'><span class='nick'>{p['nick']}</span></td><td class='t-left'><span class='role'>{p['role']}</span></td>"
+            html += f"<td class='t-left'>{nick_display}</td><td class='t-left'><span class='role'>{p['role']}</span></td>"
             html += f"<td class='t-center'><span class='main-score'>{res['total']:,}</span></td>"
             for g in res['growths']:
                 if g > 0: html += f"<td class='t-center'><span class='day-growth'>+{g:,}</span></td>"
