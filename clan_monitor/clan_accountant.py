@@ -46,11 +46,11 @@ def translate_traits_batch(traits_list):
     m_dict = {
         "Short Hair": "Короткие волосы", "Long Wavy": "Длинные волнистые волосы", "Long Straight": "Длинные прямые волосы",
         "Square": "Площадка", "Tail Male": "Хвост", "Tail Female": "Хвост", "Shaved Temples Male": "Бритые виски",
-        "Afro": "Афро", "Bald": "Лысый", 
-        "Goatee 1 ": "Бородка ", "Goatee 2 ": "Бородка ", "Goatee": "Бородка", "Moustache": "Усы", "Thin Moustache": "Тонкие усы",
+        "Afro": "Афро", "Bald": "Лысый", "Mohawk": "Ирокез", "Mohawk Male": "Ирокез",
+        "Goatee 1 ": "Бородка ", "Goatee 2 ": "Бородка ", "Goatee": "Бородка", "Thin Moustache": "Тонкие усы", "Moustache": "Усы",
         "Bristle": "Щетина", "Beard No Moustache": "Шкиперская бородка", "Scar": "Шрам", "Toxin": "Токсичный шрам",
-        "Glasses 1": "Черные очки", "Glasses Yellow": "Желтые очки", "Glasses": "Очки", "Visor": "Монокль",
-        "Cyber Glasses": "Киберочки", "Vr": "VR-шлем", "Camouflage": "Камуфляж", "Eye Line": "Макияж глаз",
+        "Glasses 1": "Черные очки", "Glasses Yellow": "Желтые очки", "Cyber Glasses": "Киберочки", "Glasses": "Очки", "Visor": "Монокль",
+        "Vr": "VR-шлем", "Camouflage": "Камуфляж", "Eye Line": "Макияж глаз",
         "Lipstick Red": "Красная помада", "Cybernatic Mask Male": "Кибермаска", "Aviator Mask Male": "Маска авиатора",
         "Aviator Mask Female": "Маска авиатора"
     }
@@ -61,11 +61,16 @@ def translate_traits_batch(traits_list):
     }
     
     res = []
+    # Sort dictionaries by key length descending to prevent partial replacements (e.g. "Glasses" replacing part of "Cyber Glasses")
+    sorted_m = sorted(m_dict.items(), key=lambda x: len(x[0]), reverse=True)
+    sorted_c = sorted(color_dict.items(), key=lambda x: len(x[0]), reverse=True)
+    
     for trait in traits_list:
         t = trait.replace("_", " ")
-        for eng, rus in m_dict.items(): t = t.replace(eng, rus)
-        for eng, rus in color_dict.items(): t = t.replace(eng, rus)
+        for eng, rus in sorted_m: t = t.replace(eng, rus)
+        for eng, rus in sorted_c: t = t.replace(eng, rus)
         res.append(t.strip().capitalize())
+
     
     translated = ", ".join(res)
     # Cleanup possible double spaces from empty gender words
