@@ -42,18 +42,21 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
-# ACCESSORY MAPPING (TRANSLATION)
+# ACCESSORY MAPPING
 ACC_MAP = {
     "cap_black": "Черная кепка",
-    "glasses_2": "Очки",
-    "helper": "Спецовка",
-    "bristle_blond": "Блондин",
-    "none": "",
-    "glasses_1": "Черные очки",
     "cap_red": "Красная кепка",
-    "mask_1": "Маска",
+    "glasses_2": "Очки",
+    "glasses_1": "Черные очки",
+    "helper": "Спецовка",
+    "bristle_blond": "Светлая щетина",
     "hair_brown": "Шатен",
-    "helmet_1": "Шлем"
+    "hair_blond": "Блондин",
+    "bald": "Лысый",
+    "goatee_blond": "Светлая эспаньолка",
+    "mask_1": "Маска",
+    "short_hair_brown": "Короткий шатен",
+    "none": ""
 }
 
 def translate_acc(val):
@@ -86,7 +89,6 @@ def generate_web_report(hier, users):
     now_utc = datetime.now(timezone.utc)
     names_map = load_json(MEMBERS_DB)
     
-    # Store accessories
     for u in users:
         acc = u.get("avatarConfiguration", {})
         traits = filter(None, [translate_acc(acc.get('top')), translate_acc(acc.get('front')), translate_acc(acc.get('down'))])
@@ -96,7 +98,6 @@ def generate_web_report(hier, users):
             "traits": ", ".join(traits)
         }
     
-    # Leader role set
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "LEADER"
     for s in hier['slots']: 
@@ -146,7 +147,6 @@ def generate_web_report(hier, users):
                 d_snaps = week["days"].get(d_str, [])
                 exits = adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(exits, list): exits = [exits]
-                
                 day_growth, reference = 0, last_ref
                 for ev in exits:
                     day_growth += max(0, ev - reference)
@@ -161,11 +161,6 @@ def generate_web_report(hier, users):
 
         clan_growths = [sum(p["growths"][ev] for p in pl_results.values()) for ev in range(7)]
         sorted_ids = sorted(players, key=lambda x: pl_results[x]['total'], reverse=True)
-        
-        # Detect DUPLICATE NAMES
-        all_nicks = [names_map.get(uid, {}).get('nick', '') for uid in players]
-        dupes = {n for n in all_nicks if all_nicks.count(n) > 1 and n}
-
         nav_html = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in sorted(weeks.keys())])
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
@@ -182,20 +177,14 @@ def generate_web_report(hier, users):
     nav a.active {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
     .table-container {{ background: var(--card); border-radius: 24px; border: 1px solid var(--border); margin-bottom: 50px; overflow: hidden; }}
     table {{ width: 100%; border-collapse: separate; border-spacing: 0; }}
-    .summary-row td:first-child {{ border-top-left-radius: 23px; }}
-    .summary-row td:last-child {{ border-top-right-radius: 23px; }}
-    tr:last-child td:first-child {{ border-bottom-left-radius: 23px; }}
-    tr:last-child td:last-child {{ border-bottom-right-radius: 23px; }}
-    tr:last-child td {{ border-bottom: none; }}
-    .summary-row {{ background: rgba(88, 166, 255, 0.1); }}
     .summary-row td {{ padding: 30px 20px; color: var(--accent); font-weight: 700; border-bottom: 3px solid var(--accent); }}
-    .clan-score {{ font-size: 1.6rem; font-family: 'Roboto Mono'; display: block; }}
     th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; border-bottom: 1px solid var(--border); }}
     td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.5); }}
     td:last-child {{ border-right: none; }}
     .num-col {{ color: #484f58; font-family: 'Roboto Mono'; width: 40px; font-size: 0.9rem; }}
+    .nick-cell {{ display: flex; flex-direction: column; gap: 4px; }}
     .nick {{ color: #fff; font-weight: 700; font-size: 1.1rem; }}
-    .trait {{ color: #8b949e; font-size: 0.8rem; font-weight: 400; margin-left: 10px; opacity: 0.8; }}
+    .trait {{ color: var(--gold); font-size: 0.75rem; font-weight: 500; opacity: 0.9; font-style: italic; }}
     .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; }}
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1.3rem; color: var(--gold); font-weight: 700; }}
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 1.1rem; color: var(--green); font-weight: 700; text-align: center; display: block; }}
@@ -222,15 +211,18 @@ def generate_web_report(hier, users):
     </thead>
     <tbody>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier", "traits": ""})
+            p_data = names_map.get(uid, {})
+            p_nick = p_data.get('nick', f"ID:{uid}")
+            p_traits = p_data.get('traits', '')
+            p_role = p_data.get('role', 'Soldier')
+            
             res = pl_results[uid]
-            nick_display = f"<span class='nick'>{p['nick']}</span>"
-            # Show traits if name is duplicated
-            if p['nick'] in dupes and p['traits']:
-                nick_display += f"<span class='trait'>[{p['traits']}]</span>"
+            nick_sec = f"<div class='nick-cell'><span class='nick'>{p_nick}</span>"
+            if p_traits: nick_sec += f"<span class='trait'>{p_traits}</span>"
+            nick_sec += "</div>"
             
             html += f"<tr><td class='num-col'>{count}</td>"
-            html += f"<td class='t-left'>{nick_display}</td><td class='t-left'><span class='role'>{p['role']}</span></td>"
+            html += f"<td class='t-left'>{nick_sec}</td><td class='t-left'><span class='role'>{p_role}</span></td>"
             html += f"<td class='t-center'><span class='main-score'>{res['total']:,}</span></td>"
             for g in res['growths']:
                 if g > 0: html += f"<td class='t-center'><span class='day-growth'>+{g:,}</span></td>"
