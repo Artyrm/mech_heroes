@@ -13,7 +13,7 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
-VERSION_NUM = "0.2.1"
+VERSION_NUM = "0.2.2"
 
 def load_json(path):
     if not os.path.exists(path): return {}
@@ -78,6 +78,10 @@ def run_git_push():
 
 def generate_web_report(hier, users, current_rating):
     now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
+    # MOSCOW TIME FOR WEEKDAY
+    now_mskq = now_utc.astimezone(timezone(timedelta(hours=3)))
+    today_idx = now_mskq.weekday() # 0-Mon, 1-Tue...
+    
     for u in users:
         ac = u.get("avatarConfiguration", {}) or {}; raw_list = []
         for k in ['top', 'middle', 'down']:
@@ -89,8 +93,7 @@ def generate_web_report(hier, users, current_rating):
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "ЛИДЕР"
     for s in hier['slots']: 
-        uid = str(s['member']['userId']); 
-        if uid in names_map: names_map[uid]["role"] = s['role']
+        uid = str(s['member']['userId']); names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
     pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
@@ -126,16 +129,13 @@ def generate_web_report(hier, users, current_rating):
             for e in d: players.update(e['pts'].keys())
         pl_res, clan_rats = {}, [None] * 7
         for uid in players:
-            growths, total_acc, last_ref, presence = [], 0, 0, []
+            growths, total_acc, last_ref, pres = [], 0, 0, []
             for i in range(7):
                 d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
                 sn, ex = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(ex, list): ex = [ex]
-                
-                # Check presence: in any snapshot or has adjustment record
                 is_present = any(uid in s['pts'] for s in sn) or bool(ex)
-                presence.append(is_present)
-                
+                pres.append(is_present)
                 day_growth, reference = 0, last_ref
                 for ev in ex: day_growth += max(0, ev - reference); reference = 0
                 if sn:
@@ -143,7 +143,12 @@ def generate_web_report(hier, users, current_rating):
                     day_growth += (final if final < reference and not ex else max(0, final - reference)); last_ref = final
                     if sn[-1].get('rating'): clan_rats[i] = sn[-1]['rating']
                 growths.append(day_growth); total_acc += day_growth
-            pl_res[uid] = {"growths": growths, "total": total_acc, "presence": presence}
+            
+            try: first_p = pres.index(True)
+            except: first_p = 999
+            try: last_p = 6 - pres[::-1].index(True)
+            except: last_p = -1
+            pl_res[uid] = {"growths": growths, "total": total_acc, "presence": pres, "first_p": first_p, "last_p": last_p}
 
         clan_growths = [sum(p["growths"][ev] for p in pl_res.values()) for ev in range(7)]
         clan_stats, prev_r = [], 11199931
@@ -162,12 +167,18 @@ def generate_web_report(hier, users, current_rating):
         target_r = current_rating if w_key == all_ws[-1] else (next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0))
         
         c_cells = []
-        for s in clan_stats:
+        for i, s in enumerate(clan_stats):
             if s["rating"]:
                 f_val = f"+{s['fact']:,}" if s['fact'] >= 0 else f"{s['fact']:,}"
                 c_cells.append(f'<td style="text-align:center"><div class="fact-grow">{f_val}</div><div class="burned">🔥 -{s["burned"]:,}</div></td>')
-            else: c_cells.append('<td style="text-align:center">-</td>')
-        s_cells = [f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>' for cg in clan_growths]
+            else:
+                lbl = "-" if i <= today_idx else ""
+                c_cells.append(f'<td style="text-align:center; color:#30363d">{lbl}</td>')
+
+        s_cells = []
+        for i, cg in enumerate(clan_growths):
+            if i <= today_idx: s_cells.append(f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>')
+            else: s_cells.append('<td style="text-align:center">-</td>')
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
@@ -193,7 +204,7 @@ def generate_web_report(hier, users, current_rating):
     .role {{ font-size: 0.6rem; color: #8b949e; border: 1px solid var(--border); padding: 1px 4px; border-radius: 3px; }}
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1.1rem; color: var(--gold); font-weight: 700; }}
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.95rem; color: var(--green); font-weight: 700; }}
-    .absent {{ color: var(--error); font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; cursor: help; }}
+    .absent {{ color: var(--error); font-weight: 900; font-size: 1.2rem; font-family: 'Orbitron'; }}
 </style></head><body><div class="container"><header><h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
 <nav>{nav}</nav><div class="table-container"><table>
     <thead><tr><th style="width:30px">№</th><th>Участник</th><th>Звание</th><th style="text-align:center">Всего</th>
@@ -207,16 +218,23 @@ def generate_web_report(hier, users, current_rating):
     {" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {}); p_res = pl_res[uid]
+            first, last = p_res['first_p'], p_res['last_p']
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p.get('nick','ID:'+uid)}</span>"
             if p.get('nick') in dupes: nick_sec += f"<span class='trait'>({p.get('traits','') if p.get('traits','') else 'Без особых примет'})</span>"
             nick_sec += "</div>"
             html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.75rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p.get('role','Soldier')}</span></td>"
             html += f"<td style='text-align:center'><span class='main-score'>{p_res['total']:,}</span></td>"
             for i, g in enumerate(p_res['growths']):
-                if g > 0: html += f"<td style='text-align:center'><span class='day-growth'>+{g:,}</span></td>"
-                elif not p_res['presence'][i]: 
-                    html += '<td style="text-align:center"><span class="absent" title="Покинул клан или не вступил">X</span></td>'
-                else: html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
+                if i > today_idx: # Future
+                    html += '<td style="text-align:center; color:#30363d">-</td>'
+                elif g > 0:
+                    html += f"<td style='text-align:center'><span class='day-growth'>+{g:,}</span></td>"
+                elif i < first: # Hasn't joined yet
+                    html += '<td style="text-align:center; color:#8b949e">-</td>'
+                elif i > last: # Left early
+                    html += '<td style="text-align:center"><span class="absent" title="Покинул клан">X</span></td>'
+                else:
+                    html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
         html += "</tbody></table></div></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
