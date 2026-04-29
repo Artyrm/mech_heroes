@@ -88,18 +88,55 @@ HEADERS = {
 }
 
 def fetch_data():
+    global VERSION, BASE_URL
     try:
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
+        print(f"[*] Send /init request (VERSION: {VERSION})...")
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
-        if "error" in r: return None, None, None
+        if "error" in r:
+            err = r['error']
+            print(f"[!] API ERROR on /init: {err}")
+            
+            # Auto-healing: Update version if game updated
+            if isinstance(err, dict) and err.get('code') == 61058:
+                m = re.search(r"later version (\d+\.\d+\.\d+)", err.get('message', ''))
+                if m:
+                    new_v = m.group(1)
+                    print(f"[*] Auto-updating config.json with new game version: {new_v}")
+                    CONF['VERSION'] = new_v
+                    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+                        json.dump(CONF, f, indent=4)
+                    
+                    # Update global and retry
+                    VERSION = new_v
+                    BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
+                    print("[*] Retrying fetch_data() with new version...")
+                    if 'error' in p1: pass # filler
+                    return fetch_data()
+            
+            return None, None, None
+            
         d = r.get("data", {})
         sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
         rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+        
+        if not hier:
+            print("[!] ERROR: 'hierarchy' not found in server response. Are you in a clan?")
+            return None, None, None
+            
         ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots']}
         p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
+        print(f"[*] Post /directcommand to get member details...")
         r2 = requests.post(f"{BASE_URL}/directcommand?userid={USER_ID}", json=p2, headers=HEADERS).json()
+        
+        if "error" in r2:
+            print(f"[!] API ERROR on /directcommand: {r2['error']}")
+            return None, None, None
+            
         return hier, json.loads(r2["data"]["response"]).get("Users", []), rating
-    except: return None, None, None
+    except Exception as e:
+        print(f"[!] FATAL ERROR during network sync: {e}")
+        return None, None, None
 
 def run_git_push():
     try:
@@ -284,5 +321,11 @@ def generate_web_report(hier, users, current_rating):
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
     if AUTO_PUSH: run_git_push()
 if __name__ == "__main__":
-    h, u, r = fetch_data(); 
-    if h: generate_web_report(h, u, r)
+    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    h, u, r = fetch_data()
+    if h: 
+        print(f"[*] Data fetched successfully! Generating HTML report...")
+        generate_web_report(h, u, r)
+        print("[*] Done. Have a good day.")
+    else:
+        print("[!] Execution aborted: no data returned.")
