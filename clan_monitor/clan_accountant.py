@@ -16,8 +16,8 @@ TRANS_CACHE_FILE = 'translations_cache.json'
 VERSION_NUM = "0.2.4"
 
 def fmt(n: int) -> str:
-    """Format integer with non-breaking space as thousands separator (RU typography)."""
-    return f"{n:,}".replace(",", "\u00a0")
+    """Format integer with narrow no-break space as thousands separator (RU typography, U+202F)."""
+    return f"{n:,}".replace(",", "\u202f")
 
 def load_json(path):
     if not os.path.exists(path): return {}
