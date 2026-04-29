@@ -13,7 +13,11 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
-VERSION_NUM = "0.2.3"
+VERSION_NUM = "0.2.4"
+
+def fmt(n: int) -> str:
+    """Format integer with non-breaking space as thousands separator (RU typography)."""
+    return f"{n:,}".replace(",", "\u00a0")
 
 def load_json(path):
     if not os.path.exists(path): return {}
@@ -251,12 +255,12 @@ def generate_web_report(hier, users, current_rating):
         c_cells = []
         for i, s in enumerate(clan_stats):
             if s["rating"]:
-                f_val = f"+{s['fact']:,}" if s['fact'] >= 0 else f"{s['fact']:,}"
-                c_cells.append(f'<td style="text-align:center"><div class="fact-grow">{f_val}</div><div class="burned">🔥 -{s["burned"]:,}</div></td>')
+                f_val = f"+{fmt(s['fact'])}" if s['fact'] >= 0 else f"-{fmt(-s['fact'])}"
+                c_cells.append(f'<td style="text-align:center"><div class="fact-grow">{f_val}</div><div class="burned">🔥 -{fmt(s["burned"])}</div></td>')
             else:
                 lbl = "-" if i <= today_idx else ""
                 c_cells.append(f'<td style="text-align:center; color:#30363d">{lbl}</td>')
-        s_cells = [f'<td style="text-align:center"><span class="day-growth">+{cg:,}</span></td>' for i, cg in enumerate(clan_growths)]
+        s_cells = [f'<td style="text-align:center"><span class="day-growth">+{fmt(cg)}</span></td>' for i, cg in enumerate(clan_growths)]
 
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
@@ -290,10 +294,10 @@ def generate_web_report(hier, users, current_rating):
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
     <tbody>
     <tr class="clan-row"><td style="text-align:center; color:#58a6ff">--</td><td colspan="2">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td>
-    <td style="text-align:center"><span class="main-score" style="color:#fff">{target_r:,}</span></td>
+    <td style="text-align:center"><span class="main-score" style="color:#fff">{fmt(target_r)}</span></td>
     {" ".join(c_cells)}</tr>
     <tr class="clan-row" style="background:#0d1117; height: 45px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.8rem;">СУММАРНЫЙ ЗАРАБОТОК</td>
-    <td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 0.95rem;">{sum(clan_growths):,}</span></td>
+    <td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 0.95rem;">{fmt(sum(clan_growths))}</span></td>
     {" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {}); p_res = pl_res[uid]
@@ -302,12 +306,12 @@ def generate_web_report(hier, users, current_rating):
             if p.get('nick') in dupes: nick_sec += f"<span class='trait'>({p.get('traits','') if p.get('traits','') else 'Без особых примет'})</span>"
             nick_sec += "</div>"
             html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.7rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p.get('role','Soldier')}</span></td>"
-            html += f"<td style='text-align:center'><span class='main-score'>{p_res['total']:,}</span></td>"
+            html += f"<td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
             for i, g in enumerate(p_res['growths']):
                 if i > today_idx: # Future
                     html += '<td style="text-align:center; color:#30363d">-</td>'
                 elif g > 0:
-                    html += f"<td style='text-align:center'><span class='day-growth'>+{g:,}</span></td>"
+                    html += f"<td style='text-align:center'><span class='day-growth'>+{fmt(g)}</span></td>"
                 elif i < first: # Hasn't joined yet
                     html += '<td style="text-align:center; color:#8b949e">-</td>'
                 elif i > last: # Left early (not in the last snapshot of the day or current hier)
