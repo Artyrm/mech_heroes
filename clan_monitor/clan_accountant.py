@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import sys
+import socket
 import subprocess
 import re
 from datetime import datetime, timedelta, timezone
@@ -13,11 +14,39 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
-VERSION_NUM = "0.2.4"
+VERSION_NUM = "0.2.6"
 
 def fmt(n: int) -> str:
     """Format integer with narrow no-break space as thousands separator (RU typography, U+202F)."""
     return f"{n:,}".replace(",", "\u202f")
+
+def is_user_active() -> bool:
+    """Detects if the game is currently active in a browser to avoid kicking the session."""
+    domain = "tanks.ya.patternmasters.ru"
+    window_pattern = "Боевые роботы"
+    
+    # 1. Check Window Title (Fast)
+    try:
+        proc = subprocess.run(['powershell', '-Command', f'Get-Process | Where-Object {{$_.MainWindowTitle -like "*{window_pattern}*"}} | Select-Object -ExpandProperty MainWindowTitle'], capture_output=True, text=True, encoding='cp866')
+        if window_pattern in proc.stdout:
+            print(f"[*] Найдено открытое окно игры: '{proc.stdout.strip()}'")
+            
+            # 2. If window found, check network connection (Accurate)
+            try:
+                target_ip = socket.gethostbyname(domain)
+                netstat = subprocess.run(['netstat', '-n', '-o'], capture_output=True, text=True)
+                if f"{target_ip}:443" in netstat.stdout and "ESTABLISHED" in netstat.stdout:
+                    print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain} ({target_ip})")
+                    return True
+                else:
+                    print("[*] Окно открыто, но активного соединения с сервером нет (тайм-аут).")
+            except Exception as e:
+                print(f"[!] Ошибка при проверке сети: {e}. Считаем, что сессия активна для безопасности.")
+                return True
+    except Exception as e:
+        print(f"[!] Ошибка при проверке окон: {e}")
+    
+    return False
 
 def load_json(path):
     if not os.path.exists(path): return {}
@@ -152,10 +181,12 @@ def run_git_push():
     except Exception as e:
         print(f"GIT EXCEPTION: {e}")
 
-def generate_web_report(hier, users, current_rating):
-    now_utc, names_map = datetime.now(timezone.utc), load_json(MEMBERS_DB)
+def generate_web_report(hier, users, current_rating, last_update_time=None):
+    now_utc = last_update_time.astimezone(timezone.utc) if last_update_time else datetime.now(timezone.utc)
     now_mskq = now_utc.astimezone(timezone(timedelta(hours=3)))
+    update_str = now_mskq.strftime("%d.%m.%Y %H:%M")
     today_idx = now_mskq.weekday()
+    names_map = load_json(MEMBERS_DB)
     
     # Track current members strictly
     cur_ids = {str(hier['leader']['member']['userId'])} | {str(s['member']['userId']) for s in hier['slots']}
@@ -268,6 +299,7 @@ def generate_web_report(hier, users, current_rating):
     :root {{ --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; --text: #c9d1d9; }}
     body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 25px; font-size: 16px; overflow-x: hidden; }}
     header {{ text-align: center; margin-bottom: 30px; }}
+    .update-time {{ font-size: 0.9rem; color: #8b949e; margin-bottom: 20px; font-family: 'Roboto Mono'; }}
     h1 {{ font-family: 'Orbitron'; font-size: 3rem; color: #fff; margin: 0; letter-spacing: 12px; }}
     .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; }}
     nav {{ display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }}
@@ -288,7 +320,9 @@ def generate_web_report(hier, users, current_rating):
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--gold); font-weight: 700; }}
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.9rem; color: var(--green); font-weight: 700; }}
     .absent {{ color: var(--error); font-weight: 900; font-size: 1.1rem; font-family: 'Orbitron'; }}
-</style></head><body><div class="container"><header><h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
+</style></head><body><div class="container"><header>
+<div class="update-time">ОТЧЕТ СФОРМИРОВАН: {update_str}</div>
+<h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
 <nav>{nav}</nav><div class="table-container"><table>
     <thead><tr><th style="width:30px">№</th><th>Участник</th><th>Звание</th><th style="text-align:center">Всего</th>
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
@@ -325,11 +359,16 @@ def generate_web_report(hier, users, current_rating):
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
     if AUTO_PUSH: run_git_push()
 if __name__ == "__main__":
+    if is_user_active():
+        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия в браузере!")
+        print("[!] Бот завершает работу, чтобы не разорвать соединение.")
+        sys.exit(0)
+
     print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     h, u, r = fetch_data()
     if h: 
         print(f"[*] Data fetched successfully! Generating HTML report...")
-        generate_web_report(h, u, r)
+        generate_web_report(h, u, r, last_update_time=datetime.now())
         print("[*] Done. Have a good day.")
     else:
         print("[!] Execution aborted: no data returned.")
