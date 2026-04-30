@@ -344,7 +344,6 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                     html += '<td style="text-align:center; color:#8b949e">-</td>'
                 elif i > last: # Left early (not in the last snapshot of the day or current hier)
                     html += '<td style="text-align:center"><span class="absent" title="Покинул клан">X</span></td>'
-                    html += '<td style="text-align:center"><span class=\"absent\" title=\"Покинул клан\">X</span></td>'
                 else:
                     html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
