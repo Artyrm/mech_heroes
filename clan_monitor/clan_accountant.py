@@ -344,6 +344,7 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                     html += '<td style="text-align:center; color:#8b949e">-</td>'
                 elif i > last: # Left early (not in the last snapshot of the day or current hier)
                     html += '<td style="text-align:center"><span class="absent" title="Покинул клан">X</span></td>'
+                    html += '<td style="text-align:center"><span class=\"absent\" title=\"Покинул клан\">X</span></td>'
                 else:
                     html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
@@ -351,7 +352,6 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
-    if AUTO_PUSH: run_git_push()
 if __name__ == "__main__":
     if is_user_active():
         print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия в браузере!")
