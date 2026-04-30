@@ -23,33 +23,29 @@ def fmt(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
 def is_user_active() -> bool:
-    """Detects if the game is currently active in a browser to avoid kicking the session."""
+    """Detects if the game is currently active using fast native tasklist command."""
     domain = "tanks.ya.patternmasters.ru"
     window_pattern = "Боевые роботы"
     
-    # 1. Check Window Title (Fast)
+    print("[*] Проверка активности пользователя...")
     try:
-        # Use a more robust way to get titles and decode them
-        proc = subprocess.run(['powershell', '-Command', '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Process | Where-Object {$_.MainWindowTitle -ne ""} | Select-Object -ExpandProperty MainWindowTitle'], capture_output=True, text=True, encoding='utf-8')
-        titles = proc.stdout.splitlines()
-        for t in titles:
-            if window_pattern in t:
-                print(f"[*] Найдено открытое окно игры: '{t.strip()}'")
+        # tasklist /V shows window titles. It's much faster than powershell.
+        proc = subprocess.run(['tasklist', '/V', '/FO', 'CSV'], capture_output=True, text=True, encoding='cp866', errors='ignore')
+        if window_pattern in proc.stdout:
+            print(f"[*] Найдено окно игры в списке процессов.")
             
-            # 2. If window found, check network connection (Accurate)
             try:
                 target_ip = socket.gethostbyname(domain)
                 netstat = subprocess.run(['netstat', '-n', '-o'], capture_output=True, text=True)
                 if f"{target_ip}:443" in netstat.stdout and "ESTABLISHED" in netstat.stdout:
-                    print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain} ({target_ip})")
+                    print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain}")
                     return True
                 else:
-                    print("[*] Окно открыто, но активного соединения с сервером нет (тайм-аут).")
-            except Exception as e:
-                print(f"[!] Ошибка при проверке сети: {e}. Считаем, что сессия активна для безопасности.")
-                return True
+                    print("[*] Окно открыто, но сессия не активна.")
+            except Exception:
+                return True # Safety first
     except Exception as e:
-        print(f"[!] Ошибка при проверке окон: {e}")
+        print(f"[!] Ошибка детектора: {e}")
     
     return False
 
@@ -354,17 +350,17 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
-if __name__ == "__main__":
+    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
     if is_user_active():
         print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия в браузере!")
-        print("[!] Бот завершает работу, чтобы не разорвать соединение.")
         sys.exit(0)
 
-    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("[*] Приступаю к сбору данных...")
     h, u, r = fetch_data()
     if h: 
-        print(f"[*] Data fetched successfully! Generating HTML report...")
+        print(f"[*] Данные получены успешно. Генерация отчета...")
         generate_web_report(h, u, r, last_update_time=datetime.now())
-        print("[*] Done. Have a good day.")
+        print("[*] Готово. Отчет обновлен.")
     else:
-        print("[!] Execution aborted: no data returned.")
+        print("[!] Ошибка: данные от API не получены.")
