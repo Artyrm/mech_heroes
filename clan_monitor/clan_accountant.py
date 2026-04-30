@@ -29,9 +29,12 @@ def is_user_active() -> bool:
     
     # 1. Check Window Title (Fast)
     try:
-        proc = subprocess.run(['powershell', '-Command', f'Get-Process | Where-Object {{$_.MainWindowTitle -like "*{window_pattern}*"}} | Select-Object -ExpandProperty MainWindowTitle'], capture_output=True, text=True, encoding='cp866')
-        if window_pattern in proc.stdout:
-            print(f"[*] Найдено открытое окно игры: '{proc.stdout.strip()}'")
+        # Use a more robust way to get titles and decode them
+        proc = subprocess.run(['powershell', '-Command', '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Process | Where-Object {$_.MainWindowTitle -ne ""} | Select-Object -ExpandProperty MainWindowTitle'], capture_output=True, text=True, encoding='utf-8')
+        titles = proc.stdout.splitlines()
+        for t in titles:
+            if window_pattern in t:
+                print(f"[*] Найдено открытое окно игры: '{t.strip()}'")
             
             # 2. If window found, check network connection (Accurate)
             try:
@@ -347,7 +350,7 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 else:
                     html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
-        html += "</tbody></table></div></div></body></html>"
+        html += "</tbody></table></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
