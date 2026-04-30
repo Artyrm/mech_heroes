@@ -14,6 +14,8 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
+REPORTS_DIR = 'reports'
+MAIN_REPORT = 'index.html'
 VERSION_NUM = "0.2.5"
 
 def fmt(n: int) -> str:
@@ -171,19 +173,6 @@ def fetch_data():
         print(f"[!] FATAL ERROR during network sync: {e}")
         return None, None, None
 
-def run_git_push():
-    try:
-        env = os.environ.copy()
-        env["GIT_TERMINAL_PROMPT"] = "0"
-        
-        # We don't capture output to avoid hangs if git tries to be chatty
-        subprocess.run(["git", "add", "-A"], cwd=REPO_ROOT, check=True, timeout=15, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(["git", "commit", "-m", f"Report updated {datetime.now().strftime('%d.%m %H:%M')}"], cwd=REPO_ROOT, check=True, timeout=15, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(["git", "push"], cwd=REPO_ROOT, check=True, timeout=60, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except subprocess.TimeoutExpired:
-        print("GIT PUSH TIMEOUT ERROR: Process exceeded time limit.")
-    except Exception as e:
-        print(f"GIT EXCEPTION: {e}")
 
 def generate_web_report(hier, users, current_rating, last_update_time=None):
     now_utc = last_update_time.astimezone(timezone.utc) if last_update_time else datetime.now(timezone.utc)
