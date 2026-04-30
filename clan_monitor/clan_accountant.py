@@ -14,7 +14,7 @@ from deep_translator import GoogleTranslator
 CONFIG_FILE = 'config.json'
 ADJUSTMENTS_FILE = 'manual_adjustments.json'
 TRANS_CACHE_FILE = 'translations_cache.json'
-VERSION_NUM = "0.2.6"
+VERSION_NUM = "0.2.5"
 
 def fmt(n: int) -> str:
     """Format integer with narrow no-break space as thousands separator (RU typography, U+202F)."""
@@ -299,9 +299,9 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     :root {{ --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; --text: #c9d1d9; }}
     body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 25px; font-size: 16px; overflow-x: hidden; }}
     header {{ text-align: center; margin-bottom: 30px; }}
-    .update-time {{ font-size: 0.9rem; color: #8b949e; margin-bottom: 20px; font-family: 'Roboto Mono'; }}
     h1 {{ font-family: 'Orbitron'; font-size: 3rem; color: #fff; margin: 0; letter-spacing: 12px; }}
     .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; }}
+    .update-time {{ font-size: 0.65rem; color: #30363d; text-align: center; margin-bottom: 10px; font-family: 'Roboto Mono'; letter-spacing: 1px; text-transform: uppercase; }}
     nav {{ display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }}
     nav a {{ text-decoration: none; color: #8b949e; padding: 8px 16px; border-radius: 6px; background: var(--card); border: 1px solid var(--border); font-size: 0.9rem; }}
     nav a.active {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
@@ -321,9 +321,10 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.9rem; color: var(--green); font-weight: 700; }}
     .absent {{ color: var(--error); font-weight: 900; font-size: 1.1rem; font-family: 'Orbitron'; }}
 </style></head><body><div class="container"><header>
-<div class="update-time">ОТЧЕТ СФОРМИРОВАН: {update_str}</div>
 <h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
-<nav>{nav}</nav><div class="table-container"><table>
+<nav>{nav}</nav>
+<div class="update-time">Данные обновлены: {update_str}</div>
+<div class="table-container"><table>
     <thead><tr><th style="width:30px">№</th><th>Участник</th><th>Звание</th><th style="text-align:center">Всего</th>
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
     <tbody>
