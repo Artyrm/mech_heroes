@@ -194,3 +194,36 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Данные получены. Генерация отчета...
 [*] Готово.
 [01.05.2026  4:34:21,00] Syncing with Git... 
+warning: in the working copy of 'clan_monitor/clan_accountant.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'clan_monitor/fix_night_burn.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'clan_monitor/interpolate_gap.py', LF will be replaced by CRLF the next time Git touches it
+[main 2ffcf56] Auto-update 01.05.2026  4:34:24,52
+ 8 files changed, 125 insertions(+), 7 deletions(-)
+ create mode 100644 clan_monitor/fix_night_burn.py
+ create mode 100644 clan_monitor/interpolate_gap.py
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-04-30_23-59.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-01_01-33.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-01_01-34.json
+[01.05.2026  4:34:32,44] Pushing to repository... 
+Enumerating objects: 26, done.
+Counting objects:   3% (1/26)Counting objects:   7% (2/26)Counting objects:  11% (3/26)Counting objects:  15% (4/26)Counting objects:  19% (5/26)Counting objects:  23% (6/26)Counting objects:  26% (7/26)Counting objects:  30% (8/26)Counting objects:  34% (9/26)Counting objects:  38% (10/26)Counting objects:  42% (11/26)Counting objects:  46% (12/26)Counting objects:  50% (13/26)Counting objects:  53% (14/26)Counting objects:  57% (15/26)Counting objects:  61% (16/26)Counting objects:  65% (17/26)Counting objects:  69% (18/26)Counting objects:  73% (19/26)Counting objects:  76% (20/26)Counting objects:  80% (21/26)Counting objects:  84% (22/26)Counting objects:  88% (23/26)Counting objects:  92% (24/26)Counting objects:  96% (25/26)Counting objects: 100% (26/26)Counting objects: 100% (26/26), done.
+Delta compression using up to 4 threads
+Compressing objects:   7% (1/13)Compressing objects:  15% (2/13)Compressing objects:  23% (3/13)Compressing objects:  30% (4/13)Compressing objects:  38% (5/13)Compressing objects:  46% (6/13)Compressing objects:  53% (7/13)Compressing objects:  61% (8/13)Compressing objects:  69% (9/13)Compressing objects:  76% (10/13)Compressing objects:  84% (11/13)Compressing objects:  92% (12/13)Compressing objects: 100% (13/13)Compressing objects: 100% (13/13), done.
+Writing objects:   6% (1/16)Writing objects:  12% (2/16)Writing objects:  18% (3/16)Writing objects:  25% (4/16)Writing objects:  31% (5/16)Writing objects:  37% (6/16)Writing objects:  43% (7/16)Writing objects:  50% (8/16)Writing objects:  56% (9/16)Writing objects:  62% (10/16)Writing objects:  68% (11/16)Writing objects:  75% (12/16)Writing objects:  87% (14/16)Writing objects:  93% (15/16)Writing objects: 100% (16/16)Writing objects: 100% (16/16), 3.97 KiB | 1.98 MiB/s, done.
+Total 16 (delta 8), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:  12% (1/8)        remote: Resolving deltas:  25% (2/8)        remote: Resolving deltas:  37% (3/8)        remote: Resolving deltas:  50% (4/8)        remote: Resolving deltas:  62% (5/8)        remote: Resolving deltas:  75% (6/8)        remote: Resolving deltas:  87% (7/8)        remote: Resolving deltas: 100% (8/8)        remote: Resolving deltas: 100% (8/8), completed with 6 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   0b5096d..2ffcf56  main -> main
+[01.05.2026  4:36:40,77] SUCCESS: Data pushed to Git. 
+[01.05.2026  4:36:40,95] PROCESS FINISHED 
+------------------------------------------ 
+[01.05.2026  4:50:03,87] STARTING PROCESS 
+[01.05.2026  4:50:04,22] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+2026-05-01 04:50:10
+[*] Сбор данных...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные получены. Генерация отчета...
+[*] Готово.
+[01.05.2026  4:50:20,96] Syncing with Git... 
