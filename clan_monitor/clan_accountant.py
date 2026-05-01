@@ -250,11 +250,21 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         clan_stats, prev_r = [], 11199931
         for i in range(7):
             curr_r = clan_rats[i]
+            d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
+            
+            # Check for manual burned override in the adjustments file
+            manual_burned = adj_db.get(d_str, {}).get("burned_override")
+            
             if curr_r and prev_r:
-                f_ch = curr_r - prev_r; brn = max(0, clan_growths[i] - f_ch)
+                f_ch = curr_r - prev_r
+                if manual_burned is not None:
+                    brn = int(manual_burned)
+                else:
+                    brn = max(0, clan_growths[i] - f_ch)
                 clan_stats.append({"rating": curr_r, "fact": f_ch, "burned": brn}); prev_r = curr_r
             else:
-                clan_stats.append({"rating": curr_r or 0, "fact": 0, "burned": 0})
+                brn = int(manual_burned) if manual_burned is not None else 0
+                clan_stats.append({"rating": curr_r or 0, "fact": 0, "burned": brn})
                 if curr_r: prev_r = curr_r
 
         sorted_ids = sorted(players, key=lambda x: pl_res[x]['total'], reverse=True)
