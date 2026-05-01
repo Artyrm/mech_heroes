@@ -27,23 +27,16 @@ def is_user_active() -> bool:
     domain = "tanks.ya.patternmasters.ru"
     window_pattern = "Боевые роботы"
     
-    print("[*] Проверка активности пользователя...")
+    print("[*] Проверка активности пользователя (сеть)...")
     try:
-        # tasklist /V shows window titles. It's much faster than powershell.
-        proc = subprocess.run(['tasklist', '/V', '/FO', 'CSV'], capture_output=True, text=True, encoding='cp866', errors='ignore')
-        if window_pattern in proc.stdout:
-            print(f"[*] Найдено окно игры в списке процессов.")
-            
-            try:
-                target_ip = socket.gethostbyname(domain)
-                netstat = subprocess.run(['netstat', '-n', '-o'], capture_output=True, text=True)
-                if f"{target_ip}:443" in netstat.stdout and "ESTABLISHED" in netstat.stdout:
-                    print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain}")
-                    return True
-                else:
-                    print("[*] Окно открыто, но сессия не активна.")
-            except Exception:
-                return True # Safety first
+        target_ip = socket.gethostbyname(domain)
+        # Using -n prevents DNS resolution, making it much faster.
+        netstat = subprocess.run(['netstat', '-n', '-p', 'TCP'], capture_output=True, text=True, timeout=10)
+        if f"{target_ip}:443" in netstat.stdout and "ESTABLISHED" in netstat.stdout:
+            print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain}")
+            return True
+        else:
+            print("[*] Сессия не активна.")
     except Exception as e:
         print(f"[!] Ошибка детектора: {e}")
     
@@ -350,6 +343,8 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
+
+if __name__ == "__main__":
     print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     if is_user_active():
