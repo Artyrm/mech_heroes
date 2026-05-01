@@ -23,23 +23,17 @@ def fmt(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
 def is_user_active() -> bool:
-    """Detects if the game is currently active using fast native tasklist command."""
-    domain = "tanks.ya.patternmasters.ru"
-    window_pattern = "Боевые роботы"
-    
-    print("[*] Проверка активности пользователя (сеть)...")
+    """Fast IP-based detector to avoid kicking active sessions."""
+    target_ip = "84.201.164.35"
     try:
-        target_ip = socket.gethostbyname(domain)
-        # Using -n prevents DNS resolution, making it much faster.
-        netstat = subprocess.run(['netstat', '-n', '-p', 'TCP'], capture_output=True, text=True, timeout=10)
-        if f"{target_ip}:443" in netstat.stdout and "ESTABLISHED" in netstat.stdout:
-            print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с {domain}")
+        # Check only for ESTABLISHED connection to the game server IP
+        cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+        proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if "ESTABLISHED" in proc.stdout:
+            print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.")
             return True
-        else:
-            print("[*] Сессия не активна.")
-    except Exception as e:
-        print(f"[!] Ошибка детектора: {e}")
-    
+    except Exception:
+        pass
     return False
 
 def load_json(path):
@@ -348,14 +342,14 @@ if __name__ == "__main__":
     print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
     if is_user_active():
-        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия в браузере!")
+        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Бот спит.")
         sys.exit(0)
 
-    print("[*] Приступаю к сбору данных...")
+    print("[*] Сбор данных...")
     h, u, r = fetch_data()
     if h: 
-        print(f"[*] Данные получены успешно. Генерация отчета...")
+        print(f"[*] Данные получены. Генерация отчета...")
         generate_web_report(h, u, r, last_update_time=datetime.now())
-        print("[*] Готово. Отчет обновлен.")
+        print("[*] Готово.")
     else:
         print("[!] Ошибка: данные от API не получены.")
