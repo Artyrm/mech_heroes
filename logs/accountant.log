@@ -369,3 +369,44 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Бот спит.
 [02.05.2026  2:52:15,85] Syncing with Git... 
+warning: in the working copy of 'analyze_last_strel.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'analyze_strel.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'battle_analytics/Strel/compare_builds.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'battle_analytics/generate_html_report.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'final_history_dump.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'find_strel_extended.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'get_strel_battle.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'list_battle_history.py', LF will be replaced by CRLF the next time Git touches it
+[main 92bbbc7] Auto-update 02.05.2026  2:52:17,72
+ 12 files changed, 1217 insertions(+)
+ create mode 100644 analyze_last_strel.py
+ create mode 100644 analyze_strel.py
+ create mode 100644 battle_analytics/Strel/battle_2026-04-29.html
+ create mode 100644 battle_analytics/Strel/battle_2026-05-01_21-01.html
+ create mode 100644 battle_analytics/Strel/battle_2026-05-01_22-29.html
+ create mode 100644 battle_analytics/Strel/compare_builds.py
+ create mode 100644 battle_analytics/generate_html_report.py
+ create mode 100644 final_history_dump.py
+ create mode 100644 find_strel_extended.py
+ create mode 100644 get_strel_battle.py
+ create mode 100644 list_battle_history.py
+[02.05.2026  2:52:19,60] Pushing to repository... 
+Enumerating objects: 20, done.
+Counting objects:   5% (1/20)Counting objects:  10% (2/20)Counting objects:  15% (3/20)Counting objects:  20% (4/20)Counting objects:  25% (5/20)Counting objects:  30% (6/20)Counting objects:  35% (7/20)Counting objects:  40% (8/20)Counting objects:  45% (9/20)Counting objects:  50% (10/20)Counting objects:  55% (11/20)Counting objects:  60% (12/20)Counting objects:  65% (13/20)Counting objects:  70% (14/20)Counting objects:  75% (15/20)Counting objects:  80% (16/20)Counting objects:  85% (17/20)Counting objects:  90% (18/20)Counting objects:  95% (19/20)Counting objects: 100% (20/20)Counting objects: 100% (20/20), done.
+Delta compression using up to 4 threads
+Compressing objects:   6% (1/16)Compressing objects:  12% (2/16)Compressing objects:  18% (3/16)Compressing objects:  25% (4/16)Compressing objects:  31% (5/16)Compressing objects:  37% (6/16)Compressing objects:  43% (7/16)Compressing objects:  50% (8/16)Compressing objects:  56% (9/16)Compressing objects:  62% (10/16)Compressing objects:  68% (11/16)Compressing objects:  75% (12/16)Compressing objects:  81% (13/16)Compressing objects:  87% (14/16)Compressing objects:  93% (15/16)Compressing objects: 100% (16/16)Compressing objects: 100% (16/16), done.
+Writing objects:   5% (1/17)Writing objects:  11% (2/17)Writing objects:  17% (3/17)Writing objects:  23% (4/17)Writing objects:  29% (5/17)Writing objects:  35% (6/17)Writing objects:  47% (8/17)Writing objects:  52% (9/17)Writing objects:  58% (10/17)Writing objects:  64% (11/17)Writing objects:  70% (12/17)Writing objects:  76% (13/17)Writing objects:  82% (14/17)Writing objects:  88% (15/17)Writing objects:  94% (16/17)Writing objects: 100% (17/17)Writing objects: 100% (17/17), 14.87 KiB | 2.12 MiB/s, done.
+Total 17 (delta 4), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/4)        remote: Resolving deltas:  25% (1/4)        remote: Resolving deltas:  50% (2/4)        remote: Resolving deltas:  75% (3/4)        remote: Resolving deltas: 100% (4/4)        remote: Resolving deltas: 100% (4/4), completed with 2 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   dc11f70..92bbbc7  main -> main
+[02.05.2026  2:52:36,28] SUCCESS: Data pushed to Git. 
+[02.05.2026  2:52:36,60] PROCESS FINISHED 
+------------------------------------------ 
+[02.05.2026  2:56:46,69] STARTING PROCESS 
+[02.05.2026  2:56:46,81] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+2026-05-02 02:56:51
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Бот спит.
+[02.05.2026  2:56:51,73] Syncing with Git... 
