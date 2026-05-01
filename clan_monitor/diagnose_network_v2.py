@@ -1,36 +1,38 @@
 import socket
 import subprocess
 import time
-import os
 
 def check_game_connection():
     domain = "tanks.ya.patternmasters.ru"
-    print(f"[*] Проверка домена {domain}...")
     
-    start_time = time.time()
+    # --- Шаг 1: DNS ---
+    print(f"[*] Шаг 1: DNS резолвинг {domain}...")
+    s1 = time.time()
     try:
         target_ip = socket.gethostbyname(domain)
-        print(f"[*] IP сервера: {target_ip}")
-        
-        print("[*] Запуск netstat -n -p TCP...")
-        # Используем те же параметры, что планируются для бота
-        proc = subprocess.run(['netstat', '-n', '-p', 'TCP'], capture_output=True, text=True, timeout=15)
-        
-        pattern = f"{target_ip}:443"
-        is_active = (pattern in proc.stdout) and ("ESTABLISHED" in proc.stdout)
-        
-        end_time = time.time()
-        elapsed = end_time - start_time
-        
-        if is_active:
-            print(f"[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ!")
-        else:
-            print("[*] Соединение не найдено (игра закрыта или в фоне).")
-            
-        print(f"\n[OK] Время выполнения проверки: {elapsed:.3f} сек.")
-        
+        dns_time = time.time() - s1
+        print(f"[OK] DNS определил IP: {target_ip} за {dns_time:.3f} сек.")
     except Exception as e:
-        print(f"[!] Ошибка: {e}")
+        target_ip = "84.201.164.35"
+        dns_time = time.time() - s1
+        print(f"[!] DNS ОШИБКА ({e}), используем fallback IP за {dns_time:.3f} сек.")
+
+    # --- Шаг 2: NETSTAT ---
+    print(f"[*] Шаг 2: Запуск netstat -n -p TCP | findstr {target_ip}...")
+    s2 = time.time()
+    cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+    proc = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    netstat_time = time.time() - s2
+    
+    is_active = ("ESTABLISHED" in proc.stdout)
+    print(f"[OK] Netstat отработал за {netstat_time:.3f} сек.")
+    
+    if is_active:
+        print("[!] ИГРА АКТИВНА.")
+    else:
+        print("[*] Игра не найдена.")
+
+    print(f"\n[ИТОГО] Общее время: {dns_time + netstat_time:.3f} сек.")
 
 if __name__ == "__main__":
     check_game_connection()
