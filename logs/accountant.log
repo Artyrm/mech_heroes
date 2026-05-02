@@ -72,3 +72,34 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [02.05.2026 23:21:39,28] Syncing with Git... 
+warning: in the working copy of 'run_accountant.bat', LF will be replaced by CRLF the next time Git touches it
+[main e6c8eaa] Auto-update 02.05.2026 23:21:40,81
+ 5 files changed, 76 insertions(+), 19 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-02_20-04.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-02_20-21.json
+[02.05.2026 23:21:43,11] Pushing to repository... 
+Enumerating objects: 23, done.
+Counting objects:   4% (1/23)Counting objects:   8% (2/23)Counting objects:  13% (3/23)Counting objects:  17% (4/23)Counting objects:  21% (5/23)Counting objects:  26% (6/23)Counting objects:  30% (7/23)Counting objects:  34% (8/23)Counting objects:  39% (9/23)Counting objects:  43% (10/23)Counting objects:  47% (11/23)Counting objects:  52% (12/23)Counting objects:  56% (13/23)Counting objects:  60% (14/23)Counting objects:  65% (15/23)Counting objects:  69% (16/23)Counting objects:  73% (17/23)Counting objects:  78% (18/23)Counting objects:  82% (19/23)Counting objects:  86% (20/23)Counting objects:  91% (21/23)Counting objects:  95% (22/23)Counting objects: 100% (23/23)Counting objects: 100% (23/23), done.
+Delta compression using up to 4 threads
+Compressing objects:  10% (1/10)Compressing objects:  20% (2/10)Compressing objects:  30% (3/10)Compressing objects:  40% (4/10)Compressing objects:  50% (5/10)Compressing objects:  60% (6/10)Compressing objects:  70% (7/10)Compressing objects:  80% (8/10)Compressing objects:  90% (9/10)Compressing objects: 100% (10/10)Compressing objects: 100% (10/10), done.
+Writing objects:   7% (1/13)Writing objects:  15% (2/13)Writing objects:  23% (3/13)Writing objects:  30% (4/13)Writing objects:  38% (5/13)Writing objects:  46% (6/13)Writing objects:  53% (7/13)Writing objects:  61% (8/13)Writing objects:  69% (9/13)Writing objects:  76% (10/13)Writing objects:  84% (11/13)Writing objects:  92% (12/13)Writing objects: 100% (13/13)Writing objects: 100% (13/13), 4.10 KiB | 840.00 KiB/s, done.
+Total 13 (delta 6), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/6)        remote: Resolving deltas:  16% (1/6)        remote: Resolving deltas:  33% (2/6)        remote: Resolving deltas:  50% (3/6)        remote: Resolving deltas:  66% (4/6)        remote: Resolving deltas:  83% (5/6)        remote: Resolving deltas: 100% (6/6)        remote: Resolving deltas: 100% (6/6), completed with 5 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   fdea4e3..e6c8eaa  main -> main
+[02.05.2026 23:21:51,08] SUCCESS: Data pushed to Git. 
+[02.05.2026 23:21:51,19] PROCESS FINISHED 
+------------------------------------------ 
+[02.05.2026 23:23:13,68] STARTING PROCESS 
+[02.05.2026 23:23:14,11] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-02 23:23:17
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 11 461 905
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[02.05.2026 23:23:24,56] Syncing with Git... 
