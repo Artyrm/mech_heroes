@@ -17,3 +17,58 @@
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [02.05.2026 15:52:08,06] Syncing with Git... 
+warning: in the working copy of 'clan_monitor/clan_accountant.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'run_accountant.bat', LF will be replaced by CRLF the next time Git touches it
+[main fdea4e3] Auto-update 02.05.2026 15:52:09,28
+ 5 files changed, 34 insertions(+), 611 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-02_12-52.json
+[02.05.2026 15:52:10,50] Pushing to repository... 
+Enumerating objects: 24, done.
+Counting objects:   4% (1/24)Counting objects:   8% (2/24)Counting objects:  12% (3/24)Counting objects:  16% (4/24)Counting objects:  20% (5/24)Counting objects:  25% (6/24)Counting objects:  29% (7/24)Counting objects:  33% (8/24)Counting objects:  37% (9/24)Counting objects:  41% (10/24)Counting objects:  45% (11/24)Counting objects:  50% (12/24)Counting objects:  54% (13/24)Counting objects:  58% (14/24)Counting objects:  62% (15/24)Counting objects:  66% (16/24)Counting objects:  70% (17/24)Counting objects:  75% (18/24)Counting objects:  79% (19/24)Counting objects:  83% (20/24)Counting objects:  87% (21/24)Counting objects:  91% (22/24)Counting objects:  95% (23/24)Counting objects: 100% (24/24)Counting objects: 100% (24/24), done.
+Delta compression using up to 4 threads
+Compressing objects:  10% (1/10)Compressing objects:  20% (2/10)Compressing objects:  30% (3/10)Compressing objects:  40% (4/10)Compressing objects:  50% (5/10)Compressing objects:  60% (6/10)Compressing objects:  70% (7/10)Compressing objects:  80% (8/10)Compressing objects:  90% (9/10)Compressing objects: 100% (10/10)Compressing objects: 100% (10/10), done.
+Writing objects:   7% (1/13)Writing objects:  15% (2/13)Writing objects:  23% (3/13)Writing objects:  30% (4/13)Writing objects:  38% (5/13)Writing objects:  46% (6/13)Writing objects:  53% (7/13)Writing objects:  61% (8/13)Writing objects:  69% (9/13)Writing objects:  76% (10/13)Writing objects:  84% (11/13)Writing objects:  92% (12/13)Writing objects: 100% (13/13)Writing objects: 100% (13/13), 2.76 KiB | 705.00 KiB/s, done.
+Total 13 (delta 6), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/6)        remote: Resolving deltas:  16% (1/6)        remote: Resolving deltas:  33% (2/6)        remote: Resolving deltas:  50% (3/6)        remote: Resolving deltas:  66% (4/6)        remote: Resolving deltas:  83% (5/6)        remote: Resolving deltas: 100% (6/6)        remote: Resolving deltas: 100% (6/6), completed with 6 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   7451345..fdea4e3  main -> main
+[02.05.2026 15:52:18,18] SUCCESS: Data pushed to Git. 
+[02.05.2026 15:52:18,30] PROCESS FINISHED 
+------------------------------------------ 
+[02.05.2026 22:24:08,13] STARTING PROCESS 
+[02.05.2026 22:24:08,76] Running Python script... 
+------------------------------------------ 
+[02.05.2026 22:40:59,89] STARTING PROCESS 
+[02.05.2026 22:41:00,53] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-02 22:57:14
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[!] FATAL ERROR during network sync: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.23.1/init?userid=227408 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x000002A5F4671B80>: Failed to establish a new connection: [Errno 11001] getaddrinfo failed'))
+[!] КРИТИЧЕСКАЯ ОШИБКА: Не удалось получить данные от сервера.
+[!] Возможные причины: просрочен AUTH_KEY, изменилась версия игры или нет связи с сервером.
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-02 23:04:14
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 11 460 849
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+------------------------------------------ 
+[02.05.2026 23:21:28,56] STARTING PROCESS 
+[02.05.2026 23:21:28,59] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-02 23:21:30
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 11 461 905
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[02.05.2026 23:21:39,28] Syncing with Git... 

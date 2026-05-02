@@ -18,8 +18,8 @@ echo [%date% %time%] Running Python script... >> "%LOG_FILE%"
 
 cd /d "%BASE_DIR%clan_monitor"
 
-:: Use PowerShell to duplicate output to console and file with UTF8 encoding
-powershell -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; C:\tools\Anaconda3\python.exe -u clan_accountant.py | ForEach-Object { Process { Write-Host $_; $_ | Out-File -FilePath '%LOG_FILE%' -Append -Encoding utf8 } }"
+:: Direct redirection to avoid background hangs in Session 0
+C:\tools\Anaconda3\python.exe -u clan_accountant.py >> "%LOG_FILE%" 2>&1
 set PY_ERROR=%errorlevel%
 
 if NOT "%PY_ERROR%"=="0" (
