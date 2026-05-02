@@ -568,3 +568,32 @@ To https://github.com/Artyrm/mech_heroes.git
  [ * ]   5=5@0F8O  H T M L - >BG5B0. . .  
  [ * ]   "'"  #!(  .  
  [02.05.2026  4:21:40,52] Syncing with Git... 
+[main a0fe691] Auto-update 02.05.2026  4:21:41,56
+ 3 files changed, 47 insertions(+), 1 deletion(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-02_01-21.json
+[02.05.2026  4:21:42,65] Pushing to repository... 
+Enumerating objects: 19, done.
+Counting objects:   5% (1/19)Counting objects:  10% (2/19)Counting objects:  15% (3/19)Counting objects:  21% (4/19)Counting objects:  26% (5/19)Counting objects:  31% (6/19)Counting objects:  36% (7/19)Counting objects:  42% (8/19)Counting objects:  47% (9/19)Counting objects:  52% (10/19)Counting objects:  57% (11/19)Counting objects:  63% (12/19)Counting objects:  68% (13/19)Counting objects:  73% (14/19)Counting objects:  78% (15/19)Counting objects:  84% (16/19)Counting objects:  89% (17/19)Counting objects:  94% (18/19)Counting objects: 100% (19/19)Counting objects: 100% (19/19), done.
+Delta compression using up to 4 threads
+Compressing objects:  14% (1/7)Compressing objects:  28% (2/7)Compressing objects:  42% (3/7)Compressing objects:  57% (4/7)Compressing objects:  71% (5/7)Compressing objects:  85% (6/7)Compressing objects: 100% (7/7)Compressing objects: 100% (7/7), done.
+Writing objects:  10% (1/10)Writing objects:  20% (2/10)Writing objects:  30% (3/10)Writing objects:  40% (4/10)Writing objects:  50% (5/10)Writing objects:  60% (6/10)Writing objects:  70% (7/10)Writing objects:  80% (8/10)Writing objects:  90% (9/10)Writing objects: 100% (10/10)Writing objects: 100% (10/10), 1.31 KiB | 267.00 KiB/s, done.
+Total 10 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/5)        remote: Resolving deltas:  20% (1/5)        remote: Resolving deltas:  40% (2/5)        remote: Resolving deltas:  60% (3/5)        remote: Resolving deltas:  80% (4/5)        remote: Resolving deltas: 100% (5/5)        remote: Resolving deltas: 100% (5/5), completed with 5 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   8f32453..a0fe691  main -> main
+[02.05.2026  4:21:53,30] SUCCESS: Data pushed to Git. 
+[02.05.2026  4:21:53,33] PROCESS FINISHED 
+------------------------------------------ 
+[02.05.2026 11:31:18,76] STARTING PROCESS 
+[02.05.2026 11:31:19,74] Running Python script... 
+- - -   S t a r t i n g   C l a n   A c c o u n t a n t   v 0 . 2 . 5   - - -  
+ [ * ]   @5<O  70?CA:0:   2 0 2 6 - 0 5 - 0 2   1 1 : 3 1 : 4 7  
+ [ * ]   @>25@:0  0:B82=>AB8  ?>;L7>20B5;O. . .  
+ [ * ]   >?KB:0  ?>;CG5=8O  40==KE  >B  A P I   A5@25@0. . .  
+ [ * ]   S e n d   / i n i t   r e q u e s t   ( V E R S I O N :   1 . 2 3 . 1 ) . . .  
+ [ * ]   P o s t   / d i r e c t c o m m a n d   t o   g e t   m e m b e r   d e t a i l s . . .  
+ [ * ]   0==K5  CA?5H=>  ?>;CG5=K.    59B8=3  :;0=0:   1 0 / 9 3 7 / 4 6 9  
+ [ * ]   0945=>  CG0AB=8:>2  2  85@0@E88:   4 1  
+ [ * ]   5=5@0F8O  H T M L - >BG5B0. . .  
+ [ * ]   "'"  #!(  .  
+ [02.05.2026 11:31:54,08] Syncing with Git... 
