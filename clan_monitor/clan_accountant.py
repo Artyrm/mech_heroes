@@ -145,7 +145,7 @@ def fetch_data():
             print("[!] ERROR: 'hierarchy' not found in server response. Are you in a clan?")
             return None, None, None
             
-        ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots']}
+        ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots'] if s.get('member', {}).get('userId', -1) != -1}
         p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
         print(f"[*] Post /directcommand to get member details...")
         r2 = requests.post(f"{BASE_URL}/directcommand?userid={USER_ID}", json=p2, headers=HEADERS).json()
@@ -167,8 +167,8 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     today_idx = now_mskq.weekday()
     names_map = load_json(MEMBERS_DB)
     
-    # Track current members strictly
-    cur_ids = {str(hier['leader']['member']['userId'])} | {str(s['member']['userId']) for s in hier['slots']}
+    # Track current members strictly (excluding empty slots -1)
+    cur_ids = {str(hier['leader']['member']['userId'])} | {str(s['member']['userId']) for s in hier['slots'] if s.get('member', {}).get('userId', -1) != -1}
 
     for u in users:
         ac = u.get("avatarConfiguration", {}) or {}; raw_list = []
@@ -181,7 +181,9 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     l_id = str(hier['leader']['member']['userId'])
     if l_id in names_map: names_map[l_id]["role"] = "ЛИДЕР"
     for s in hier['slots']: 
-        uid = str(s['member']['userId']); names_map[uid]["role"] = s['role']
+        uid = str(s.get('member', {}).get('userId', -1))
+        if uid != '-1' and uid in names_map:
+            names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
     
     pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
@@ -375,7 +377,7 @@ if __name__ == "__main__":
     
     if h: 
         print(f"[*] Данные успешно получены. Рейтинг клана: {fmt(r)}")
-        print(f"[*] Найдено участников в иерархии: {len(u) + 1}")
+        print(f"[*] Найдено участников: {len(u)}")
         print(f"[*] Генерация HTML-отчета...")
         generate_web_report(h, u, r, last_update_time=datetime.now())
         print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")

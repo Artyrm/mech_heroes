@@ -18,8 +18,8 @@ echo [%date% %time%] Running Python script... >> "%LOG_FILE%"
 
 cd /d "%BASE_DIR%clan_monitor"
 
-:: Use PowerShell Tee-Object for dual logging with UTF8
-powershell -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; C:\tools\Anaconda3\python.exe -u clan_accountant.py | Tee-Object -FilePath '%LOG_FILE%' -Append"
+:: Use PowerShell to duplicate output to console and file with UTF8 encoding
+powershell -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; C:\tools\Anaconda3\python.exe -u clan_accountant.py | ForEach-Object { Process { Write-Host $_; $_ | Out-File -FilePath '%LOG_FILE%' -Append -Encoding utf8 } }"
 set PY_ERROR=%errorlevel%
 
 if NOT "%PY_ERROR%"=="0" (
