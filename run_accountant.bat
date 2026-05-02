@@ -14,15 +14,19 @@ echo ------------------------------------------ >> "%LOG_FILE%"
 echo [%date% %time%] STARTING PROCESS >> "%LOG_FILE%"
 
 :: 1. Сбор данных
-echo [%date% %time%] Running Python script...
+echo [%date% %time%] Running Python script (clan_accountant.py)...
 echo [%date% %time%] Running Python script... >> "%LOG_FILE%"
 
 cd /d "%BASE_DIR%clan_monitor"
-C:\tools\Anaconda3\python.exe -u clan_accountant.py >> "%LOG_FILE%" 2>&1
 
-if errorlevel 1 (
-    echo [!] Python script FAILED. Check logs/accountant.log
-    echo [%date% %time%] ERROR: Python script failed with code %errorlevel% >> "%LOG_FILE%"
+:: Используем PowerShell с принудительной установкой UTF8 для консоли и Tee-Object
+powershell -Command "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; C:\tools\Anaconda3\python.exe -u clan_accountant.py | Tee-Object -FilePath '%LOG_FILE%' -Append"
+set PY_ERROR=%errorlevel%
+
+if %PY_ERROR% neq 0 (
+    echo.
+    echo [!] PYTHON SCRIPT FAILED with code %PY_ERROR%
+    echo [%date% %time%] ERROR: Python script failed with code %PY_ERROR% >> "%LOG_FILE%"
     goto DONE
 )
 

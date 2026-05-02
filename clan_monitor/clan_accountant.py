@@ -349,17 +349,30 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{all_ws[-1]}.html"></head></html>')
 
 if __name__ == "__main__":
-    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---\n{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    # Принудительно ставим UTF-8 для вывода в Windows
+    if sys.platform == "win32":
+        import codecs
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach(), 'replace')
+        sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach(), 'replace')
+
+    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---")
+    print(f"[*] Время запуска: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
+    print("[*] Проверка активности пользователя...")
     if is_user_active():
-        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Бот спит.")
+        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.")
         sys.exit(0)
 
-    print("[*] Сбор данных...")
+    print("[*] Попытка получения данных от API сервера...")
     h, u, r = fetch_data()
+    
     if h: 
-        print(f"[*] Данные получены. Генерация отчета...")
+        print(f"[*] Данные успешно получены. Рейтинг клана: {fmt(r)}")
+        print(f"[*] Найдено участников в иерархии: {len(u) + 1}")
+        print(f"[*] Генерация HTML-отчета...")
         generate_web_report(h, u, r, last_update_time=datetime.now())
-        print("[*] Готово.")
+        print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")
     else:
-        print("[!] Ошибка: данные от API не получены.")
+        print("[!] КРИТИЧЕСКАЯ ОШИБКА: Не удалось получить данные от сервера.")
+        print("[!] Возможные причины: просрочен AUTH_KEY, изменилась версия игры или нет связи с сервером.")
+        sys.exit(1)
