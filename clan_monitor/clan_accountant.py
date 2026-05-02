@@ -199,8 +199,15 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             try:
                 with open(os.path.join(SNAPSHOTS_DIR, fs), 'r', encoding='utf-8') as f:
                     d = json.load(f); pts_m = d.get("pts", d)
-                    sd.append({"time": dt, "pts": {k: int(v) for k,v in pts_m.items() if k.isdigit()}, "rating": d.get("clanRating")})
+                    r_val = d.get("clanRating")
+                    # Принудительно приводим к int, если это возможно
+                    try:
+                        r_int = int(r_val) if r_val is not None else None
+                    except:
+                        r_int = None
+                    sd.append({"time": dt, "pts": {k: int(v) for k,v in pts_m.items() if k.isdigit()}, "rating": r_int})
             except: pass
+
 
     adj_db, weeks = load_json(ADJUSTMENTS_FILE), {}
     for e in sd:
@@ -255,8 +262,8 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             # Check for manual burned override in the adjustments file
             manual_burned = adj_db.get(d_str, {}).get("burned_override")
             
-            if curr_r and prev_r:
-                f_ch = curr_r - prev_r
+            if curr_r is not None and prev_r is not None:
+                f_ch = int(curr_r) - int(prev_r)
                 if manual_burned is not None:
                     brn = int(manual_burned)
                 else:
