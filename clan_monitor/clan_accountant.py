@@ -228,24 +228,17 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             for e in d: players.update(e['pts'].keys())
         pl_res, clan_rats = {}, [None] * 7
         
-        # Determine baseline for Monday growth
-        week_start_pts = {}
+        # Determine baseline for Clan Rating (not resetting)
         pre_week_sn = [e for e in sd if e['time'] < week["monday"]]
-        if pre_week_sn:
-            week_start_pts = pre_week_sn[-1]['pts']
-            prev_r = pre_week_sn[-1]['rating']
-        else:
-            prev_r = 11199931 # Fallback for very first entry
+        prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
             
         for uid in players:
-            growths, total_acc, last_ref, pres = [], 0, week_start_pts.get(uid, 0), []
+            growths, total_acc, last_ref, pres = [], 0, 0, [] # Always start week from 0
             for i in range(7):
                 d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
                 sn, ex = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(ex, list): ex = [ex]
                 
-                # SENSE OF PRESENCE: Must be in the VERY LAST snapshot of the day to be 'present'
-                # Use current status only if we are in the CURRENT WEEK and looking at TODAY
                 if is_current_week and i == today_idx:
                     is_present = (uid in cur_ids) or bool(ex)
                 else:
@@ -254,15 +247,25 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 
                 pres.append(is_present)
                 day_growth, reference = 0, last_ref
-                for ev in ex: day_growth += max(0, ev - reference); reference = 0
-                if sn:
-                    final = sn[-1]['pts'].get(uid, 0)
-                    if last_ref == 0 and not ex: # First time seen in snapshots
-                        day_growth = 0
+                
+                # Process Manual Adjustments (Exits)
+                for ev in ex: 
+                    day_growth += max(0, ev - reference)
+                    reference = 0 # Reset reference after exit recorded
+                
+                # Process ALL snapshots of the day to catch re-joins and resets
+                for s_entry in sn:
+                    curr_pts = s_entry['pts'].get(uid, 0)
+                    if curr_pts < reference: # Reset or Re-join detected
+                        day_growth += curr_pts
                     else:
-                        day_growth += (final if final < reference and not ex else max(0, final - reference))
-                    last_ref = final
-                    if sn[-1].get('rating'): clan_rats[i] = sn[-1]['rating']
+                        day_growth += (curr_pts - reference)
+                    reference = curr_pts
+                    
+                    # Update clan rating from snapshots
+                    if s_entry.get('rating'): clan_rats[i] = s_entry['rating']
+                
+                last_ref = reference
                 growths.append(day_growth); total_acc += day_growth
             
             try: first_p = pres.index(True)
