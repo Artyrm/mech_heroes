@@ -185,6 +185,11 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         if uid != '-1' and uid in names_map:
             names_map[uid]["role"] = s['role']
     with open(MEMBERS_DB, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
+    # Save a per-week role snapshot so historical reports show correct roles
+    cur_wk = f"{now_utc.strftime('%Y')}_W{now_utc.strftime('%W')}"
+    roles_snap_path = os.path.join(SNAPSHOTS_DIR, f"roles_{cur_wk}.json")
+    with open(roles_snap_path, 'w', encoding='utf-8') as f: json.dump(names_map, f, ensure_ascii=False, indent=2)
+
     
     pts = {str(hier['leader']['member']['userId']): int(hier['leader']['member']['points'])}
     for s in hier['slots']: pts[str(s['member']['userId'])] = int(s['member']['points'])
@@ -223,6 +228,9 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     is_current_week = False
     for w_key in all_ws:
         is_current_week = (w_key == all_ws[-1])
+        # Use historical role snapshot for past weeks if available
+        roles_snap = os.path.join(SNAPSHOTS_DIR, f"roles_{w_key}.json")
+        week_names_map = load_json(roles_snap) if os.path.exists(roles_snap) else names_map
         week, players = weeks[w_key], set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
@@ -281,7 +289,7 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 if curr_r: prev_r = curr_r
 
         sorted_ids = sorted(players, key=lambda x: pl_res[x]['total'], reverse=True)
-        dupes = {names_map.get(u, {}).get('nick'): u for u in players if [names_map.get(x, {}).get('nick') for x in players].count(names_map.get(u, {}).get('nick')) > 1}
+        dupes = {week_names_map.get(u, {}).get('nick'): u for u in players if [week_names_map.get(x, {}).get('nick') for x in players].count(week_names_map.get(u, {}).get('nick')) > 1}
         nav = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_ws])
         target_r = current_rating if w_key == all_ws[-1] else (next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0))
         
@@ -337,7 +345,7 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     <td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 0.95rem;">{fmt(sum(clan_growths))}</span></td>
     {" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {}); p_res = pl_res[uid]
+            p = week_names_map.get(uid, {}); p_res = pl_res[uid]
             first, last = p_res['first_p'], p_res['last_p']
             nick_sec = f"<div class='nick-cell'><span class='nick'>{p.get('nick','ID:'+uid)}</span>"
             if p.get('nick') in dupes: nick_sec += f"<span class='trait'>({p.get('traits','') if p.get('traits','') else 'Без особых примет'})</span>"
