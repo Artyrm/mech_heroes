@@ -222,23 +222,20 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     all_ws = sorted(weeks.keys())
     is_current_week = False
     for w_key in all_ws:
-        week, players = weeks[w_key], set()
         is_current_week = (w_key == all_ws[-1])
+        week, players = weeks[w_key], set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
         pl_res, clan_rats = {}, [None] * 7
-        
-        # Determine baseline for Clan Rating (not resetting)
-        pre_week_sn = [e for e in sd if e['time'] < week["monday"]]
-        prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
-            
         for uid in players:
-            growths, total_acc, last_ref, pres = [], 0, 0, [] # Always start week from 0
+            growths, total_acc, last_ref, pres = [], 0, 0, []
             for i in range(7):
                 d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
                 sn, ex = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
                 if not isinstance(ex, list): ex = [ex]
                 
+                # SENSE OF PRESENCE: Must be in the VERY LAST snapshot of the day to be 'present'
+                # or have an exit event (Manual Adjustment)
                 if is_current_week and i == today_idx:
                     is_present = (uid in cur_ids) or bool(ex)
                 else:
@@ -247,26 +244,11 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 
                 pres.append(is_present)
                 day_growth, reference = 0, last_ref
-                
-                # Process Manual Adjustments (Exits)
-                for ev in ex: 
-                    day_growth += max(0, ev - reference)
-                    reference = 0 # Reset reference after exit recorded
-                
-                # Process ALL snapshots of the day to catch re-joins and resets
-                for s_entry in sn:
-                    curr_pts = s_entry['pts'].get(uid, 0)
-                    if curr_pts == 0: continue # Ignore API flickers (missing player in one snapshot)
-                    
-                    if curr_pts < reference: # Real Re-join detected (with points) or reset
-                        day_growth += curr_pts
-                    else:
-                        day_growth += (curr_pts - reference)
-                    reference = curr_pts
-                    
-                    if s_entry.get('rating'): clan_rats[i] = s_entry['rating']
-                
-                last_ref = reference
+                for ev in ex: day_growth += max(0, ev - reference); reference = 0
+                if sn:
+                    final = sn[-1]['pts'].get(uid, 0)
+                    day_growth += (final if final < reference and not ex else max(0, final - reference)); last_ref = final
+                    if sn[-1].get('rating'): clan_rats[i] = sn[-1]['rating']
                 growths.append(day_growth); total_acc += day_growth
             
             try: first_p = pres.index(True)
@@ -276,15 +258,22 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             pl_res[uid] = {"growths": growths, "total": total_acc, "presence": pres, "first_p": first_p, "last_p": last_p}
 
         clan_growths = [sum(p["growths"][ev] for p in pl_res.values()) for ev in range(7)]
+        pre_week_sn = [e for e in sd if e['time'] < week["monday"]]
+        prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
         clan_stats = []
         for i in range(7):
             curr_r = clan_rats[i]
             d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
+            
+            # Check for manual burned override in the adjustments file
             manual_burned = adj_db.get(d_str, {}).get("burned_override")
             
             if curr_r is not None and prev_r is not None:
                 f_ch = int(curr_r) - int(prev_r)
-                brn = int(manual_burned) if manual_burned is not None else max(0, clan_growths[i] - f_ch)
+                if manual_burned is not None:
+                    brn = int(manual_burned)
+                else:
+                    brn = max(0, clan_growths[i] - f_ch)
                 clan_stats.append({"rating": curr_r, "fact": f_ch, "burned": brn}); prev_r = curr_r
             else:
                 brn = int(manual_burned) if manual_burned is not None else 0
@@ -356,16 +345,16 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.7rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p.get('role','Soldier')}</span></td>"
             html += f"<td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
             for i, g in enumerate(p_res['growths']):
-                if is_current_week and i > today_idx: # Future
+                if is_current_week and i > today_idx: # Future (only hide in current week)
                     html += '<td style="text-align:center; color:#30363d">-</td>'
                 elif g > 0:
                     html += f"<td style='text-align:center'><span class='day-growth'>+{fmt(g)}</span></td>"
                 elif i < first: # Hasn't joined yet
                     html += '<td style="text-align:center; color:#8b949e">-</td>'
-                elif i > last: # Left early
+                elif i > last: # Left early (not in the last snapshot of the day or current hier)
                     html += '<td style="text-align:center"><span class="absent" title="Покинул клан">X</span></td>'
                 else:
-                    html += f'<td style="text-align:center; color:#484f58; font-size: 0.85rem;">{fmt(g) if g else 0}</td>'
+                    html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
         html += "</tbody></table></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
