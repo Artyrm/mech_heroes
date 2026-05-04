@@ -256,13 +256,14 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 # Process ALL snapshots of the day to catch re-joins and resets
                 for s_entry in sn:
                     curr_pts = s_entry['pts'].get(uid, 0)
-                    if curr_pts < reference: # Reset or Re-join detected
+                    if curr_pts == 0: continue # Ignore API flickers (missing player in one snapshot)
+                    
+                    if curr_pts < reference: # Real Re-join detected (with points) or reset
                         day_growth += curr_pts
                     else:
                         day_growth += (curr_pts - reference)
                     reference = curr_pts
                     
-                    # Update clan rating from snapshots
                     if s_entry.get('rating'): clan_rats[i] = s_entry['rating']
                 
                 last_ref = reference
