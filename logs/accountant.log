@@ -1725,3 +1725,35 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [05.05.2026 15:55:17,13] Syncing with Git... 
+warning: in the working copy of 'fetch_and_store_battles.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'list_nicks.py', LF will be replaced by CRLF the next time Git touches it
+[main 2b98870] Auto-update 05.05.2026 15:55:17,91
+ 3 files changed, 153 insertions(+)
+ create mode 100644 fetch_and_store_battles.py
+ create mode 100644 list_nicks.py
+[05.05.2026 15:55:23,16] Pushing to repository... 
+Enumerating objects: 9, done.
+Counting objects:  11% (1/9)Counting objects:  22% (2/9)Counting objects:  33% (3/9)Counting objects:  44% (4/9)Counting objects:  55% (5/9)Counting objects:  66% (6/9)Counting objects:  77% (7/9)Counting objects:  88% (8/9)Counting objects: 100% (9/9)Counting objects: 100% (9/9), done.
+Delta compression using up to 4 threads
+Compressing objects:  20% (1/5)Compressing objects:  40% (2/5)Compressing objects:  60% (3/5)Compressing objects:  80% (4/5)Compressing objects: 100% (5/5)Compressing objects: 100% (5/5), done.
+Writing objects:  16% (1/6)Writing objects:  33% (2/6)Writing objects:  50% (3/6)Writing objects:  66% (4/6)Writing objects:  83% (5/6)Writing objects: 100% (6/6)Writing objects: 100% (6/6), 2.41 KiB | 1.20 MiB/s, done.
+Total 6 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/2)        remote: Resolving deltas:  50% (1/2)        remote: Resolving deltas: 100% (2/2)        remote: Resolving deltas: 100% (2/2), completed with 2 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   71a531b..2b98870  main -> main
+[05.05.2026 15:55:34,99] SUCCESS: Data pushed to Git. 
+[05.05.2026 15:55:35,03] PROCESS FINISHED 
+------------------------------------------ 
+[05.05.2026 16:55:02,37] STARTING PROCESS 
+[05.05.2026 16:55:02,39] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-05 16:55:03
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 496 282
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[05.05.2026 16:55:13,04] Syncing with Git... 
