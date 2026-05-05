@@ -12,6 +12,17 @@ def format_num(val_str):
     except:
         return val_str
 
+def format_level(raw_lvl):
+    try:
+        raw = int(raw_lvl)
+        lvl = (raw // 4) + 1
+        step = (raw % 4) + 1
+        if step == 1:
+            return str(lvl)
+        return f"{lvl}.{step}"
+    except:
+        return raw_lvl
+
 def generate_html(json_file, output_html):
     with open(json_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -96,7 +107,7 @@ def generate_html(json_file, output_html):
         <div class="unit general-box">
             <div class="unit-header">
                 <span>Генерал: {gen.get('defId', 'Unknown')}</span>
-                <span>Ур. {gen.get('level', '?')}</span>
+                <span>Ур. {format_level(gen.get('level', '?'))}</span>
             </div>
             <div class="equips">
                 <strong>Экипировка:</strong>
@@ -105,7 +116,7 @@ def generate_html(json_file, output_html):
         for eid, eq in gen.get('equipables', {}).items():
             sharp = eq.get('sharpening', {})
             sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
-            res += f"<li>{eq.get('id')} (Lvl: {eq.get('level')}) <span class='sharpening'>[{sharp_str}]</span></li>"
+            res += f"<li>{eq.get('id')} (Ур. {format_level(eq.get('level', '?'))}) <span class='sharpening'>[{sharp_str}]</span></li>"
         res += "</ul></div></div>"
 
         units = data_dict.get('units', {})
@@ -123,7 +134,7 @@ def generate_html(json_file, output_html):
             <div class="unit {box_class}">
                 <div class="unit-header">
                     <span>Слот {slot}: {state.get('defId', 'Unknown')}</span>
-                    <span>Lvl {state.get('level', '?')} | {state.get('stars', '?')}★</span>
+                    <span>Ур. {format_level(state.get('level', '?'))} | {state.get('stars', '?')}★</span>
                 </div>
                 <div class="unit-stats">
                     <div class="stat-box">⚔️ Нанёс: {dmg}</div>
@@ -138,7 +149,7 @@ def generate_html(json_file, output_html):
             for eid, eq in state.get('equipables', {}).items():
                 sharp = eq.get('sharpening', {})
                 sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
-                res += f"<li>{eq.get('id')} (Lvl {eq.get('level')}) <span class='sharpening'>[{sharp_str}]</span></li>"
+                res += f"<li>{eq.get('id')} (Ур. {format_level(eq.get('level'))}) <span class='sharpening'>[{sharp_str}]</span></li>"
             res += "</ul></div></div>"
             
         res += "</div>"
