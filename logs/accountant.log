@@ -1820,3 +1820,26 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [05.05.2026 18:55:03,45] Syncing with Git... 
+[main 75072ef] Auto-update 05.05.2026 18:55:03,60
+ 1 file changed, 23 insertions(+)
+[05.05.2026 18:55:03,90] Pushing to repository... 
+Enumerating objects: 7, done.
+Counting objects:  14% (1/7)Counting objects:  28% (2/7)Counting objects:  42% (3/7)Counting objects:  57% (4/7)Counting objects:  71% (5/7)Counting objects:  85% (6/7)Counting objects: 100% (7/7)Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects:  33% (1/3)Compressing objects:  66% (2/3)Compressing objects: 100% (3/3)Compressing objects: 100% (3/3), done.
+Writing objects:  25% (1/4)Writing objects:  50% (2/4)Writing objects:  75% (3/4)Writing objects: 100% (4/4)Writing objects: 100% (4/4), 556 bytes | 556.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/2)        remote: Resolving deltas:  50% (1/2)        remote: Resolving deltas: 100% (2/2)        remote: Resolving deltas: 100% (2/2), completed with 2 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   3752b5f..75072ef  main -> main
+[05.05.2026 18:55:15,37] SUCCESS: Data pushed to Git. 
+[05.05.2026 18:55:15,41] PROCESS FINISHED 
+------------------------------------------ 
+[05.05.2026 19:55:02,69] STARTING PROCESS 
+[05.05.2026 19:55:02,71] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-05 19:55:03
+[*] Проверка активности пользователя...
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
+[05.05.2026 19:55:03,74] Syncing with Git... 
