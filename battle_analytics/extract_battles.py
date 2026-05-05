@@ -44,13 +44,17 @@ def extract_for_nick(target_nick):
                 history = [data]
             
             for b in history:
-                if b.get('nick') == target_nick:
-                    found_count += 1
-                    ts = int(b.get('fightTime'))
-                    dt = datetime.datetime.fromtimestamp(ts)
-                    date_str = dt.strftime("%Y-%m-%d_%H-%M-%S")
-                    battle_id = b.get('statistics', {}).get('id', 'unknown')
-                    filename = f"battle_{date_str}_{battle_id}.json"
+                    ft_str = b.get('fightTime', '00/00/0000_00:00:00')
+                    try:
+                        parts = ft_str.split('_')
+                        date_p = parts[0].split('/')
+                        time_p = parts[1].split(':')
+                        ms = time_p[2].split('.')[1] if '.' in time_p[2] else '0000'
+                        date_str = f"{date_p[2]}-{date_p[1]}-{date_p[0]}_{time_p[0]}-{time_p[1]}-{time_p[2].split('.')[0]}_{ms}"
+                    except:
+                        date_str = ft_str.replace('/', '-').replace(':', '-').replace('.', '_')
+                        
+                    filename = f"battle_{date_str}.json"
                     filepath = os.path.join(folder, filename)
                     
                     if not os.path.exists(filepath):

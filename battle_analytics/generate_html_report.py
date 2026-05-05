@@ -116,7 +116,7 @@ def generate_html(json_file, output_html):
         for eid, eq in gen.get('equipables', {}).items():
             sharp = eq.get('sharpening', {})
             sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
-            res += f"<li>{eq.get('id')} (Ур. {format_level(eq.get('level', '?'))}) <span class='sharpening'>[{sharp_str}]</span></li>"
+            res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
         res += "</ul></div></div>"
 
         units = data_dict.get('units', {})
@@ -149,7 +149,7 @@ def generate_html(json_file, output_html):
             for eid, eq in state.get('equipables', {}).items():
                 sharp = eq.get('sharpening', {})
                 sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
-                res += f"<li>{eq.get('id')} (Ур. {format_level(eq.get('level'))}) <span class='sharpening'>[{sharp_str}]</span></li>"
+                res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
             res += "</ul></div></div>"
             
         res += "</div>"
