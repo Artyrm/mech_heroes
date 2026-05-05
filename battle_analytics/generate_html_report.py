@@ -28,17 +28,31 @@ def generate_html(json_file, output_html):
     result_class = "win" if delta_val > 0 else "lose"
     result_text = "ПОБЕДА" if delta_val > 0 else "ПОРАЖЕНИЕ"
 
+    # Detect attack or defense
+    # Attacker always has lower slot IDs than defender
+    stats_data = data.get('statistics', {})
+    p_units = stats_data.get('player', {}).get('units', {})
+    e_units = stats_data.get('enemy', {}).get('units', {})
+    
+    p_min = min([int(s) for s in p_units.keys()]) if p_units else 99
+    e_min = min([int(s) for s in e_units.keys()]) if e_units else 99
+    
+    is_attack = p_min < e_min
+    battle_type = "НАПАДЕНИЕ" if is_attack else "ЗАЩИТА"
+    type_color = "#2196f3" if is_attack else "#ff9800"
+
     html = f"""
     <!DOCTYPE html>
     <html lang="ru">
     <head>
         <meta charset="UTF-8">
-        <title>Отчет о бое: {nick}</title>
+        <title>Бой с игроком: {nick}</title>
         <style>
             body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e1e24; color: #fff; margin: 0; padding: 20px; }}
             .container {{ max-width: 1200px; margin: auto; }}
             .header {{ background-color: #2b2b36; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }}
             .header h1 {{ margin: 0; color: #e5e5e5; }}
+            .battle-type {{ display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 14px; font-weight: bold; margin-bottom: 10px; background-color: {type_color}; }}
             .status {{ font-size: 24px; font-weight: bold; margin-top: 10px; }}
             .win {{ color: #4caf50; }}
             .lose {{ color: #f44336; }}
@@ -64,7 +78,8 @@ def generate_html(json_file, output_html):
     <body>
         <div class="container">
             <div class="header">
-                <h1>Отчет о бое против {nick}</h1>
+                <div class="battle-type">{battle_type}</div>
+                <h1>Бой с игроком: {nick}</h1>
                 <div class="info">
                     <span>Время: {fight_time}</span>
                     <span>Рейтинг врага: {rating}</span>
