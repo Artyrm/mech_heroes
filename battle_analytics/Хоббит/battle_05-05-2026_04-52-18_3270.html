@@ -20,8 +20,8 @@
             
             .unit { background-color: #383845; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #555; }
             .unit-header { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #ffeb3b; }
-            .unit-stats { display: flex; gap: 15px; font-size: 14px; margin-bottom: 10px; color: #ccc; }
-            .stat-box { background-color: #222; padding: 5px 10px; border-radius: 4px; }
+            .unit-stats { display: flex; gap: 10px; font-size: 13px; margin-bottom: 10px; color: #ccc; flex-wrap: wrap; }
+            .stat-box { background-color: #222; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }
             
             .equips { font-size: 13px; color: #aaa; }
             .equips ul { padding-left: 20px; margin: 5px 0 0 0; }
@@ -51,17 +51,17 @@
             <div class="equips">
                 <strong>Экипировка:</strong>
                 <ul>
-        <li>favourite_weapon (Lvl: 6)</li><li>favourite_engine (Lvl: 16)</li><li>favourite_foot (Lvl: 60)</li><li>favourite_armor (Lvl: 41)</li><li>favourite_ammunition (Lvl: 1)</li><li>favourite_tracker (Lvl: 1)</li></ul></div></div>
+        <li>favourite_weapon (Lvl: 6) <span class='sharpening'>[1: e_health_weak]</span></li><li>favourite_engine (Lvl: 16) <span class='sharpening'>[1: e_damage_weak]</span></li><li>favourite_foot (Lvl: 60) <span class='sharpening'>[1: e_crit, 30: e_dodge, 60: e_crit]</span></li><li>favourite_armor (Lvl: 41) <span class='sharpening'>[1: e_health_medium, 30: e_reload]</span></li><li>favourite_ammunition (Lvl: 1) <span class='sharpening'>[1: e_health]</span></li><li>favourite_tracker (Lvl: 1) <span class='sharpening'>[1: e_dodge_weak]</span></li></ul></div></div>
             <div class="unit ">
                 <div class="unit-header">
                     <span>Слот 7: bhramarah</span>
                     <span>Lvl 76 | 9★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 3186,930</div>
-                    <div class="stat-box">💔 Урон получ.: 23310,416</div>
-                    <div class="stat-box">💚 Хил: 15012,333</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 3k</div>
+                    <div class="stat-box">💔 Получил: 23k</div>
+                    <div class="stat-box">💚 Хил: 15k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -73,10 +73,10 @@
                     <span>Lvl 476 | 5★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 277295,364</div>
-                    <div class="stat-box">💔 Урон получ.: 614774,838</div>
-                    <div class="stat-box">💚 Хил: 327783,864</div>
-                    <div class="stat-box">💀 Убийства: 1</div>
+                    <div class="stat-box">⚔️ Нанёс: 277k</div>
+                    <div class="stat-box">💔 Получил: 614k</div>
+                    <div class="stat-box">💚 Хил: 327k</div>
+                    <div class="stat-box">💀 Убил: 1</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -88,10 +88,10 @@
                     <span>Lvl 1 | 9★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 326,838</div>
-                    <div class="stat-box">💔 Урон получ.: 8959,433</div>
-                    <div class="stat-box">💚 Хил: 3726,118</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 0k</div>
+                    <div class="stat-box">💔 Получил: 8k</div>
+                    <div class="stat-box">💚 Хил: 3k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -103,10 +103,10 @@
                     <span>Lvl 476 | 10★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 229262,548</div>
-                    <div class="stat-box">💔 Урон получ.: 438185,345</div>
-                    <div class="stat-box">💚 Хил: 255279,276</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 229k</div>
+                    <div class="stat-box">💔 Получил: 438k</div>
+                    <div class="stat-box">💚 Хил: 255k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -118,10 +118,10 @@
                     <span>Lvl 425 | 6★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 0</div>
-                    <div class="stat-box">💔 Урон получ.: 191209,451</div>
-                    <div class="stat-box">💚 Хил: 95133,953</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 0</div>
+                    <div class="stat-box">💔 Получил: 191k</div>
+                    <div class="stat-box">💚 Хил: 95k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -135,17 +135,17 @@
             <div class="equips">
                 <strong>Экипировка:</strong>
                 <ul>
-        <li>favourite_tracker (Lvl: 120)</li><li>favourite_engine (Lvl: 120)</li><li>favourite_foot (Lvl: 120)</li><li>favourite_ammunition (Lvl: 120)</li><li>favourite_weapon (Lvl: 120)</li><li>favourite_armor (Lvl: 120)</li><li>suppression_core (Lvl: 120)</li></ul></div></div>
+        <li>favourite_tracker (Lvl: 120) <span class='sharpening'>[1: e_health, 30: e_dodge, 60: e_health, 90: e_reload, 120: e_crit]</span></li><li>favourite_engine (Lvl: 120) <span class='sharpening'>[1: e_reload, 30: e_damage, 60: e_dodge, 90: e_health, 120: e_crit]</span></li><li>favourite_foot (Lvl: 120) <span class='sharpening'>[1: e_health, 30: e_dodge, 60: e_damage, 90: e_crit, 120: e_reload]</span></li><li>favourite_ammunition (Lvl: 120) <span class='sharpening'>[1: e_dodge, 30: e_dodge, 60: e_health, 90: e_reload, 120: e_crit]</span></li><li>favourite_weapon (Lvl: 120) <span class='sharpening'>[1: e_damage, 30: e_reload, 60: e_reload, 90: e_dodge, 120: e_health]</span></li><li>favourite_armor (Lvl: 120) <span class='sharpening'>[1: e_health, 30: e_health, 60: e_damage, 90: e_reload, 120: e_crit]</span></li><li>suppression_core (Lvl: 120) <span class='sharpening'>[1: e_crit_weak, 30: e_dodge, 60: e_crit, 90: e_reload, 120: e_health]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 1: muskrat</span>
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 331975,732</div>
-                    <div class="stat-box">💔 Урон получ.: 262598,386</div>
-                    <div class="stat-box">💚 Хил: 88104,794</div>
-                    <div class="stat-box">💀 Убийства: 1</div>
+                    <div class="stat-box">⚔️ Нанёс: 331k</div>
+                    <div class="stat-box">💔 Получил: 262k</div>
+                    <div class="stat-box">💚 Хил: 88k</div>
+                    <div class="stat-box">💀 Убил: 1</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -157,10 +157,10 @@
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 372092,604</div>
-                    <div class="stat-box">💔 Урон получ.: 4234,721</div>
-                    <div class="stat-box">💚 Хил: 4234,721</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 372k</div>
+                    <div class="stat-box">💔 Получил: 4k</div>
+                    <div class="stat-box">💚 Хил: 4k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -172,10 +172,10 @@
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 129197,475</div>
-                    <div class="stat-box">💔 Урон получ.: 54150,560</div>
-                    <div class="stat-box">💚 Хил: 54150,559</div>
-                    <div class="stat-box">💀 Убийства: 0</div>
+                    <div class="stat-box">⚔️ Нанёс: 129k</div>
+                    <div class="stat-box">💔 Получил: 54k</div>
+                    <div class="stat-box">💚 Хил: 54k</div>
+                    <div class="stat-box">💀 Убил: 0</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -187,10 +187,10 @@
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 325111,960</div>
-                    <div class="stat-box">💔 Урон получ.: 4234,721</div>
-                    <div class="stat-box">💚 Хил: 4234,721</div>
-                    <div class="stat-box">💀 Убийства: 1</div>
+                    <div class="stat-box">⚔️ Нанёс: 325k</div>
+                    <div class="stat-box">💔 Получил: 4k</div>
+                    <div class="stat-box">💚 Хил: 4k</div>
+                    <div class="stat-box">💀 Убил: 1</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -202,10 +202,10 @@
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 149886,075</div>
-                    <div class="stat-box">💔 Урон получ.: 232015,842</div>
-                    <div class="stat-box">💚 Хил: 232015,842</div>
-                    <div class="stat-box">💀 Убийства: 2</div>
+                    <div class="stat-box">⚔️ Нанёс: 149k</div>
+                    <div class="stat-box">💔 Получил: 232k</div>
+                    <div class="stat-box">💚 Хил: 232k</div>
+                    <div class="stat-box">💀 Убил: 2</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -217,10 +217,10 @@
                     <span>Lvl 476 | 15★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: 113151,289</div>
-                    <div class="stat-box">💔 Урон получ.: 2753,294</div>
-                    <div class="stat-box">💚 Хил: 117450,130</div>
-                    <div class="stat-box">💀 Убийства: 3</div>
+                    <div class="stat-box">⚔️ Нанёс: 113k</div>
+                    <div class="stat-box">💔 Получил: 2k</div>
+                    <div class="stat-box">💚 Хил: 117k</div>
+                    <div class="stat-box">💀 Убил: 3</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>

@@ -2,6 +2,16 @@ import json
 import os
 import sys
 
+def format_num(val_str):
+    try:
+        val = float(val_str.replace(',', '.'))
+        if val == 0: return "0"
+        # Display as thousands with 'k' suffix and space separator
+        thousands = int(val // 1000)
+        return "{:,}".format(thousands).replace(',', ' ') + "k"
+    except:
+        return val_str
+
 def generate_html(json_file, output_html):
     with open(json_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -40,8 +50,8 @@ def generate_html(json_file, output_html):
             
             .unit {{ background-color: #383845; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #555; }}
             .unit-header {{ display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #ffeb3b; }}
-            .unit-stats {{ display: flex; gap: 15px; font-size: 14px; margin-bottom: 10px; color: #ccc; }}
-            .stat-box {{ background-color: #222; padding: 5px 10px; border-radius: 4px; }}
+            .unit-stats {{ display: flex; gap: 10px; font-size: 13px; margin-bottom: 10px; color: #ccc; flex-wrap: wrap; }}
+            .stat-box {{ background-color: #222; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }}
             
             .equips {{ font-size: 13px; color: #aaa; }}
             .equips ul {{ padding-left: 20px; margin: 5px 0 0 0; }}
@@ -78,7 +88,9 @@ def generate_html(json_file, output_html):
                 <ul>
         """
         for eid, eq in gen.get('equipables', {}).items():
-            res += f"<li>{eq.get('id')} (Lvl: {eq.get('level')})</li>"
+            sharp = eq.get('sharpening', {})
+            sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
+            res += f"<li>{eq.get('id')} (Lvl: {eq.get('level')}) <span class='sharpening'>[{sharp_str}]</span></li>"
         res += "</ul></div></div>"
 
         units = data_dict.get('units', {})
@@ -87,9 +99,9 @@ def generate_html(json_file, output_html):
             stats = u.get('statistics', {})
             box_class = "enemy-box" if is_enemy else ""
             
-            dmg = stats.get('damageDone', '0')
-            hl = stats.get('healthLost', '0')
-            hh = stats.get('healthHealed', '0')
+            dmg = format_num(stats.get('damageDone', '0'))
+            hl = format_num(stats.get('healthLost', '0'))
+            hh = format_num(stats.get('healthHealed', '0'))
             kills = stats.get('killsCount', '0')
             
             res += f"""
@@ -99,10 +111,10 @@ def generate_html(json_file, output_html):
                     <span>Lvl {state.get('level', '?')} | {state.get('stars', '?')}★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Урон: {dmg}</div>
-                    <div class="stat-box">💔 Урон получ.: {hl}</div>
+                    <div class="stat-box">⚔️ Нанёс: {dmg}</div>
+                    <div class="stat-box">💔 Получил: {hl}</div>
                     <div class="stat-box">💚 Хил: {hh}</div>
-                    <div class="stat-box">💀 Убийства: {kills}</div>
+                    <div class="stat-box">💀 Убил: {kills}</div>
                 </div>
                 <div class="equips">
                     <strong>Снаряжение:</strong>
@@ -133,7 +145,6 @@ def generate_html(json_file, output_html):
 
     with open(output_html, 'w', encoding='utf-8') as f:
         f.write(html)
-    print(f"Отчет сохранен в {output_html}")
 
 if __name__ == "__main__":
     import sys
