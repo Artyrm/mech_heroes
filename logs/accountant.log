@@ -2771,3 +2771,82 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [06.05.2026 21:55:38,94] Syncing with Git... 
+[main 7fa8bfe] Auto-update 06.05.2026 21:55:45,42
+ 1 file changed, 23 insertions(+)
+[06.05.2026 21:55:50,25] Pushing to repository... 
+Enumerating objects: 7, done.
+Counting objects:  14% (1/7)Counting objects:  28% (2/7)Counting objects:  42% (3/7)Counting objects:  57% (4/7)Counting objects:  71% (5/7)Counting objects:  85% (6/7)Counting objects: 100% (7/7)Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects:  33% (1/3)Compressing objects:  66% (2/3)Compressing objects: 100% (3/3)Compressing objects: 100% (3/3), done.
+Writing objects:  25% (1/4)Writing objects:  50% (2/4)Writing objects:  75% (3/4)Writing objects: 100% (4/4)Writing objects: 100% (4/4), 547 bytes | 182.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/2)        remote: Resolving deltas:  50% (1/2)        remote: Resolving deltas: 100% (2/2)        remote: Resolving deltas: 100% (2/2), completed with 2 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   78b086a..7fa8bfe  main -> main
+[06.05.2026 21:56:28,88] SUCCESS: Data pushed to Git. 
+[06.05.2026 21:56:28,92] PROCESS FINISHED 
+------------------------------------------ 
+[06.05.2026 22:55:02,39] STARTING PROCESS 
+[06.05.2026 22:55:02,41] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-06 22:55:03
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 295 228
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 394, in <module>
+    generate_web_report(h, u, r, last_update_time=datetime.now())
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 219, in generate_web_report
+    adj_db, weeks = load_json(ADJUSTMENTS_FILE), {}
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 41, in load_json
+    with open(path, 'r', encoding='utf-8') as f: return json.load(f)
+  File "C:\tools\Anaconda3\lib\json\__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "C:\tools\Anaconda3\lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "C:\tools\Anaconda3\lib\json\decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 30 column 1 (char 408)
+[06.05.2026 22:55:08,59] ERROR: Python script failed with code 1 
+[06.05.2026 22:55:08,66] PROCESS FINISHED 
+------------------------------------------ 
+[06.05.2026 23:55:21,44] STARTING PROCESS 
+[06.05.2026 23:55:32,83] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-06 23:55:44
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.23.1)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 299 408
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 394, in <module>
+    generate_web_report(h, u, r, last_update_time=datetime.now())
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 219, in generate_web_report
+    adj_db, weeks = load_json(ADJUSTMENTS_FILE), {}
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 41, in load_json
+    with open(path, 'r', encoding='utf-8') as f: return json.load(f)
+  File "C:\tools\Anaconda3\lib\json\__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "C:\tools\Anaconda3\lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+  File "C:\tools\Anaconda3\lib\json\decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 30 column 1 (char 408)
+[06.05.2026 23:55:50,99] ERROR: Python script failed with code 1 
+[06.05.2026 23:55:51,06] PROCESS FINISHED 
+------------------------------------------ 
+[07.05.2026  0:51:48,97] STARTING PROCESS 
+[07.05.2026  0:51:49,45] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-07 00:51:50
+[*] Проверка активности пользователя...
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
+[07.05.2026  0:51:50,51] Syncing with Git... 
