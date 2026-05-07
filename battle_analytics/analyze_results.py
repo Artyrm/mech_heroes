@@ -1,3 +1,7 @@
+import os
+import json
+from datetime import datetime
+
 # Smart path detection
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
