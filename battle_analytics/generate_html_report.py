@@ -8,7 +8,9 @@ def format_num(val_str):
         if val == 0: return "0"
         # Display as thousands with 'k' suffix and space separator
         thousands = int(val // 1000)
-        return "{:,}".format(thousands).replace(',', ' ') + "k"
+        if thousands > 0:
+            return "{:,}".format(thousands).replace(',', ' ') + "k"
+        return str(int(val))
     except:
         return val_str
 
@@ -22,6 +24,9 @@ def format_level(raw_lvl):
         return f"{lvl}.{step}"
     except:
         return raw_lvl
+
+def clean_stat(s):
+    return s.replace('e_', '').replace('_sharpening', '').replace('sharpening', '')
 
 def generate_html(json_file, output_html):
     with open(json_file, 'r', encoding='utf-8') as f:
@@ -40,7 +45,6 @@ def generate_html(json_file, output_html):
     result_text = "ПОБЕДА" if delta_val > 0 else "ПОРАЖЕНИЕ"
 
     # Detect attack or defense
-    # Attacker always has lower slot IDs than defender
     stats_data = data.get('statistics', {})
     p_units = stats_data.get('player', {}).get('units', {})
     e_units = stats_data.get('enemy', {}).get('units', {})
@@ -78,9 +82,14 @@ def generate_html(json_file, output_html):
             .unit-stats {{ display: flex; gap: 10px; font-size: 13px; margin-bottom: 10px; color: #ccc; flex-wrap: wrap; }}
             .stat-box {{ background-color: #222; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }}
             
-            .equips {{ font-size: 13px; color: #aaa; }}
-            .equips ul {{ padding-left: 20px; margin: 5px 0 0 0; }}
-            .sharpening {{ color: #888; font-style: italic; }}
+            .agg-box {{ margin-top: 10px; background-color: #1a1a20; padding: 10px; border-radius: 4px; font-size: 12px; border: 1px solid #444; }}
+            .agg-title {{ color: #00bcd4; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; font-size: 11px; }}
+            .mod-types {{ color: #8bc34a; margin-bottom: 5px; }}
+            .sharpening-summary {{ color: #ffc107; }}
+            
+            .equips {{ font-size: 11px; color: #888; margin-top: 10px; border-top: 1px solid #444; padding-top: 5px; }}
+            .equips ul {{ padding-left: 15px; margin: 5px 0 0 0; list-style-type: square; }}
+            .sharpening {{ color: #666; font-style: italic; }}
             
             .general-box {{ background-color: #4a3b2c; border-left-color: #ff9800; }}
             .enemy-box {{ background-color: #3b2c2c; border-left-color: #f44336; }}
@@ -109,13 +118,38 @@ def generate_html(json_file, output_html):
                 <span>Генерал: {gen.get('defId', 'Unknown')}</span>
                 <span>Ур. {format_level(gen.get('level', '?'))}</span>
             </div>
+        """
+        
+        # Aggregated stats for General
+        agg = gen.get('aggregated_stats', {})
+        if not agg and gen.get('equipables'):
+            # Fallback for old/other units if needed
+            from collections import defaultdict
+            sharps = defaultdict(int)
+            types = set()
+            for eq in gen.get('equipables', {}).values():
+                types.add(eq.get('id', '').split('_')[0]) # simple heuristic
+                for t in eq.get('sharpening', {}).values():
+                    sharps[clean_stat(t)] += 1
+            agg = {'mod_types': sorted(list(types)), 'sharpening_summary': dict(sharps)}
+
+        if agg:
+            res += f"""
+            <div class="agg-box">
+                <div class="agg-title">Сводка по модулям</div>
+                <div class="mod-types">Типы: {', '.join(agg.get('mod_types', []))}</div>
+                <div class="sharpening-summary">Заточки: {', '.join([f'{k}: {v}' for k, v in sorted(agg.get('sharpening_summary', {}).items())])}</div>
+            </div>
+            """
+
+        res += f"""
             <div class="equips">
-                <strong>Экипировка:</strong>
+                <strong>Детали экипировки:</strong>
                 <ul>
         """
         for eid, eq in gen.get('equipables', {}).items():
             sharp = eq.get('sharpening', {})
-            sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
+            sharp_str = ", ".join([f"{k}: {clean_stat(v)}" for k, v in sharp.items()])
             res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
         res += "</ul></div></div>"
 
@@ -137,18 +171,32 @@ def generate_html(json_file, output_html):
                     <span>Ур. {format_level(state.get('level', '?'))} | {state.get('stars', '?')}★</span>
                 </div>
                 <div class="unit-stats">
-                    <div class="stat-box">⚔️ Нанёс: {dmg}</div>
-                    <div class="stat-box">💔 Получил: {hl}</div>
-                    <div class="stat-box">💚 Хил: {hh}</div>
-                    <div class="stat-box">💀 Убил: {kills}</div>
+                    <div class="stat-box">⚔️ {dmg}</div>
+                    <div class="stat-box">💔 {hl}</div>
+                    <div class="stat-box">💚 {hh}</div>
+                    <div class="stat-box">💀 {kills}</div>
                 </div>
+            """
+
+            # Aggregated stats for Unit
+            agg = u.get('aggregated_stats', {})
+            if agg:
+                res += f"""
+                <div class="agg-box">
+                    <div class="agg-title">Агрегированные данные</div>
+                    <div class="mod-types">Модули: {', '.join(agg.get('mod_types', []))}</div>
+                    <div class="sharpening-summary">Сумма заточек: {', '.join([f'{k}: {v}' for k, v in sorted(agg.get('sharpening_summary', {}).items())])}</div>
+                </div>
+                """
+
+            res += f"""
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
             """
             for eid, eq in state.get('equipables', {}).items():
                 sharp = eq.get('sharpening', {})
-                sharp_str = ", ".join([f"{k}: {v.replace('_sharpening', '')}" for k, v in sharp.items()])
+                sharp_str = ", ".join([f"{k}: {clean_stat(v)}" for k, v in sharp.items()])
                 res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
             res += "</ul></div></div>"
             
@@ -173,9 +221,5 @@ def generate_html(json_file, output_html):
         f.write(html)
 
 if __name__ == "__main__":
-    import sys
     if len(sys.argv) > 1:
         generate_html(sys.argv[1], sys.argv[1].replace('.json', '.html'))
-    else:
-        # По умолчанию генерируем для последнего боя со Strel
-        generate_html('battle_analytics/Strel/battle_2026-05-01_22-29.json', 'battle_analytics/Strel/battle_report_Strel.html')
