@@ -1,0 +1,14 @@
+=== СРАВНИТЕЛЬНЫЙ АНАЛИЗ МОДУЛЕЙ (ОБНОВЛЕННЫЙ) ===
+
+--- Юнит: PREDATOR ---
+Strel: Нет данных
+Hefast: crit: 12, damag: 13, health: 5
+Тетка с веслом: crit: 3, damag: 17, damag_medium: 2, health: 2, reload: 6
+Лиса: crit: 6, damag: 11, damag_medium: 1, dodg: 5, health: 5, reload: 2
+
+--- Юнит: ARMAGEDDON ---
+Strel: crit: 4, damag: 5, dodg: 3, health: 8, reload: 4
+Hefast: crit: 6, damag: 9, damag_weak: 1, dodg: 2, health: 5, health_medium: 1, health_weak: 2, reload: 4
+Тетка с веслом: crit: 24, crit_medium: 1, damag: 1, health: 2, reload: 2
+Лиса: crit: 27, health: 3
+

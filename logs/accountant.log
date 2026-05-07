@@ -3645,3 +3645,126 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [07.05.2026 17:55:06,23] Syncing with Git... 
+[main 186979f] Auto-update 07.05.2026 17:55:06,79
+ 98 files changed, 332 insertions(+), 20203 deletions(-)
+ delete mode 100644 battle_analytics/LordDragon/battle_2026-04-28_21-30-54_2510.html
+ delete mode 100644 battle_analytics/LordDragon/battle_2026-05-05_17-06-16_9350.html
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-06_23-08-08_9050.html" => battle_analytics/Strel/battle_2026-05-07_13-21-21_1000.html (94%)
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_17-04-49_3160.html" => battle_analytics/Strel/battle_2026-05-07_13-31-39_8410.html (52%)
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-07-29_4880.html" => battle_analytics/Strel/battle_2026-05-07_13-38-09_7680.html (54%)
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_09-34-38_5980.html" => battle_analytics/Strel/battle_2026-05-07_13-40-12_1010.html (71%)
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-20-36_9100.html" => battle_analytics/Strel/battle_2026-05-07_13-42-32_5950.html (53%)
+ rename "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-34-38_7090.html" => battle_analytics/Strel/battle_2026-05-07_13-44-36_2940.html (54%)
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-25-28_9200.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-27-16_1270.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-28-49_2090.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-30-54_2510.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-34-36_6000.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-37-08_7860.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-41-35_3070.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-43-18_7030.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-28_21-44-42_3490.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_04-13-24_5790.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_06-58-20_2010.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_07-02-11_3550.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_07-05-58_2080.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_07-38-03_3470.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_08-26-10_3160.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_08-27-46_4700.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_09-12-50_9480.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_09-14-29_1430.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_09-15-33_4770.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-04-29_09-17-14_8030.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-04_23-53-33_1760.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-04_23-55-20_5290.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-30-31_8920.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-51-02_1860.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-56-26_4510.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-57-08_8810.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-58-33_8050.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-59-21_2610.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_03-59-45_7240.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_04-00-08_7550.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_04-11-24_7900.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_04-14-21_2970.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_04-15-32_8570.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_04-52-18_3270.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_05-22-34_4370.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_08-32-16_3150.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_10-27-49_1450.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_11-06-03_1580.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_13-03-38_1060.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-00-11_6950.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-02-42_8750.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-05-15_3290.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-12-48_2400.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-13-56_3480.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-16-08_5490.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-17-47_5090.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-25-06_8330.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_15-51-57_4820.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_17-06-16_9350.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_17-23-08_2940.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_18-03-59_9910.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_18-11-02_1480.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_19-15-42_6200.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_19-58-12_1800.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_20-38-25_9240.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-08-08_5020.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-13-29_0180.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-17-16.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-17-16_3790.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-23-28.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-23-28_1100.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-29-58_7210.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-31-10_5650.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-32-21_6010.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-44-43.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-44-43_0560.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-47-27.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_21-47-27_9060.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-11-41_4250.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-13-06.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-13-06_9430.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-14-55_6880.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-16-11_7270.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-20-28_4410.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-21-38_9200.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-23-15_6780.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-26-08_0890.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-37-40_4900.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-39-16_6120.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-39-48.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-05_22-39-48_9650.html"
+ delete mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-07_03-08-26_8370.html"
+ delete mode 100644 "battle_analytics/\321\2053/battle_2026-04-28_21-34-36_6000.html"
+ delete mode 100644 "battle_analytics/\321\2053/battle_2026-04-28_21-41-35_3070.html"
+ delete mode 100644 "battle_analytics/\321\2053/battle_2026-04-28_21-44-42_3490.html"
+ delete mode 100644 "battle_analytics/\321\2053/battle_2026-05-05_21-29-58_7210.html"
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-07_14-55.json
+[07.05.2026 17:55:07,67] Pushing to repository... 
+Enumerating objects: 32, done.
+Counting objects:   3% (1/32)Counting objects:   6% (2/32)Counting objects:   9% (3/32)Counting objects:  12% (4/32)Counting objects:  15% (5/32)Counting objects:  18% (6/32)Counting objects:  21% (7/32)Counting objects:  25% (8/32)Counting objects:  28% (9/32)Counting objects:  31% (10/32)Counting objects:  34% (11/32)Counting objects:  37% (12/32)Counting objects:  40% (13/32)Counting objects:  43% (14/32)Counting objects:  46% (15/32)Counting objects:  50% (16/32)Counting objects:  53% (17/32)Counting objects:  56% (18/32)Counting objects:  59% (19/32)Counting objects:  62% (20/32)Counting objects:  65% (21/32)Counting objects:  68% (22/32)Counting objects:  71% (23/32)Counting objects:  75% (24/32)Counting objects:  78% (25/32)Counting objects:  81% (26/32)Counting objects:  84% (27/32)Counting objects:  87% (28/32)Counting objects:  90% (29/32)Counting objects:  93% (30/32)Counting objects:  96% (31/32)Counting objects: 100% (32/32)Counting objects: 100% (32/32), done.
+Delta compression using up to 4 threads
+Compressing objects:   5% (1/18)Compressing objects:  11% (2/18)Compressing objects:  16% (3/18)Compressing objects:  22% (4/18)Compressing objects:  27% (5/18)Compressing objects:  33% (6/18)Compressing objects:  38% (7/18)Compressing objects:  44% (8/18)Compressing objects:  50% (9/18)Compressing objects:  55% (10/18)Compressing objects:  61% (11/18)Compressing objects:  66% (12/18)Compressing objects:  72% (13/18)Compressing objects:  77% (14/18)Compressing objects:  83% (15/18)Compressing objects:  88% (16/18)Compressing objects:  94% (17/18)Compressing objects: 100% (18/18)Compressing objects: 100% (18/18), done.
+Writing objects:   5% (1/20)Writing objects:  10% (2/20)Writing objects:  15% (3/20)Writing objects:  20% (4/20)Writing objects:  30% (6/20)Writing objects:  40% (8/20)Writing objects:  50% (10/20)Writing objects:  55% (11/20)Writing objects:  60% (12/20)Writing objects:  65% (13/20)Writing objects:  70% (14/20)Writing objects:  75% (15/20)Writing objects:  80% (16/20)Writing objects:  85% (17/20)Writing objects:  90% (18/20)Writing objects:  95% (19/20)Writing objects: 100% (20/20)Writing objects: 100% (20/20), 9.55 KiB | 1.59 MiB/s, done.
+Total 20 (delta 13), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/13)        remote: Resolving deltas:   7% (1/13)        remote: Resolving deltas:  15% (2/13)        remote: Resolving deltas:  23% (3/13)        remote: Resolving deltas:  30% (4/13)        remote: Resolving deltas:  38% (5/13)        remote: Resolving deltas:  46% (6/13)        remote: Resolving deltas:  53% (7/13)        remote: Resolving deltas:  61% (8/13)        remote: Resolving deltas:  69% (9/13)        remote: Resolving deltas:  76% (10/13)        remote: Resolving deltas:  84% (11/13)        remote: Resolving deltas:  92% (12/13)        remote: Resolving deltas: 100% (13/13)        remote: Resolving deltas: 100% (13/13), completed with 8 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   2711f8c..186979f  main -> main
+[07.05.2026 17:55:11,60] SUCCESS: Data pushed to Git. 
+[07.05.2026 17:55:11,61] PROCESS FINISHED 
+------------------------------------------ 
+[07.05.2026 18:55:00,79] STARTING PROCESS 
+[07.05.2026 18:55:00,81] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-07 18:55:01
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.24.0)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 473 080
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[07.05.2026 18:55:05,92] Syncing with Git... 
