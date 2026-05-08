@@ -4337,3 +4337,31 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [08.05.2026 11:55:02,31] Syncing with Git... 
+[main 5de86c5] Auto-update 08.05.2026 11:55:02,48
+ 1 file changed, 24 insertions(+)
+[08.05.2026 11:55:02,77] Pushing to repository... 
+Enumerating objects: 7, done.
+Counting objects:  14% (1/7)Counting objects:  28% (2/7)Counting objects:  42% (3/7)Counting objects:  57% (4/7)Counting objects:  71% (5/7)Counting objects:  85% (6/7)Counting objects: 100% (7/7)Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects:  33% (1/3)Compressing objects:  66% (2/3)Compressing objects: 100% (3/3)Compressing objects: 100% (3/3), done.
+Writing objects:  25% (1/4)Writing objects:  50% (2/4)Writing objects:  75% (3/4)Writing objects: 100% (4/4)Writing objects: 100% (4/4), 537 bytes | 537.00 KiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/2)        remote: Resolving deltas:  50% (1/2)        remote: Resolving deltas: 100% (2/2)        remote: Resolving deltas: 100% (2/2), completed with 2 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   90af335..5de86c5  main -> main
+[08.05.2026 11:55:05,67] SUCCESS: Data pushed to Git. 
+[08.05.2026 11:55:05,68] PROCESS FINISHED 
+------------------------------------------ 
+[08.05.2026 12:55:01,71] STARTING PROCESS 
+[08.05.2026 12:55:01,73] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-08 12:55:02
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.24.0)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 330 434
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[08.05.2026 12:55:06,04] Syncing with Git... 
