@@ -1,22 +1,26 @@
 --- ОБЗОР БОЯ: 07/05/2026_13:38:09.7680 ---
 Оппонент: -=Hefas†agon=-
 
+Генерал: chong (Lvl: 473)
+  Модули: favourite
+  Заточки: crit: 7, damage: 4, dodge: 1, health: 4, reload: 2
+
 Slot 6: raptor (Lvl: 476, Stars: 15)
   Модули: red_bull, watch_the_target
-  Агрегация заточек: crit: 15, damag: 5, damag_weak: 1, dodg: 2, health: 5, reload: 2
+  Заточки: crit: 15, damage: 5, damage_weak: 1, dodge: 2, health: 5, reload: 2
 
 Slot 7: armageddon (Lvl: 476, Stars: 15)
   Модули: criticals, watch_the_target
-  Агрегация заточек: crit: 6, damag: 9, damag_weak: 1, dodg: 2, health: 5, health_medium: 1, health_weak: 2, reload: 4
+  Заточки: crit: 6, damage: 9, damage_weak: 1, dodge: 2, health: 5, health_medium: 1, health_weak: 2, reload: 4
 
 Slot 8: predator (Lvl: 476, Stars: 15)
   Модули: attack, watch_the_target
-  Агрегация заточек: crit: 12, damag: 13, health: 5
+  Заточки: crit: 12, damage: 13, health: 5
 
 Slot 9: ronin (Lvl: 476, Stars: 15)
   Модули: criticals, dodge
-  Агрегация заточек: crit: 7, crit_medium: 2, crit_weak: 1, damag: 2, dodg: 9, dodg_medium: 3, dodg_weak: 2, health: 3, health_medium: 1
+  Заточки: crit: 7, crit_medium: 2, crit_weak: 1, damage: 2, dodge: 9, dodge_medium: 3, dodge_weak: 2, health: 3, health_medium: 1
 
 Slot 10: rm23beam (Lvl: 476, Stars: 13)
   Модули: healing_power
-  Агрегация заточек: dodg: 1, dodg_medium: 1, health: 13, health_medium: 2, reload: 1
+  Заточки: dodge: 1, dodge_medium: 1, health: 13, health_medium: 2, reload: 1

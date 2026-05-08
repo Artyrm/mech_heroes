@@ -14,25 +14,22 @@
             .win { color: #4caf50; }
             .lose { color: #f44336; }
             .info { display: flex; justify-content: center; gap: 20px; margin-top: 10px; color: #bbb; }
-            
             .team-container { display: flex; gap: 20px; }
             .team { flex: 1; background-color: #2b2b36; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
             .team h2 { border-bottom: 2px solid #444; padding-bottom: 10px; margin-top: 0; text-align: center; }
-            
             .unit { background-color: #383845; padding: 15px; margin-bottom: 15px; border-radius: 6px; border-left: 4px solid #555; }
             .unit-header { display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #ffeb3b; }
             .unit-stats { display: flex; gap: 10px; font-size: 13px; margin-bottom: 10px; color: #ccc; flex-wrap: wrap; }
             .stat-box { background-color: #222; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }
             
-            .agg-box { margin-top: 10px; background-color: #1a1a20; padding: 10px; border-radius: 4px; font-size: 12px; border: 1px solid #444; }
-            .agg-title { color: #00bcd4; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; font-size: 11px; }
-            .mod-types { color: #8bc34a; margin-bottom: 5px; }
-            .sharpening-summary { color: #ffc107; }
+            .agg-box { margin-top: 10px; background-color: #1a1a20; padding: 10px; border-radius: 4px; font-size: 12px; border: 1px solid #444; line-height: 1.6; }
+            .agg-label { color: #9e9e9e; font-weight: normal; margin-right: 5px; }
+            .mod-types { color: #8bc34a; font-weight: bold; }
+            .sharpening-summary { color: #ffc107; font-weight: bold; }
             
             .equips { font-size: 11px; color: #888; margin-top: 10px; border-top: 1px solid #444; padding-top: 5px; }
             .equips ul { padding-left: 15px; margin: 5px 0 0 0; list-style-type: square; }
             .sharpening { color: #666; font-style: italic; }
-            
             .general-box { background-color: #4a3b2c; border-left-color: #ff9800; }
             .enemy-box { background-color: #3b2c2c; border-left-color: #f44336; }
         </style>
@@ -57,15 +54,14 @@
             </div>
         
             <div class="agg-box">
-                <div class="agg-title">Сводка по модулям</div>
-                <div class="mod-types">Типы: eye</div>
-                <div class="sharpening-summary">Заточки: crit: 5, crit_medium: 7, crit_weak: 4, damag: 1, reload: 1</div>
+                <div class="mod-types"><span class="agg-label">Модули:</span> eye_for_an_eye</div>
+                <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 5, crit_medium: 7, crit_weak: 4, damage: 1, reload: 1</div>
             </div>
             
             <div class="equips">
                 <strong>Детали экипировки:</strong>
                 <ul>
-        <li>eye_for_an_eye_tracker (Ур. 60) <span class='sharpening'>[1: reload, 30: crit, 60: crit_weak]</span></li><li>eye_for_an_eye_weapon (Ур. 70) <span class='sharpening'>[1: damag, 30: crit_medium, 60: crit_medium]</span></li><li>eye_for_an_eye_foot (Ур. 54) <span class='sharpening'>[1: crit_medium, 30: crit_medium]</span></li><li>eye_for_an_eye_engine (Ур. 60) <span class='sharpening'>[1: crit, 30: crit_weak, 60: crit_weak]</span></li><li>eye_for_an_eye_ammunition (Ур. 90) <span class='sharpening'>[1: crit, 30: crit_medium, 60: crit, 90: crit_medium]</span></li><li>eye_for_an_eye_armor (Ур. 65) <span class='sharpening'>[1: crit_weak, 30: crit_medium, 60: crit]</span></li></ul></div></div>
+        <li>eye_for_an_eye_tracker (Ур. 60) <span class='sharpening'>[1: reload, 30: crit, 60: crit_weak]</span></li><li>eye_for_an_eye_weapon (Ур. 70) <span class='sharpening'>[1: damage, 30: crit_medium, 60: crit_medium]</span></li><li>eye_for_an_eye_foot (Ур. 54) <span class='sharpening'>[1: crit_medium, 30: crit_medium]</span></li><li>eye_for_an_eye_engine (Ур. 60) <span class='sharpening'>[1: crit, 30: crit_weak, 60: crit_weak]</span></li><li>eye_for_an_eye_ammunition (Ур. 90) <span class='sharpening'>[1: crit, 30: crit_medium, 60: crit, 90: crit_medium]</span></li><li>eye_for_an_eye_armor (Ур. 65) <span class='sharpening'>[1: crit_weak, 30: crit_medium, 60: crit]</span></li></ul></div></div>
             <div class="unit ">
                 <div class="unit-header">
                     <span>Слот 7: bhramarah</span>
@@ -94,10 +90,15 @@
                     <div class="stat-box">💀 1</div>
                 </div>
             
+                <div class="agg-box">
+                    <div class="mod-types"><span class="agg-label">Модули:</span> health</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 1, damage: 2, damage_medium: 1, damage_weak: 2, dodge: 2, dodge_medium: 3, dodge_weak: 1, health: 1, health_medium: 6, health_weak: 3, reload_weak: 1</div>
+                </div>
+                
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>health_engine_legendary (Ур. 90) <span class='sharpening'>[1: dodg_medium, 30: damag_weak, 60: dodg, 90: health_medium]</span></li><li>health_foot_legendary (Ур. 119) <span class='sharpening'>[1: damag_medium, 30: health, 60: dodg, 90: dodg_weak]</span></li><li>health_weapon_legendary (Ур. 115) <span class='sharpening'>[1: reload_weak, 30: dodg_medium, 60: damag, 90: health_medium]</span></li><li>health_tracker_legendary (Ур. 82) <span class='sharpening'>[1: crit, 30: health_medium, 60: health_medium]</span></li><li>health_ammunition_legendary (Ур. 116) <span class='sharpening'>[1: damag_weak, 30: dodg_medium, 60: health_medium, 90: health_weak]</span></li><li>health_armor_legendary (Ур. 119) <span class='sharpening'>[1: damag, 30: health_weak, 60: health_medium, 90: health_weak]</span></li></ul></div></div>
+            <li>health_engine_legendary (Ур. 90) <span class='sharpening'>[1: dodge_medium, 30: damage_weak, 60: dodge, 90: health_medium]</span></li><li>health_foot_legendary (Ур. 119) <span class='sharpening'>[1: damage_medium, 30: health, 60: dodge, 90: dodge_weak]</span></li><li>health_weapon_legendary (Ур. 115) <span class='sharpening'>[1: reload_weak, 30: dodge_medium, 60: damage, 90: health_medium]</span></li><li>health_tracker_legendary (Ур. 82) <span class='sharpening'>[1: crit, 30: health_medium, 60: health_medium]</span></li><li>health_ammunition_legendary (Ур. 116) <span class='sharpening'>[1: damage_weak, 30: dodge_medium, 60: health_medium, 90: health_weak]</span></li><li>health_armor_legendary (Ур. 119) <span class='sharpening'>[1: damage, 30: health_weak, 60: health_medium, 90: health_weak]</span></li></ul></div></div>
             <div class="unit ">
                 <div class="unit-header">
                     <span>Слот 9: spark</span>
@@ -110,10 +111,15 @@
                     <div class="stat-box">💀 0</div>
                 </div>
             
+                <div class="agg-box">
+                    <div class="mod-types"><span class="agg-label">Модули:</span> red_bull</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> damage_weak: 1, dodge_medium: 1, reload: 1, reload_medium: 2, reload_weak: 1</div>
+                </div>
+                
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>red_bull_engine (Ур. 1) <span class='sharpening'>[1: reload]</span></li><li>red_bull_armor (Ур. 1) <span class='sharpening'>[1: dodg_medium]</span></li><li>red_bull_ammunition (Ур. 1) <span class='sharpening'>[1: reload_weak]</span></li><li>red_bull_foot (Ур. 1) <span class='sharpening'>[1: reload_medium]</span></li><li>red_bull_tracker (Ур. 1) <span class='sharpening'>[1: reload_medium]</span></li><li>red_bull_weapon (Ур. 1) <span class='sharpening'>[1: damag_weak]</span></li></ul></div></div>
+            <li>red_bull_engine (Ур. 1) <span class='sharpening'>[1: reload]</span></li><li>red_bull_armor (Ур. 1) <span class='sharpening'>[1: dodge_medium]</span></li><li>red_bull_ammunition (Ур. 1) <span class='sharpening'>[1: reload_weak]</span></li><li>red_bull_foot (Ур. 1) <span class='sharpening'>[1: reload_medium]</span></li><li>red_bull_tracker (Ур. 1) <span class='sharpening'>[1: reload_medium]</span></li><li>red_bull_weapon (Ур. 1) <span class='sharpening'>[1: damage_weak]</span></li></ul></div></div>
             <div class="unit ">
                 <div class="unit-header">
                     <span>Слот 10: fury</span>
@@ -126,10 +132,15 @@
                     <div class="stat-box">💀 0</div>
                 </div>
             
+                <div class="agg-box">
+                    <div class="mod-types"><span class="agg-label">Модули:</span> watch_the_target</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 2, damage: 10, damage_medium: 1, damage_weak: 2, dodge_medium: 1, health: 2, health_medium: 2, health_weak: 1, reload: 1, reload_medium: 1, reload_weak: 1</div>
+                </div>
+                
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>watch_the_target_tracker (Ур. 90) <span class='sharpening'>[1: health_weak, 30: reload, 60: dodg_medium, 90: crit]</span></li><li>watch_the_target_ammunition (Ур. 101) <span class='sharpening'>[1: damag, 30: damag, 60: damag, 90: damag]</span></li><li>watch_the_target_foot (Ур. 119) <span class='sharpening'>[1: health, 30: reload_weak, 60: damag_weak, 90: health_medium]</span></li><li>watch_the_target_armor (Ур. 119) <span class='sharpening'>[1: reload_medium, 30: health_medium, 60: crit, 90: health]</span></li><li>watch_the_target_engine (Ур. 90) <span class='sharpening'>[1: damag_weak, 30: damag, 60: damag, 90: damag]</span></li><li>watch_the_target_weapon (Ур. 109) <span class='sharpening'>[1: damag, 30: damag, 60: damag_medium, 90: damag]</span></li></ul></div></div>
+            <li>watch_the_target_tracker (Ур. 90) <span class='sharpening'>[1: health_weak, 30: reload, 60: dodge_medium, 90: crit]</span></li><li>watch_the_target_ammunition (Ур. 101) <span class='sharpening'>[1: damage, 30: damage, 60: damage, 90: damage]</span></li><li>watch_the_target_foot (Ур. 119) <span class='sharpening'>[1: health, 30: reload_weak, 60: damage_weak, 90: health_medium]</span></li><li>watch_the_target_armor (Ур. 119) <span class='sharpening'>[1: reload_medium, 30: health_medium, 60: crit, 90: health]</span></li><li>watch_the_target_engine (Ур. 90) <span class='sharpening'>[1: damage_weak, 30: damage, 60: damage, 90: damage]</span></li><li>watch_the_target_weapon (Ур. 109) <span class='sharpening'>[1: damage, 30: damage, 60: damage_medium, 90: damage]</span></li></ul></div></div>
             <div class="unit ">
                 <div class="unit-header">
                     <span>Слот 11: valkyrie</span>
@@ -142,6 +153,11 @@
                     <div class="stat-box">💀 0</div>
                 </div>
             
+                <div class="agg-box">
+                    <div class="mod-types"><span class="agg-label">Модули:</span> health</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 1, crit_medium: 2, health_medium: 2, health_weak: 2, reload: 2</div>
+                </div>
+                
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
@@ -153,15 +169,14 @@
             </div>
         
             <div class="agg-box">
-                <div class="agg-title">Сводка по модулям</div>
-                <div class="mod-types">Типы: favourite, suppression</div>
-                <div class="sharpening-summary">Заточки: crit: 6, crit_weak: 1, damag: 4, dodg: 7, health: 9, reload: 8</div>
+                <div class="mod-types"><span class="agg-label">Модули:</span> favourite, suppression_core</div>
+                <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 6, crit_weak: 1, damage: 4, dodge: 7, health: 9, reload: 8</div>
             </div>
             
             <div class="equips">
                 <strong>Детали экипировки:</strong>
                 <ul>
-        <li>favourite_tracker (Ур. 120) <span class='sharpening'>[1: health, 30: dodg, 60: health, 90: reload, 120: crit]</span></li><li>favourite_engine (Ур. 120) <span class='sharpening'>[1: reload, 30: damag, 60: dodg, 90: health, 120: crit]</span></li><li>favourite_foot (Ур. 120) <span class='sharpening'>[1: health, 30: dodg, 60: damag, 90: crit, 120: reload]</span></li><li>favourite_ammunition (Ур. 120) <span class='sharpening'>[1: dodg, 30: dodg, 60: health, 90: reload, 120: crit]</span></li><li>favourite_weapon (Ур. 120) <span class='sharpening'>[1: damag, 30: reload, 60: reload, 90: dodg, 120: health]</span></li><li>favourite_armor (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: damag, 90: reload, 120: crit]</span></li><li>suppression_core (Ур. 120) <span class='sharpening'>[1: crit_weak, 30: dodg, 60: crit, 90: reload, 120: health]</span></li></ul></div></div>
+        <li>favourite_tracker (Ур. 120) <span class='sharpening'>[1: health, 30: dodge, 60: health, 90: reload, 120: crit]</span></li><li>favourite_engine (Ур. 120) <span class='sharpening'>[1: reload, 30: damage, 60: dodge, 90: health, 120: crit]</span></li><li>favourite_foot (Ур. 120) <span class='sharpening'>[1: health, 30: dodge, 60: damage, 90: crit, 120: reload]</span></li><li>favourite_ammunition (Ур. 120) <span class='sharpening'>[1: dodge, 30: dodge, 60: health, 90: reload, 120: crit]</span></li><li>favourite_weapon (Ур. 120) <span class='sharpening'>[1: damage, 30: reload, 60: reload, 90: dodge, 120: health]</span></li><li>favourite_armor (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: damage, 90: reload, 120: crit]</span></li><li>suppression_core (Ур. 120) <span class='sharpening'>[1: crit_weak, 30: dodge, 60: crit, 90: reload, 120: health]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 1: ronin</span>
@@ -175,15 +190,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: dodge, vampirism</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 8, damag: 4, dodg: 7, health: 10, reload: 1</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> dodge, vampirism</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 8, damage: 4, dodge: 7, health: 10, reload: 1</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>vampirism_weapon_legendary (Ур. 120) <span class='sharpening'>[1: damag, 30: health, 60: crit, 90: health, 120: crit]</span></li><li>vampirism_tracker_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: dodg, 90: crit, 120: damag]</span></li><li>dodge_engine_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: crit, 60: damag, 90: dodg, 120: health]</span></li><li>vampirism_armor_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: reload, 60: crit, 90: dodg, 120: dodg]</span></li><li>dodge_foot_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: dodg, 60: health, 90: health, 120: dodg]</span></li><li>dodge_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: dodg, 60: health, 90: damag, 120: crit]</span></li></ul></div></div>
+            <li>vampirism_weapon_legendary (Ур. 120) <span class='sharpening'>[1: damage, 30: health, 60: crit, 90: health, 120: crit]</span></li><li>vampirism_tracker_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: dodge, 90: crit, 120: damage]</span></li><li>dodge_engine_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: crit, 60: damage, 90: dodge, 120: health]</span></li><li>vampirism_armor_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: reload, 60: crit, 90: dodge, 120: dodge]</span></li><li>dodge_foot_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: dodge, 60: health, 90: health, 120: dodge]</span></li><li>dodge_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: dodge, 60: health, 90: damage, 120: crit]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 2: armageddon</span>
@@ -197,15 +211,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: attack_speed, watch_the_target</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 12, damag: 5, dodg: 3, health: 6, reload: 4</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> attack_speed, watch_the_target</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 12, damage: 5, dodge: 3, health: 6, reload: 4</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>watch_the_target_weapon (Ур. 120) <span class='sharpening'>[1: reload, 30: reload, 60: crit, 90: crit, 120: damag]</span></li><li>attack_speed_engine_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: health, 60: damag, 90: dodg, 120: crit]</span></li><li>attack_speed_foot_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: crit, 60: damag, 90: reload, 120: damag]</span></li><li>watch_the_target_armor (Ур. 120) <span class='sharpening'>[1: dodg, 30: crit, 60: crit, 90: health, 120: crit]</span></li><li>watch_the_target_tracker (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: dodg, 90: damag, 120: health]</span></li><li>attack_speed_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: crit, 90: reload, 120: crit]</span></li></ul></div></div>
+            <li>watch_the_target_weapon (Ур. 120) <span class='sharpening'>[1: reload, 30: reload, 60: crit, 90: crit, 120: damage]</span></li><li>attack_speed_engine_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: health, 60: damage, 90: dodge, 120: crit]</span></li><li>attack_speed_foot_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: crit, 60: damage, 90: reload, 120: damage]</span></li><li>watch_the_target_armor (Ур. 120) <span class='sharpening'>[1: dodge, 30: crit, 60: crit, 90: health, 120: crit]</span></li><li>watch_the_target_tracker (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: dodge, 90: damage, 120: health]</span></li><li>attack_speed_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: crit, 90: reload, 120: crit]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 3: predator</span>
@@ -219,15 +232,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: red_bull</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 7, damag: 2, dodg: 10, health: 3, reload: 8</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> red_bull</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 7, damage: 2, dodge: 10, health: 3, reload: 8</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>red_bull_weapon (Ур. 120) <span class='sharpening'>[1: damag, 30: crit, 60: health, 90: dodg, 120: health]</span></li><li>red_bull_engine (Ур. 120) <span class='sharpening'>[1: dodg, 30: dodg, 60: crit, 90: reload, 120: reload]</span></li><li>red_bull_ammunition (Ур. 120) <span class='sharpening'>[1: crit, 30: dodg, 60: dodg, 90: crit, 120: reload]</span></li><li>red_bull_foot (Ур. 120) <span class='sharpening'>[1: crit, 30: reload, 60: crit, 90: dodg, 120: reload]</span></li><li>red_bull_tracker (Ур. 120) <span class='sharpening'>[1: reload, 30: crit, 60: dodg, 90: reload, 120: dodg]</span></li><li>red_bull_armor (Ур. 120) <span class='sharpening'>[1: damag, 30: dodg, 60: health, 90: dodg, 120: reload]</span></li></ul></div></div>
+            <li>red_bull_weapon (Ур. 120) <span class='sharpening'>[1: damage, 30: crit, 60: health, 90: dodge, 120: health]</span></li><li>red_bull_engine (Ур. 120) <span class='sharpening'>[1: dodge, 30: dodge, 60: crit, 90: reload, 120: reload]</span></li><li>red_bull_ammunition (Ур. 120) <span class='sharpening'>[1: crit, 30: dodge, 60: dodge, 90: crit, 120: reload]</span></li><li>red_bull_foot (Ур. 120) <span class='sharpening'>[1: crit, 30: reload, 60: crit, 90: dodge, 120: reload]</span></li><li>red_bull_tracker (Ур. 120) <span class='sharpening'>[1: reload, 30: crit, 60: dodge, 90: reload, 120: dodge]</span></li><li>red_bull_armor (Ур. 120) <span class='sharpening'>[1: damage, 30: dodge, 60: health, 90: dodge, 120: reload]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 4: muskrat</span>
@@ -241,15 +253,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: red_bull, watch_the_target</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 10, damag: 3, dodg: 7, health: 5, reload: 5</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> red_bull, watch_the_target</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 10, damage: 3, dodge: 7, health: 5, reload: 5</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>red_bull_armor (Ур. 120) <span class='sharpening'>[1: dodg, 30: crit, 60: reload, 90: crit, 120: dodg]</span></li><li>red_bull_weapon (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: dodg, 90: damag, 120: dodg]</span></li><li>red_bull_tracker (Ур. 120) <span class='sharpening'>[1: dodg, 30: dodg, 60: crit, 90: reload, 120: health]</span></li><li>watch_the_target_ammunition (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: crit, 90: reload, 120: crit]</span></li><li>watch_the_target_engine (Ур. 120) <span class='sharpening'>[1: damag, 30: reload, 60: crit, 90: crit, 120: dodg]</span></li><li>watch_the_target_foot (Ур. 120) <span class='sharpening'>[1: damag, 30: crit, 60: reload, 90: crit, 120: health]</span></li></ul></div></div>
+            <li>red_bull_armor (Ур. 120) <span class='sharpening'>[1: dodge, 30: crit, 60: reload, 90: crit, 120: dodge]</span></li><li>red_bull_weapon (Ур. 120) <span class='sharpening'>[1: health, 30: health, 60: dodge, 90: damage, 120: dodge]</span></li><li>red_bull_tracker (Ур. 120) <span class='sharpening'>[1: dodge, 30: dodge, 60: crit, 90: reload, 120: health]</span></li><li>watch_the_target_ammunition (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: crit, 90: reload, 120: crit]</span></li><li>watch_the_target_engine (Ур. 120) <span class='sharpening'>[1: damage, 30: reload, 60: crit, 90: crit, 120: dodge]</span></li><li>watch_the_target_foot (Ур. 120) <span class='sharpening'>[1: damage, 30: crit, 60: reload, 90: crit, 120: health]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 5: raptor</span>
@@ -263,15 +274,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: dodge, red_bull</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 7, damag: 3, dodg: 6, health: 7, reload: 7</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> dodge, red_bull</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 7, damage: 3, dodge: 6, health: 7, reload: 7</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>dodge_tracker_legendary (Ур. 120) <span class='sharpening'>[1: damag, 30: dodg, 60: crit, 90: health, 120: crit]</span></li><li>red_bull_engine (Ур. 120) <span class='sharpening'>[1: reload, 30: dodg, 60: reload, 90: damag, 120: crit]</span></li><li>dodge_armor_legendary (Ур. 120) <span class='sharpening'>[1: reload, 30: health, 60: reload, 90: reload, 120: crit]</span></li><li>red_bull_ammunition (Ур. 120) <span class='sharpening'>[1: reload, 30: crit, 60: health, 90: dodg, 120: dodg]</span></li><li>dodge_weapon_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: reload, 90: dodg, 120: health]</span></li><li>red_bull_foot (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: dodg, 90: health, 120: damag]</span></li></ul></div></div>
+            <li>dodge_tracker_legendary (Ур. 120) <span class='sharpening'>[1: damage, 30: dodge, 60: crit, 90: health, 120: crit]</span></li><li>red_bull_engine (Ур. 120) <span class='sharpening'>[1: reload, 30: dodge, 60: reload, 90: damage, 120: crit]</span></li><li>dodge_armor_legendary (Ур. 120) <span class='sharpening'>[1: reload, 30: health, 60: reload, 90: reload, 120: crit]</span></li><li>red_bull_ammunition (Ур. 120) <span class='sharpening'>[1: reload, 30: crit, 60: health, 90: dodge, 120: dodge]</span></li><li>dodge_weapon_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: reload, 90: dodge, 120: health]</span></li><li>red_bull_foot (Ур. 120) <span class='sharpening'>[1: health, 30: crit, 60: dodge, 90: health, 120: damage]</span></li></ul></div></div>
             <div class="unit enemy-box">
                 <div class="unit-header">
                     <span>Слот 6: markata</span>
@@ -285,15 +295,14 @@
                 </div>
             
                 <div class="agg-box">
-                    <div class="agg-title">Агрегированные данные</div>
-                    <div class="mod-types">Модули: health, regen</div>
-                    <div class="sharpening-summary">Сумма заточек: crit: 7, damag: 7, dodg: 6, health: 7, reload: 3</div>
+                    <div class="mod-types"><span class="agg-label">Модули:</span> health, regen</div>
+                    <div class="sharpening-summary"><span class="agg-label">Заточки:</span> crit: 7, damage: 7, dodge: 6, health: 7, reload: 3</div>
                 </div>
                 
                 <div class="equips">
                     <strong>Снаряжение:</strong>
                     <ul>
-            <li>regen_armor_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: damag, 60: crit, 90: crit, 120: health]</span></li><li>health_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: damag, 60: health, 90: dodg, 120: crit]</span></li><li>health_engine_legendary (Ур. 120) <span class='sharpening'>[1: dodg, 30: dodg, 60: health, 90: health, 120: health]</span></li><li>regen_weapon_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: dodg, 60: crit, 90: damag, 120: crit]</span></li><li>health_foot_legendary (Ур. 120) <span class='sharpening'>[1: dodg, 30: damag, 60: reload, 90: damag, 120: dodg]</span></li><li>regen_tracker_legendary (Ур. 120) <span class='sharpening'>[1: damag, 30: reload, 60: reload, 90: damag, 120: crit]</span></li></ul></div></div></div>
+            <li>regen_armor_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: damage, 60: crit, 90: crit, 120: health]</span></li><li>health_ammunition_legendary (Ур. 120) <span class='sharpening'>[1: health, 30: damage, 60: health, 90: dodge, 120: crit]</span></li><li>health_engine_legendary (Ур. 120) <span class='sharpening'>[1: dodge, 30: dodge, 60: health, 90: health, 120: health]</span></li><li>regen_weapon_legendary (Ур. 120) <span class='sharpening'>[1: crit, 30: dodge, 60: crit, 90: damage, 120: crit]</span></li><li>health_foot_legendary (Ур. 120) <span class='sharpening'>[1: dodge, 30: damage, 60: reload, 90: damage, 120: dodge]</span></li><li>regen_tracker_legendary (Ур. 120) <span class='sharpening'>[1: damage, 30: reload, 60: reload, 90: damage, 120: crit]</span></li></ul></div></div></div>
             </div>
         </div>
     </body>

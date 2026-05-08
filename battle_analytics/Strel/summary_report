@@ -1,12 +1,26 @@
 --- ОБЗОР БОЯ: 07/05/2026_13:44:36.2940 ---
 Оппонент: тетка с веслом
 
+Генерал: levsha (Lvl: 476)
+  Модули: favourite
+  Заточки: crit: 6, damage: 7, dodge: 5, health: 6, reload: 6
+
 Slot 6: predator (Lvl: 476, Stars: 15)
+  Модули: attack, watch_the_target
+  Заточки: crit: 3, damage: 17, damage_medium: 2, health: 2, reload: 6
 
 Slot 7: raptor (Lvl: 476, Stars: 15)
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 5, damage: 10, health: 4, reload: 11
 
 Slot 8: armageddon (Lvl: 476, Stars: 15)
+  Модули: criticals, watch_the_target
+  Заточки: crit: 24, crit_medium: 1, damage: 1, health: 2, reload: 2
 
 Slot 9: rust (Lvl: 476, Stars: 15)
+  Модули: red_bull
+  Заточки: crit: 2, damage: 9, dodge: 3, health: 2, reload: 12
 
 Slot 10: rm23beam (Lvl: 476, Stars: 15)
+  Модули: health
+  Заточки: crit: 5, damage: 1, dodge: 3, health: 19, reload: 2
