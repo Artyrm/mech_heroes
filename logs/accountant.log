@@ -5429,3 +5429,32 @@ fatal: unable to access 'https://github.com/Artyrm/mech_heroes.git/': Failed to 
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [10.05.2026  1:55:05,98] Syncing with Git... 
+[main dadc67b] Auto-update 10.05.2026  1:55:06,26
+ 4 files changed, 28 insertions(+), 6 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-09_22-55.json
+[10.05.2026  1:55:06,70] Pushing to repository... 
+Enumerating objects: 34, done.
+Counting objects:   2% (1/34)Counting objects:   5% (2/34)Counting objects:   8% (3/34)Counting objects:  11% (4/34)Counting objects:  14% (5/34)Counting objects:  17% (6/34)Counting objects:  20% (7/34)Counting objects:  23% (8/34)Counting objects:  26% (9/34)Counting objects:  29% (10/34)Counting objects:  32% (11/34)Counting objects:  35% (12/34)Counting objects:  38% (13/34)Counting objects:  41% (14/34)Counting objects:  44% (15/34)Counting objects:  47% (16/34)Counting objects:  50% (17/34)Counting objects:  52% (18/34)Counting objects:  55% (19/34)Counting objects:  58% (20/34)Counting objects:  61% (21/34)Counting objects:  64% (22/34)Counting objects:  67% (23/34)Counting objects:  70% (24/34)Counting objects:  73% (25/34)Counting objects:  76% (26/34)Counting objects:  79% (27/34)Counting objects:  82% (28/34)Counting objects:  85% (29/34)Counting objects:  88% (30/34)Counting objects:  91% (31/34)Counting objects:  94% (32/34)Counting objects:  97% (33/34)Counting objects: 100% (34/34)Counting objects: 100% (34/34), done.
+Delta compression using up to 4 threads
+Compressing objects:   5% (1/20)Compressing objects:  10% (2/20)Compressing objects:  15% (3/20)Compressing objects:  20% (4/20)Compressing objects:  25% (5/20)Compressing objects:  30% (6/20)Compressing objects:  35% (7/20)Compressing objects:  40% (8/20)Compressing objects:  45% (9/20)Compressing objects:  50% (10/20)Compressing objects:  55% (11/20)Compressing objects:  60% (12/20)Compressing objects:  65% (13/20)Compressing objects:  70% (14/20)Compressing objects:  75% (15/20)Compressing objects:  80% (16/20)Compressing objects:  85% (17/20)Compressing objects:  90% (18/20)Compressing objects:  95% (19/20)Compressing objects: 100% (20/20)Compressing objects: 100% (20/20), done.
+Writing objects:   4% (1/24)Writing objects:   8% (2/24)Writing objects:  12% (3/24)Writing objects:  16% (4/24)Writing objects:  20% (5/24)Writing objects:  25% (6/24)Writing objects:  29% (7/24)Writing objects:  33% (8/24)Writing objects:  37% (9/24)Writing objects:  41% (10/24)Writing objects:  50% (12/24)Writing objects:  54% (13/24)Writing objects:  58% (14/24)Writing objects:  62% (15/24)Writing objects:  66% (16/24)Writing objects:  70% (17/24)Writing objects:  75% (18/24)Writing objects:  79% (19/24)Writing objects:  83% (20/24)Writing objects:  87% (21/24)Writing objects:  91% (22/24)Writing objects:  95% (23/24)Writing objects: 100% (24/24)Writing objects: 100% (24/24), 3.74 KiB | 957.00 KiB/s, done.
+Total 24 (delta 13), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/13)        remote: Resolving deltas:   7% (1/13)        remote: Resolving deltas:  15% (2/13)        remote: Resolving deltas:  23% (3/13)        remote: Resolving deltas:  30% (4/13)        remote: Resolving deltas:  38% (5/13)        remote: Resolving deltas:  46% (6/13)        remote: Resolving deltas:  53% (7/13)        remote: Resolving deltas:  61% (8/13)        remote: Resolving deltas:  69% (9/13)        remote: Resolving deltas:  76% (10/13)        remote: Resolving deltas:  84% (11/13)        remote: Resolving deltas:  92% (12/13)        remote: Resolving deltas: 100% (13/13)        remote: Resolving deltas: 100% (13/13), completed with 6 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   1661aa2..dadc67b  main -> main
+[10.05.2026  1:55:09,40] SUCCESS: Data pushed to Git. 
+[10.05.2026  1:55:09,42] PROCESS FINISHED 
+------------------------------------------ 
+[10.05.2026  2:55:01,73] STARTING PROCESS 
+[10.05.2026  2:55:01,74] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-10 02:55:02
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.24.0)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 396 667
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[10.05.2026  2:55:05,63] Syncing with Git... 
