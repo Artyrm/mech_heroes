@@ -7575,3 +7575,42 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [13.05.2026  0:55:06,79] Syncing with Git... 
+[main c4c8faf] Auto-update 13.05.2026  0:55:07,68
+ 15 files changed, 2784 insertions(+), 8 deletions(-)
+ create mode 100644 battle_analytics/Strel/battle_2026-05-12_08-27-08_7490.html
+ create mode 100644 battle_analytics/generate_comparison_report.py
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-11_02-18-36_4160.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-11_02-26-26_5720.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-11_10-02-57_1540.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-11_11-22-43_2910.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-11_19-03-56_6690.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-12_16-20-10_9840.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-12_19-03-53_1700.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/evolution_comparison_05-05_vs_current.html"
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-12_21-55.json
+[13.05.2026  0:55:08,52] Pushing to repository... 
+Enumerating objects: 40, done.
+Counting objects:   2% (1/40)Counting objects:   5% (2/40)Counting objects:   7% (3/40)Counting objects:  10% (4/40)Counting objects:  12% (5/40)Counting objects:  15% (6/40)Counting objects:  17% (7/40)Counting objects:  20% (8/40)Counting objects:  22% (9/40)Counting objects:  25% (10/40)Counting objects:  27% (11/40)Counting objects:  30% (12/40)Counting objects:  32% (13/40)Counting objects:  35% (14/40)Counting objects:  37% (15/40)Counting objects:  40% (16/40)Counting objects:  42% (17/40)Counting objects:  45% (18/40)Counting objects:  47% (19/40)Counting objects:  50% (20/40)Counting objects:  52% (21/40)Counting objects:  55% (22/40)Counting objects:  57% (23/40)Counting objects:  60% (24/40)Counting objects:  62% (25/40)Counting objects:  65% (26/40)Counting objects:  67% (27/40)Counting objects:  70% (28/40)Counting objects:  72% (29/40)Counting objects:  75% (30/40)Counting objects:  77% (31/40)Counting objects:  80% (32/40)Counting objects:  82% (33/40)Counting objects:  85% (34/40)Counting objects:  87% (35/40)Counting objects:  90% (36/40)Counting objects:  92% (37/40)Counting objects:  95% (38/40)Counting objects:  97% (39/40)Counting objects: 100% (40/40)Counting objects: 100% (40/40), done.
+Delta compression using up to 4 threads
+Compressing objects:   4% (1/24)Compressing objects:   8% (2/24)Compressing objects:  12% (3/24)Compressing objects:  16% (4/24)Compressing objects:  20% (5/24)Compressing objects:  25% (6/24)Compressing objects:  29% (7/24)Compressing objects:  33% (8/24)Compressing objects:  37% (9/24)Compressing objects:  41% (10/24)Compressing objects:  45% (11/24)Compressing objects:  50% (12/24)Compressing objects:  54% (13/24)Compressing objects:  58% (14/24)Compressing objects:  62% (15/24)Compressing objects:  66% (16/24)Compressing objects:  70% (17/24)Compressing objects:  75% (18/24)Compressing objects:  79% (19/24)Compressing objects:  83% (20/24)Compressing objects:  87% (21/24)Compressing objects:  91% (22/24)Compressing objects:  95% (23/24)Compressing objects: 100% (24/24)Compressing objects: 100% (24/24), done.
+Writing objects:   3% (1/26)Writing objects:   7% (2/26)Writing objects:  11% (3/26)Writing objects:  15% (4/26)Writing objects:  23% (6/26)Writing objects:  26% (7/26)Writing objects:  30% (8/26)Writing objects:  34% (9/26)Writing objects:  38% (10/26)Writing objects:  42% (11/26)Writing objects:  46% (12/26)Writing objects:  50% (13/26)Writing objects:  53% (14/26)Writing objects:  57% (15/26)Writing objects:  61% (16/26)Writing objects:  65% (17/26)Writing objects:  69% (18/26)Writing objects:  73% (19/26)Writing objects:  76% (20/26)Writing objects:  80% (21/26)Writing objects:  84% (22/26)Writing objects:  88% (23/26)Writing objects:  92% (24/26)Writing objects:  96% (25/26)Writing objects: 100% (26/26)Writing objects: 100% (26/26), 12.12 KiB | 2.42 MiB/s, done.
+Total 26 (delta 18), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/18)        remote: Resolving deltas:   5% (1/18)        remote: Resolving deltas:  11% (2/18)        remote: Resolving deltas:  16% (3/18)        remote: Resolving deltas:  22% (4/18)        remote: Resolving deltas:  27% (5/18)        remote: Resolving deltas:  33% (6/18)        remote: Resolving deltas:  38% (7/18)        remote: Resolving deltas:  44% (8/18)        remote: Resolving deltas:  50% (9/18)        remote: Resolving deltas:  55% (10/18)        remote: Resolving deltas:  61% (11/18)        remote: Resolving deltas:  66% (12/18)        remote: Resolving deltas:  72% (13/18)        remote: Resolving deltas:  77% (14/18)        remote: Resolving deltas:  83% (15/18)        remote: Resolving deltas:  88% (16/18)        remote: Resolving deltas:  94% (17/18)        remote: Resolving deltas: 100% (18/18)        remote: Resolving deltas: 100% (18/18), completed with 10 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   5dc4af2..c4c8faf  main -> main
+[13.05.2026  0:55:11,54] SUCCESS: Data pushed to Git. 
+[13.05.2026  0:55:11,56] PROCESS FINISHED 
+------------------------------------------ 
+[13.05.2026  1:55:01,74] STARTING PROCESS 
+[13.05.2026  1:55:01,76] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-13 01:55:02
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.24.0)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 10 110 720
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[13.05.2026  1:55:06,43] Syncing with Git... 
