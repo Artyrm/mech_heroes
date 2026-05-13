@@ -119,4 +119,5 @@ def process_battles(history, target_nicks):
 if __name__ == "__main__":
     history = fetch_history()
     if history:
-        process_battles(history, ["Хоббит", "Strel"])
+        targets = ["Хоббит", "Strel", "-=Hefas\u2020agon=-", "тетка с веслом", "Лиса", "Князь"]
+        process_battles(history, targets)
