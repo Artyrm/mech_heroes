@@ -65,8 +65,11 @@ def fetch_history():
     history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
     print(f"INFO: Successfully fetched {len(history)} battles from history.")
     
-    # Save a dump for later use (but don't output it to console)
-    save_json('current_init_dump.json', r)
+    # Save a dump with timestamp in init_dumps folder
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    dump_path = os.path.join(ROOT_DIR, 'init_dumps', 'init_{}.json'.format(timestamp))
+    save_json(dump_path, r)
+    save_json(os.path.join(ROOT_DIR, 'current_init_dump.json'), r)
     
     return history
 
