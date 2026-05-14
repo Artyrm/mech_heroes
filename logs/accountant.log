@@ -9105,3 +9105,33 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [14.05.2026 23:55:06,91] Syncing with Git... 
+[main a640b6b] Auto-update 14.05.2026 23:55:09,62
+ 9 files changed, 2010 insertions(+), 90 deletions(-)
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-14_15-39-41_2440.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-14_15-46-53_6880.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-14_18-30-37_0570.html"
+ create mode 100644 "battle_analytics/\320\264\320\270/battle_2026-05-14_19-32-28_3950.html"
+ create mode 100644 "battle_analytics/\320\264\320\270/comparison_win_vs_lose.html"
+ create mode 100644 "battle_analytics/\320\264\320\270/evolution_comparison_win_vs_lose.html"
+ create mode 100644 "battle_analytics/\320\264\320\270/full_evolution_comparison.html"
+[14.05.2026 23:55:10,56] Pushing to repository... 
+Enumerating objects: 22, done.
+Counting objects:   4% (1/22)Counting objects:   9% (2/22)Counting objects:  13% (3/22)Counting objects:  18% (4/22)Counting objects:  22% (5/22)Counting objects:  27% (6/22)Counting objects:  31% (7/22)Counting objects:  36% (8/22)Counting objects:  40% (9/22)Counting objects:  45% (10/22)Counting objects:  50% (11/22)Counting objects:  54% (12/22)Counting objects:  59% (13/22)Counting objects:  63% (14/22)Counting objects:  68% (15/22)Counting objects:  72% (16/22)Counting objects:  77% (17/22)Counting objects:  81% (18/22)Counting objects:  86% (19/22)Counting objects:  90% (20/22)Counting objects:  95% (21/22)Counting objects: 100% (22/22)Counting objects: 100% (22/22), done.
+Delta compression using up to 4 threads
+Compressing objects:   7% (1/14)Compressing objects:  14% (2/14)Compressing objects:  21% (3/14)Compressing objects:  28% (4/14)Compressing objects:  35% (5/14)Compressing objects:  42% (6/14)Compressing objects:  50% (7/14)Compressing objects:  57% (8/14)Compressing objects:  64% (9/14)Compressing objects:  71% (10/14)Compressing objects:  78% (11/14)Compressing objects:  85% (12/14)Compressing objects:  92% (13/14)Compressing objects: 100% (14/14)Compressing objects: 100% (14/14), done.
+Writing objects:   6% (1/15)Writing objects:  13% (2/15)Writing objects:  20% (3/15)Writing objects:  26% (4/15)Writing objects:  33% (5/15)Writing objects:  46% (7/15)Writing objects:  53% (8/15)Writing objects:  60% (9/15)Writing objects:  66% (10/15)Writing objects:  80% (12/15)Writing objects:  86% (13/15)Writing objects:  93% (14/15)Writing objects: 100% (15/15)Writing objects: 100% (15/15), 12.36 KiB | 316.00 KiB/s, done.
+Total 15 (delta 10), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/10)        remote: Resolving deltas:  10% (1/10)        remote: Resolving deltas:  20% (2/10)        remote: Resolving deltas:  30% (3/10)        remote: Resolving deltas:  40% (4/10)        remote: Resolving deltas:  50% (5/10)        remote: Resolving deltas:  60% (6/10)        remote: Resolving deltas:  70% (7/10)        remote: Resolving deltas:  80% (8/10)        remote: Resolving deltas:  90% (9/10)        remote: Resolving deltas: 100% (10/10)        remote: Resolving deltas: 100% (10/10), completed with 4 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   7e3dbd5..a640b6b  main -> main
+[14.05.2026 23:55:16,67] SUCCESS: Data pushed to Git. 
+[14.05.2026 23:55:16,69] PROCESS FINISHED 
+------------------------------------------ 
+[15.05.2026  0:55:02,01] STARTING PROCESS 
+[15.05.2026  0:55:02,10] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-15 00:55:03
+[*] Проверка активности пользователя...
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
+[15.05.2026  0:55:03,26] Syncing with Git... 

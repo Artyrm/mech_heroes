@@ -19,9 +19,7 @@ def format_level(raw_lvl):
         raw = int(raw_lvl)
         lvl = (raw // 4) + 1
         step = (raw % 4) + 1
-        if step == 1:
-            return str(lvl)
-        return f"{lvl}.{step}"
+        return str(lvl) if step == 1 else f"{lvl}.{step}"
     except:
         return raw_lvl
 
@@ -49,13 +47,26 @@ def aggregate_unit_stats(u_data):
         
     sharps = defaultdict(int)
     mod_types = set()
+    eq_lvls = []
     for eq in equipables.values():
         mod_types.add(get_mod_type(eq.get('id', '')))
+        lvl = int(eq.get('level', 0))
+        eq_lvls.append(lvl)
         for t in eq.get('sharpening', {}).values():
             sharps[clean_stat(t)] += 1
+            
+    # Format levels: single number if all same, list if different
+    if not eq_lvls:
+        eq_str = "нет"
+    elif all(l == eq_lvls[0] for l in eq_lvls):
+        eq_str = str(eq_lvls[0])
+    else:
+        eq_str = ", ".join(map(str, sorted(eq_lvls)))
+        
     return {
         'mod_types': sorted(list(mod_types)),
-        'sharpening_summary': dict(sharps)
+        'sharpening_summary': dict(sharps),
+        'eq_lvls_str': eq_str
     }
 
 def generate_html(json_file, output_html):
@@ -150,6 +161,7 @@ def generate_html(json_file, output_html):
         if agg['mod_types']:
             res += f"""
             <div class="agg-box">
+                <div class="mod-types"><span class="agg-label">Ур. Экипировки:</span> {agg['eq_lvls_str']}</div>
                 <div class="mod-types"><span class="agg-label">Модули:</span> {', '.join(agg['mod_types'])}</div>
                 <div class="sharpening-summary"><span class="agg-label">Заточки:</span> {', '.join([f'{k}: {v}' for k, v in sorted(agg['sharpening_summary'].items())])}</div>
             </div>
@@ -196,6 +208,7 @@ def generate_html(json_file, output_html):
             if agg['mod_types']:
                 res += f"""
                 <div class="agg-box">
+                    <div class="mod-types"><span class="agg-label">Ур. Экипировки:</span> {agg['eq_lvls_str']}</div>
                     <div class="mod-types"><span class="agg-label">Модули:</span> {', '.join(agg['mod_types'])}</div>
                     <div class="sharpening-summary"><span class="agg-label">Заточки:</span> {', '.join([f'{k}: {v}' for k, v in sorted(agg['sharpening_summary'].items())])}</div>
                 </div>

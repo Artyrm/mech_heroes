@@ -1,0 +1,347 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Сравнение боев: Хоббит</title>
+        <style>
+            body { font-family: 'Segoe UI', sans-serif; background: #1a1a1f; color: #e0e0e0; padding: 20px; }
+            .container { max-width: 1400px; margin: auto; }
+            .header { text-align: center; margin-bottom: 30px; background: #25252d; padding: 20px; border-radius: 8px; border: 1px solid #333; }
+            .comparison-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+            th, td { border: 1px solid #333; padding: 12px; vertical-align: top; }
+            th { background: #25252d; font-size: 1.1em; color: #fff; }
+            .row-header { background: #2d2d35; text-align: center; font-weight: bold; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1.5px; color: #aaa; }
+            .diff-summary { background: #4a1a1a; color: #ffabac; font-size: 0.9em; text-align: center; font-weight: bold; padding: 6px; border: 1px solid #f44336; }
+            .unit-name { font-weight: bold; color: #ffeb3b; font-size: 1.1em; }
+            .diff { background: #2c1e1e; border-left: 5px solid #f44336; }
+            .same { opacity: 0.7; }
+            .label { color: #888; font-size: 0.8em; text-transform: uppercase; }
+            .val-mods { color: #8bc34a; font-weight: bold; font-size: 0.9em; }
+            .val-sharps { color: #ffc107; font-weight: bold; font-size: 0.9em; }
+            .changes-tag { background: #f44336; color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 3px; margin-left: 10px; vertical-align: middle; }
+            .section-title { background: #121217; padding: 15px; border-radius: 4px; margin: 30px 0 10px 0; border-bottom: 3px solid #00bcd4; color: #00bcd4; font-size: 1.6em; text-align: center; font-weight: bold; }
+            .win-marker { color: #4caf50; font-weight: bold; }
+            .lose-marker { color: #f44336; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>Сравнение эволюции билдов</h1>
+                <p>Бой 1: 07/05/2026_13:21:21.1000 (Дельта: <span class="win-marker">13</span>) | Бой 2: 14/05/2026_18:30:37.0570 (Дельта: <span class="lose-marker">-1</span>)</p>
+            </div>
+
+            <div class="section-title">МОЙ ОТРЯД (Player)</div>
+            <table class="comparison-table">
+                <tr>
+                    <th>Ранее (07/05/2026_13:21:21.1000)</th>
+                    <th>Сейчас (14/05/2026_18:30:37.0570)</th>
+                </tr>
+                
+        <tr class="unit-row"><td colspan="2" class="row-header">ГЕНЕРАЛ </td></tr>
+        
+        <tr>
+            <td class="same">
+                <div class="unit-name">eva (Ур. 82 | ?★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">60, 60, 60, 70, 83, 90</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">eye_for_an_eye</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 5, crit_medium: 9, crit_weak: 3, damage: 1, reload: 1</span>
+                </div>
+            </td>
+        
+            <td class="same">
+                <div class="unit-name">eva (Ур. 82 | ?★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">60, 60, 60, 70, 83, 90</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">eye_for_an_eye</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 5, crit_medium: 9, crit_weak: 3, damage: 1, reload: 1</span>
+                </div>
+            </td>
+        </tr>
+    
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: BHRAMARAH </td></tr>
+        
+        <tr>
+            <td class="same">
+                <div class="unit-name">bhramarah (Ур. 20 | 9★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">нет</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods"></span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps"></span>
+                </div>
+            </td>
+        
+            <td class="same">
+                <div class="unit-name">bhramarah (Ур. 20 | 9★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">нет</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods"></span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps"></span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: FURY <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Экип: 90, 90, 109, 114, 119, 119 → 90, 90, 119, 119, 119, 119</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">fury (Ур. 120 | 10★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">90, 90, 109, 114, 119, 119</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">watch_the_target</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 2, damage: 10, damage_medium: 1, damage_weak: 2, dodge_medium: 1, health: 2, health_medium: 2, health_weak: 1, reload: 1, reload_medium: 1, reload_weak: 1</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">fury (Ур. 120 | 10★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">90, 90, 119, 119, 119, 119</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">watch_the_target</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 2, damage: 10, damage_medium: 1, damage_weak: 2, dodge_medium: 1, health: 2, health_medium: 2, health_weak: 1, reload: 1, reload_medium: 1, reload_weak: 1</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: GROT <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">★: 5 → 7; Экип: 82, 90, 115, 116, 119, 119 → 82, 90, 116, 118, 119, 119</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">grot (Ур. 120 | 5★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">82, 90, 115, 116, 119, 119</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">health</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 1, damage: 2, damage_medium: 1, damage_weak: 2, dodge: 2, dodge_medium: 3, dodge_weak: 1, health: 1, health_medium: 6, health_weak: 3, reload_weak: 1</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">grot (Ур. 120 | 7★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">82, 90, 116, 118, 119, 119</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">health</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 1, damage: 2, damage_medium: 1, damage_weak: 2, dodge: 2, dodge_medium: 3, dodge_weak: 1, health: 1, health_medium: 6, health_weak: 3, reload_weak: 1</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: RUST <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Юнит добавлен.</td></tr>
+        <tr><td>-</td>
+            <td class="diff">
+                <div class="unit-name">rust (Ур. 54.2 | 5★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">2, 2, 60, 61, 90, 104</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 1, crit_medium: 2, damage: 2, damage_medium: 2, damage_weak: 1, dodge: 2, dodge_medium: 1, dodge_weak: 1, health: 2, reload_medium: 2</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: SPARK </td></tr>
+        
+        <tr>
+            <td class="same">
+                <div class="unit-name">spark (Ур. 1.2 | 9★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">1</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">damage_weak: 1, dodge_medium: 1, reload: 1, reload_medium: 2, reload_weak: 1</span>
+                </div>
+            </td>
+        
+            <td class="same">
+                <div class="unit-name">spark (Ур. 1.2 | 9★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">1</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">damage_weak: 1, dodge_medium: 1, reload: 1, reload_medium: 2, reload_weak: 1</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: VALKYRIE <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Юнит убран.</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">valkyrie (Ур. 120 | 4★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">1, 1, 1, 2, 32, 60</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">health</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 1, crit_medium: 2, health_medium: 2, health_weak: 2, reload: 2</span>
+                </div>
+            </td>
+        <td>-</td></tr>
+    
+            </table>
+
+            <div class="section-title">ОТРЯД ВРАГА (Хоббит)</div>
+            <table class="comparison-table">
+                <tr>
+                    <th>Ранее (07/05/2026_13:21:21.1000)</th>
+                    <th>Сейчас (14/05/2026_18:30:37.0570)</th>
+                </tr>
+                
+        <tr class="unit-row"><td colspan="2" class="row-header">ГЕНЕРАЛ </td></tr>
+        
+        <tr>
+            <td class="same">
+                <div class="unit-name">levsha (Ур. 120 | ?★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">favourite, suppression_core</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 6, crit_weak: 1, damage: 4, dodge: 7, health: 9, reload: 8</span>
+                </div>
+            </td>
+        
+            <td class="same">
+                <div class="unit-name">levsha (Ур. 120 | ?★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">favourite, suppression_core</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 6, crit_weak: 1, damage: 4, dodge: 7, health: 9, reload: 8</span>
+                </div>
+            </td>
+        </tr>
+    
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: ARMAGEDDON <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Заточки: crit: 9→13, dodge: 7→3, health: 6→5, reload: 4→5</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">armageddon (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">attack_speed, red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 9, damage: 4, dodge: 7, health: 6, reload: 4</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">armageddon (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">watch_the_target</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 13, damage: 4, dodge: 3, health: 5, reload: 5</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: FURY <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Заточки: crit: 7→8, damage: 7→6, dodge: 5→6, reload: 4→3</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">fury (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">health, regen</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 7, damage: 7, dodge: 5, health: 7, reload: 4</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">fury (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">health, regen</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 8, damage: 6, dodge: 6, health: 7, reload: 3</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: MUSKRAT <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Заточки: crit: 12→7, dodge: 4→8, reload: 4→5</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">muskrat (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">vampirism, watch_the_target</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 12, damage: 4, dodge: 4, health: 6, reload: 4</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">muskrat (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">attack, criticals</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 7, damage: 4, dodge: 8, health: 6, reload: 5</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: PREDATOR </td></tr>
+        
+        <tr>
+            <td class="same">
+                <div class="unit-name">predator (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 7, damage: 2, dodge: 10, health: 3, reload: 8</span>
+                </div>
+            </td>
+        
+            <td class="same">
+                <div class="unit-name">predator (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 7, damage: 2, dodge: 10, health: 3, reload: 8</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: RAPTOR <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Заточки: crit: 9→6, damage: 4→3, dodge: 6→10</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">raptor (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull, watch_the_target</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 9, damage: 4, dodge: 6, health: 6, reload: 5</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">raptor (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">red_bull</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 6, damage: 3, dodge: 10, health: 6, reload: 5</span>
+                </div>
+            </td>
+        </tr>
+    
+        <tr class="unit-row"><td colspan="2" class="row-header">ЮНИТ: RONIN <span class="changes-tag">ИЗМЕНЕНО</span></td></tr>
+        <tr><td colspan="2" class="diff-summary">Заточки: crit: 7→8, damage: 3→4, dodge: 6→7, reload: 4→1</td></tr>
+        <tr>
+            <td class="diff">
+                <div class="unit-name">ronin (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">dodge</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 7, damage: 3, dodge: 6, health: 10, reload: 4</span>
+                </div>
+            </td>
+        
+            <td class="diff">
+                <div class="unit-name">ronin (Ур. 120 | 15★)</div>
+                <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">120</span><br>
+                    <span class="label">Модули:</span> <span class="val-mods">dodge, vampirism</span><br>
+                    <span class="label">Заточки:</span> <span class="val-sharps">crit: 8, damage: 4, dodge: 7, health: 10, reload: 1</span>
+                </div>
+            </td>
+        </tr>
+    
+            </table>
+        </div>
+    </body>
+    </html>
+    

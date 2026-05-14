@@ -29,7 +29,6 @@ def get_mod_type(id_str):
 def aggregate_unit(u_data):
     if not u_data: return None
     
-    # Handle both top-level (generals) and nested (units) structures
     state = u_data.get('state', {})
     def_id = u_data.get('defId') or state.get('defId', 'Unknown')
     level = u_data.get('level') or state.get('level', '?')
@@ -39,18 +38,29 @@ def aggregate_unit(u_data):
     
     sharps = defaultdict(int)
     mods = set()
+    eq_lvls = []
     for eq in equip.values():
         mods.add(get_mod_type(eq.get('id', '')))
+        lvl = int(eq.get('level', 0))
+        eq_lvls.append(lvl)
         for t in eq.get('sharpening', {}).values():
             sharps[clean_stat(t)] += 1
             
+    if not eq_lvls:
+        eq_str = "нет"
+    elif all(l == eq_lvls[0] for l in eq_lvls):
+        eq_str = str(eq_lvls[0])
+    else:
+        eq_str = ", ".join(map(str, sorted(eq_lvls)))
+        
     return {
         'defId': def_id,
         'lvl': format_level(level),
         'stars': stars,
         'mods': sorted(list(mods)),
         'sharps': dict(sharps),
-        'raw_lvl': level
+        'eq_lvls_str': eq_str,
+        'raw_eq_lvls': sorted(eq_lvls)
     }
 
 def get_diff_summary(u1, u2):
@@ -62,8 +72,9 @@ def get_diff_summary(u1, u2):
         diffs.append(f"Ур: {u1['lvl']} → {u2['lvl']}")
     if u1['stars'] != u2['stars']:
         diffs.append(f"★: {u1['stars']} → {u2['stars']}")
+    if u1['raw_eq_lvls'] != u2['raw_eq_lvls']:
+        diffs.append(f"Экип: {u1['eq_lvls_str']} → {u2['eq_lvls_str']}")
     
-    # Compare sharpenings
     all_keys = set(u1['sharps'].keys()) | set(u2['sharps'].keys())
     sharp_diffs = []
     for k in sorted(all_keys):
@@ -113,6 +124,7 @@ def render_unit_comparison(u1, u2, title):
             <td class="{status_class}">
                 <div class="unit-name">{u['defId']} (Ур. {u['lvl']} | {u['stars']}★)</div>
                 <div style="margin-top:5px;">
+                    <span class="label">Ур. Экипа:</span> <span class="val-sharps">{u['eq_lvls_str']}</span><br>
                     <span class="label">Модули:</span> <span class="val-mods">{', '.join(u['mods'])}</span><br>
                     <span class="label">Заточки:</span> <span class="val-sharps">{sharps_str}</span>
                 </div>
