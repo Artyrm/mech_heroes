@@ -267,5 +267,10 @@
     "nick": "Инферал",
     "role": "Soldier",
     "traits": "Хвост рыжий, Монокль, Щетина блонд"
+  },
+  "378789": {
+    "nick": "Expert",
+    "role": "Soldier",
+    "traits": ""
   }
 }

@@ -44,6 +44,7 @@ def extract_for_nick(target_nick):
                 history = [data]
             
             for b in history:
+                if b.get('nick') == target_nick:
                     ft_str = b.get('fightTime', '00/00/0000_00:00:00')
                     try:
                         parts = ft_str.split('_')
