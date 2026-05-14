@@ -1,0 +1,30 @@
+--- ОБЗОР БОЯ: 14/05/2026_09:12:54.3250 ---
+Оппонент: Хоббит
+
+Генерал: levsha (Lvl: 476)
+  Модули: favourite, suppression_core
+  Заточки: crit: 6, crit_weak: 1, damage: 4, dodge: 7, health: 9, reload: 8
+
+Slot 1: ronin (Lvl: 476, Stars: 15)
+  Модули: dodge, vampirism
+  Заточки: crit: 8, damage: 4, dodge: 7, health: 10, reload: 1
+
+Slot 2: predator (Lvl: 476, Stars: 15)
+  Модули: red_bull
+  Заточки: crit: 7, damage: 2, dodge: 10, health: 3, reload: 8
+
+Slot 3: muskrat (Lvl: 476, Stars: 15)
+  Модули: attack, criticals
+  Заточки: crit: 7, damage: 4, dodge: 8, health: 6, reload: 5
+
+Slot 4: armageddon (Lvl: 476, Stars: 15)
+  Модули: watch_the_target
+  Заточки: crit: 13, damage: 4, dodge: 3, health: 5, reload: 5
+
+Slot 5: raptor (Lvl: 476, Stars: 15)
+  Модули: red_bull
+  Заточки: crit: 6, damage: 3, dodge: 10, health: 6, reload: 5
+
+Slot 6: fury (Lvl: 476, Stars: 15)
+  Модули: health, regen
+  Заточки: crit: 8, damage: 6, dodge: 6, health: 7, reload: 3

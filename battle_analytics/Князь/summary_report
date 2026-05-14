@@ -1,0 +1,26 @@
+--- ОБЗОР БОЯ: 06/05/2026_23:22:05.0990 ---
+Оппонент: Князь
+
+Генерал: chong (Lvl: 476)
+  Модули: favourite
+  Заточки: crit: 2, damage: 2, dodge: 5, health: 2, reload: 19
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 5, damage: 9, dodge: 5, health: 6, reload: 5
+
+Slot 7: rm23beam (Lvl: 476, Stars: 15)
+  Модули: red_bull
+  Заточки: crit: 6, damage: 3, dodge: 7, health: 8, reload: 6
+
+Slot 8: armageddon (Lvl: 476, Stars: 15)
+  Модули: watch_the_target
+  Заточки: crit: 14, crit_medium: 8, crit_weak: 8
+
+Slot 9: ronin (Lvl: 476, Stars: 15)
+  Модули: dodge
+  Заточки: crit: 11, damage: 5, dodge: 6, health: 3, reload: 5
+
+Slot 10: predator (Lvl: 476, Stars: 15)
+  Модули: watch_the_target
+  Заточки: crit: 12, crit_medium: 5, crit_weak: 2, damage: 2, dodge: 5, health: 1, reload: 3
