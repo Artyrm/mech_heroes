@@ -3,6 +3,8 @@ import os
 import sys
 from collections import defaultdict
 
+SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot']
+
 def format_level(raw_lvl):
     try:
         raw = int(raw_lvl)
@@ -19,12 +21,18 @@ def clean_stat(s):
 def get_mod_type(id_str):
     if not id_str: return "?"
     parts = id_str.split('_')
-    stop_words = ['weapon', 'armor', 'engine', 'tracker', 'foot', 'ammunition', 'legendary']
+    stop_words = SLOT_ORDER + ['legendary']
     res = []
     for p in parts:
         if p in stop_words: break
         res.append(p)
     return '_'.join(res)
+
+def get_slot_name(id_str):
+    for s in SLOT_ORDER:
+        if s in id_str:
+            return s
+    return "other"
 
 def aggregate_unit(u_data):
     if not u_data: return None
@@ -38,20 +46,25 @@ def aggregate_unit(u_data):
     
     sharps = defaultdict(int)
     mods = set()
-    eq_lvls = []
+    slot_lvls = {}
     for eq in equip.values():
-        mods.add(get_mod_type(eq.get('id', '')))
+        eq_id = eq.get('id', '')
+        slot = get_slot_name(eq_id)
         lvl = int(eq.get('level', 0))
-        eq_lvls.append(lvl)
+        slot_lvls[slot] = lvl
+        mods.add(get_mod_type(eq_id))
         for t in eq.get('sharpening', {}).values():
             sharps[clean_stat(t)] += 1
             
-    if not eq_lvls:
-        eq_str = "нет"
-    elif all(l == eq_lvls[0] for l in eq_lvls):
-        eq_str = str(eq_lvls[0])
+    ordered_lvls = []
+    for s in SLOT_ORDER:
+        if s in slot_lvls:
+            ordered_lvls.append(f"{s}: {slot_lvls[s]}")
+            
+    if slot_lvls and all(l == list(slot_lvls.values())[0] for l in slot_lvls.values()) and len(slot_lvls) == 6:
+        eq_str = str(list(slot_lvls.values())[0])
     else:
-        eq_str = ", ".join(map(str, sorted(eq_lvls)))
+        eq_str = ", ".join(ordered_lvls)
         
     return {
         'defId': def_id,
@@ -60,7 +73,7 @@ def aggregate_unit(u_data):
         'mods': sorted(list(mods)),
         'sharps': dict(sharps),
         'eq_lvls_str': eq_str,
-        'raw_eq_lvls': sorted(eq_lvls)
+        'slot_lvls': slot_lvls
     }
 
 def get_diff_summary(u1, u2):
@@ -72,7 +85,7 @@ def get_diff_summary(u1, u2):
         diffs.append(f"Ур: {u1['lvl']} → {u2['lvl']}")
     if u1['stars'] != u2['stars']:
         diffs.append(f"★: {u1['stars']} → {u2['stars']}")
-    if u1['raw_eq_lvls'] != u2['raw_eq_lvls']:
+    if u1['slot_lvls'] != u2['slot_lvls']:
         diffs.append(f"Экип: {u1['eq_lvls_str']} → {u2['eq_lvls_str']}")
     
     all_keys = set(u1['sharps'].keys()) | set(u2['sharps'].keys())

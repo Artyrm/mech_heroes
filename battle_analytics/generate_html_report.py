@@ -3,6 +3,9 @@ import os
 import sys
 from collections import defaultdict
 
+# Correct Order: tracker, armor, weapon, engine, ammunition, foot
+SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot']
+
 def format_num(val_str):
     try:
         val = float(val_str.replace(',', '.'))
@@ -24,6 +27,7 @@ def format_level(raw_lvl):
         return raw_lvl
 
 def clean_stat(s):
+    if not s: return ""
     if s.startswith('e_'):
         s = s[2:]
     s = s.replace('_sharpening', '').replace('sharpening_', '').replace('sharpening', '')
@@ -31,12 +35,18 @@ def clean_stat(s):
 
 def get_mod_type(id_str):
     parts = id_str.split('_')
-    stop_words = ['weapon', 'armor', 'engine', 'tracker', 'foot', 'ammunition', 'legendary']
+    stop_words = SLOT_ORDER + ['legendary']
     type_parts = []
     for p in parts:
         if p in stop_words: break
         type_parts.append(p)
     return '_'.join(type_parts)
+
+def get_slot_name(id_str):
+    for s in SLOT_ORDER:
+        if s in id_str:
+            return s
+    return "other"
 
 def aggregate_unit_stats(u_data):
     state = u_data.get('state', {})
@@ -47,21 +57,28 @@ def aggregate_unit_stats(u_data):
         
     sharps = defaultdict(int)
     mod_types = set()
-    eq_lvls = []
+    slot_lvls = {}
+    
     for eq in equipables.values():
-        mod_types.add(get_mod_type(eq.get('id', '')))
+        eq_id = eq.get('id', '')
+        slot = get_slot_name(eq_id)
         lvl = int(eq.get('level', 0))
-        eq_lvls.append(lvl)
+        slot_lvls[slot] = lvl
+        
+        mod_types.add(get_mod_type(eq_id))
         for t in eq.get('sharpening', {}).values():
             sharps[clean_stat(t)] += 1
             
-    # Format levels: single number if all same, list if different
-    if not eq_lvls:
-        eq_str = "нет"
-    elif all(l == eq_lvls[0] for l in eq_lvls):
-        eq_str = str(eq_lvls[0])
+    # Format levels in requested order: tracker, armor, weapon, engine, ammunition, foot
+    ordered_lvls = []
+    for s in SLOT_ORDER:
+        if s in slot_lvls:
+            ordered_lvls.append(f"{s}: {slot_lvls[s]}")
+            
+    if slot_lvls and all(l == list(slot_lvls.values())[0] for l in slot_lvls.values()) and len(slot_lvls) == 6:
+        eq_str = str(list(slot_lvls.values())[0])
     else:
-        eq_str = ", ".join(map(str, sorted(eq_lvls)))
+        eq_str = ", ".join(ordered_lvls)
         
     return {
         'mod_types': sorted(list(mod_types)),
@@ -172,8 +189,11 @@ def generate_html(json_file, output_html):
                 <strong>Детали экипировки:</strong>
                 <ul>
         """
-        equip_source = gen.get('equipables', {})
-        for eid, eq in equip_source.items():
+        items = gen.get('equipables', {})
+        sorted_eids = sorted(items.keys(), key=lambda x: SLOT_ORDER.index(get_slot_name(items[x].get('id',''))) if get_slot_name(items[x].get('id','')) in SLOT_ORDER else 99)
+        
+        for eid in sorted_eids:
+            eq = items[eid]
             sharp = eq.get('sharpening', {})
             sharp_str = ", ".join([f"{k}: {clean_stat(v)}" for k, v in sharp.items()])
             res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
@@ -219,7 +239,11 @@ def generate_html(json_file, output_html):
                     <strong>Снаряжение:</strong>
                     <ul>
             """
-            for eid, eq in state.get('equipables', {}).items():
+            u_items = state.get('equipables', {})
+            u_sorted_eids = sorted(u_items.keys(), key=lambda x: SLOT_ORDER.index(get_slot_name(u_items[x].get('id',''))) if get_slot_name(u_items[x].get('id','')) in SLOT_ORDER else 99)
+            
+            for eid in u_sorted_eids:
+                eq = u_items[eid]
                 sharp = eq.get('sharpening', {})
                 sharp_str = ", ".join([f"{k}: {clean_stat(v)}" for k, v in sharp.items()])
                 res += f"<li>{eq.get('id')} (Ур. {eq.get('level', '?')}) <span class='sharpening'>[{sharp_str}]</span></li>"
