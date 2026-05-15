@@ -9195,3 +9195,44 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
 [!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
 [15.05.2026  2:55:10,25] Syncing with Git... 
+warning: in the working copy of 'battle_analytics/README.md', LF will be replaced by CRLF the next time Git touches it
+[main 8aa9152] Auto-update 15.05.2026  2:55:12,89
+ 20 files changed, 4462 insertions(+), 4 deletions(-)
+ create mode 100644 battle_analytics/CDV/battle_2026-05-14_21-41-42_4650.html
+ create mode 100644 battle_analytics/CDV/battle_2026-05-14_23-06-08_5150.html
+ create mode 100644 battle_analytics/Hunter/battle_2026-05-14_22-07-33_6130.html
+ create mode 100644 battle_analytics/LordDragon/battle_2026-05-14_22-55-47_1050.html
+ create mode 100644 battle_analytics/Quack/battle_2026-05-14_23-03-36_7530.html
+ create mode 100644 battle_analytics/Shark/battle_2026-05-14_21-43-42_9720.html
+ create mode 100644 battle_analytics/Strel/battle_2026-05-14_21-38-42_6260.html
+ create mode 100644 battle_analytics/Strel/battle_2026-05-14_21-49-23_9490.html
+ create mode 100644 battle_analytics/acdc/battle_2026-05-14_21-35-08_8340.html
+ create mode 100644 battle_analytics/comparison_quack_vs_hobbit.html
+ create mode 100644 battle_analytics/comparison_quack_vs_lorddragon.html
+ create mode 100644 battle_analytics/generate_custom_comparison.py
+ create mode 100644 "battle_analytics/\320\232\320\275\321\217\320\267\321\214/battle_2026-05-14_21-26-15_0330.html"
+ create mode 100644 "battle_analytics/\320\232\320\275\321\217\320\267\321\214/battle_2026-05-14_22-10-11_1380.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-14_22-36-30_8190.html"
+ create mode 100644 "battle_analytics/\320\245\320\276\320\261\320\261\320\270\321\202/battle_2026-05-14_22-38-57_1490.html"
+ create mode 100644 "battle_analytics/\320\264\320\270/battle_2026-05-14_21-19-23_8190.html"
+[15.05.2026  2:55:14,93] Pushing to repository... 
+Enumerating objects: 50, done.
+Counting objects:   2% (1/50)Counting objects:   4% (2/50)Counting objects:   6% (3/50)Counting objects:   8% (4/50)Counting objects:  10% (5/50)Counting objects:  12% (6/50)Counting objects:  14% (7/50)Counting objects:  16% (8/50)Counting objects:  18% (9/50)Counting objects:  20% (10/50)Counting objects:  22% (11/50)Counting objects:  24% (12/50)Counting objects:  26% (13/50)Counting objects:  28% (14/50)Counting objects:  30% (15/50)Counting objects:  32% (16/50)Counting objects:  34% (17/50)Counting objects:  36% (18/50)Counting objects:  38% (19/50)Counting objects:  40% (20/50)Counting objects:  42% (21/50)Counting objects:  44% (22/50)Counting objects:  46% (23/50)Counting objects:  48% (24/50)Counting objects:  50% (25/50)Counting objects:  52% (26/50)Counting objects:  54% (27/50)Counting objects:  56% (28/50)Counting objects:  58% (29/50)Counting objects:  60% (30/50)Counting objects:  62% (31/50)Counting objects:  64% (32/50)Counting objects:  66% (33/50)Counting objects:  68% (34/50)Counting objects:  70% (35/50)Counting objects:  72% (36/50)Counting objects:  74% (37/50)Counting objects:  76% (38/50)Counting objects:  78% (39/50)Counting objects:  80% (40/50)Counting objects:  82% (41/50)Counting objects:  84% (42/50)Counting objects:  86% (43/50)Counting objects:  88% (44/50)Counting objects:  90% (45/50)Counting objects:  92% (46/50)Counting objects:  94% (47/50)Counting objects:  96% (48/50)Counting objects:  98% (49/50)Counting objects: 100% (50/50)Counting objects: 100% (50/50), done.
+Delta compression using up to 4 threads
+Compressing objects:   3% (1/33)Compressing objects:   6% (2/33)Compressing objects:   9% (3/33)Compressing objects:  12% (4/33)Compressing objects:  15% (5/33)Compressing objects:  18% (6/33)Compressing objects:  21% (7/33)Compressing objects:  24% (8/33)Compressing objects:  27% (9/33)Compressing objects:  30% (10/33)Compressing objects:  33% (11/33)Compressing objects:  36% (12/33)Compressing objects:  39% (13/33)Compressing objects:  42% (14/33)Compressing objects:  45% (15/33)Compressing objects:  48% (16/33)Compressing objects:  51% (17/33)Compressing objects:  54% (18/33)Compressing objects:  57% (19/33)Compressing objects:  60% (20/33)Compressing objects:  63% (21/33)Compressing objects:  66% (22/33)Compressing objects:  69% (23/33)Compressing objects:  72% (24/33)Compressing objects:  75% (25/33)Compressing objects:  78% (26/33)Compressing objects:  81% (27/33)Compressing objects:  84% (28/33)Compressing objects:  87% (29/33)Compressing objects:  90% (30/33)Compressing objects:  93% (31/33)Compressing objects:  96% (32/33)Compressing objects: 100% (33/33)Compressing objects: 100% (33/33), done.
+Writing objects:   2% (1/34)Writing objects:   5% (2/34)Writing objects:   8% (3/34)Writing objects:  11% (4/34)Writing objects:  20% (7/34)Writing objects:  23% (8/34)Writing objects:  26% (9/34)Writing objects:  32% (11/34)Writing objects:  35% (12/34)Writing objects:  38% (13/34)Writing objects:  41% (14/34)Writing objects:  44% (15/34)Writing objects:  47% (16/34)Writing objects:  50% (17/34)Writing objects:  52% (18/34)Writing objects:  55% (19/34)Writing objects:  58% (20/34)Writing objects:  61% (21/34)Writing objects:  67% (23/34)Writing objects:  70% (24/34)Writing objects:  73% (25/34)Writing objects:  76% (26/34)Writing objects:  79% (27/34)Writing objects:  82% (28/34)Writing objects:  88% (30/34)Writing objects:  91% (31/34)Writing objects:  94% (32/34)Writing objects:  97% (33/34)Writing objects: 100% (34/34)Writing objects: 100% (34/34), 24.93 KiB | 238.00 KiB/s, done.
+Total 34 (delta 28), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/28)        remote: Resolving deltas:   3% (1/28)        remote: Resolving deltas:   7% (2/28)        remote: Resolving deltas:  10% (3/28)        remote: Resolving deltas:  14% (4/28)        remote: Resolving deltas:  17% (5/28)        remote: Resolving deltas:  21% (6/28)        remote: Resolving deltas:  25% (7/28)        remote: Resolving deltas:  28% (8/28)        remote: Resolving deltas:  32% (9/28)        remote: Resolving deltas:  35% (10/28)        remote: Resolving deltas:  39% (11/28)        remote: Resolving deltas:  42% (12/28)        remote: Resolving deltas:  46% (13/28)        remote: Resolving deltas:  50% (14/28)        remote: Resolving deltas:  53% (15/28)        remote: Resolving deltas:  57% (16/28)        remote: Resolving deltas:  60% (17/28)        remote: Resolving deltas:  64% (18/28)        remote: Resolving deltas:  67% (19/28)        remote: Resolving deltas:  71% (20/28)        remote: Resolving deltas:  75% (21/28)        remote: Resolving deltas:  78% (22/28)        remote: Resolving deltas:  82% (23/28)        remote: Resolving deltas:  85% (24/28)        remote: Resolving deltas:  89% (25/28)        remote: Resolving deltas:  92% (26/28)        remote: Resolving deltas:  96% (27/28)        remote: Resolving deltas: 100% (28/28)        remote: Resolving deltas: 100% (28/28), completed with 13 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   9e4bbe2..8aa9152  main -> main
+[15.05.2026  2:55:23,81] SUCCESS: Data pushed to Git. 
+[15.05.2026  2:55:23,85] PROCESS FINISHED 
+------------------------------------------ 
+[15.05.2026  3:55:08,09] STARTING PROCESS 
+[15.05.2026  3:55:08,12] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-15 03:55:15
+[*] Проверка активности пользователя...
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.
+[15.05.2026  3:55:15,90] Syncing with Git... 
