@@ -1,4 +1,4 @@
---- ОБЗОР БОЯ: 15/05/2026_04:41:38.7150 ---
+--- ОБЗОР БОЯ: 15/05/2026_17:49:18.4900 ---
 Оппонент: Хоббит
 
 Генерал: levsha (Lvl: 476)
@@ -11,27 +11,27 @@ Slot 1: ronin (Lvl: 476, Stars: 15)
   Модули: dodge, vampirism
   Заточки: crit: 8, damage: 4, dodge: 7, health: 10, reload: 1
 
-Slot 2: predator (Lvl: 476, Stars: 15)
+Slot 2: rust (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: red_bull
   Заточки: crit: 7, damage: 2, dodge: 10, health: 3, reload: 8
 
-Slot 3: muskrat (Lvl: 476, Stars: 15)
+Slot 3: fury (Lvl: 476, Stars: 15)
   Экип: 120
-  Модули: attack, criticals
-  Заточки: crit: 7, damage: 4, dodge: 8, health: 6, reload: 5
+  Модули: health, regen
+  Заточки: crit: 7, damage: 7, dodge: 5, health: 7, reload: 4
 
 Slot 4: armageddon (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: watch_the_target
   Заточки: crit: 13, damage: 4, dodge: 3, health: 5, reload: 5
 
-Slot 5: raptor (Lvl: 476, Stars: 15)
+Slot 5: rm23beam (Lvl: 476, Stars: 15)
   Экип: 120
-  Модули: red_bull
-  Заточки: crit: 6, damage: 3, dodge: 10, health: 6, reload: 5
+  Модули: dodge, red_bull
+  Заточки: crit: 7, damage: 3, dodge: 6, health: 7, reload: 7
 
-Slot 6: fury (Lvl: 476, Stars: 15)
+Slot 6: muskrat (Lvl: 476, Stars: 15)
   Экип: 120
-  Модули: health, regen
-  Заточки: crit: 8, damage: 6, dodge: 6, health: 7, reload: 3
+  Модули: attack, criticals
+  Заточки: crit: 7, damage: 4, dodge: 8, health: 6, reload: 5

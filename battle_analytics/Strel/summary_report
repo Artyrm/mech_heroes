@@ -1,4 +1,4 @@
---- ОБЗОР БОЯ: 14/05/2026_21:49:23.9490 ---
+--- ОБЗОР БОЯ: 15/05/2026_10:29:19.9080 ---
 Оппонент: Strel
 
 Генерал: eva (Lvl: 476)
@@ -6,27 +6,27 @@
   Модули: eye_for_an_eye
   Заточки: crit: 2, damage: 6, dodge: 1, health: 5, reload: 10
 
-Slot 6: hive (Lvl: 476, Stars: 15)
+Slot 1: hive (Lvl: 476, Stars: 15)
   Экип: tracker: 120, armor: 120, weapon: 120, engine: 91, ammunition: 120, foot: 91
   Модули: healing_power
   Заточки: health: 19, reload: 9
 
-Slot 7: ronin (Lvl: 476, Stars: 15)
+Slot 2: ronin (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: dodge
   Заточки: crit: 8, damage: 5, damage_medium: 1, dodge: 7, dodge_weak: 1, health: 7, reload: 1
 
-Slot 8: raptor (Lvl: 476, Stars: 15)
+Slot 3: raptor (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: attack, red_bull
   Заточки: damage: 24, health: 2, reload: 4
 
-Slot 9: fury (Lvl: 476, Stars: 15)
+Slot 4: fury (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: watch_the_target
   Заточки: crit: 1, damage: 23, damage_weak: 1, dodge: 1, health: 1, reload: 3
 
-Slot 10: armageddon (Lvl: 476, Stars: 15)
+Slot 5: armageddon (Lvl: 476, Stars: 15)
   Экип: 90
   Модули: criticals, health
   Заточки: crit: 5, damage: 5, dodge: 2, health: 8, reload: 4
