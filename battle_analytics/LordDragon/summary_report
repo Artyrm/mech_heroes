@@ -1,0 +1,37 @@
+--- ОБЗОР БОЯ: 14/05/2026_22:55:47.1050 ---
+Оппонент: LordDragon
+
+Генерал: chong (Lvl: 476)
+  Экип: tracker: 119, armor: 90, weapon: 90, engine: 90, ammunition: 90, foot: 110
+  Модули: favourite, suppression_core
+  Заточки: crit: 1, reload: 27
+
+Slot 6: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 16, health: 14
+
+Slot 7: rm23beam (Lvl: 476, Stars: 15)
+  Экип: tracker: 90, armor: 120, weapon: 90, engine: 90, ammunition: 100, foot: 120
+  Модули: health, red_bull
+  Заточки: health: 26
+
+Slot 8: ronin (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 120, weapon: 90, engine: 120, ammunition: 60, foot: 120
+  Модули: dodge, red_bull
+  Заточки: damage: 1, dodge: 25, dodge_medium: 1
+
+Slot 9: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 13, reload: 17
+
+Slot 10: raptor (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 120, weapon: 90, engine: 90, ammunition: 120, foot: 120
+  Модули: red_bull
+  Заточки: crit: 14, damage: 8, reload: 6
+
+Slot 11: rust (Lvl: 476, Stars: 15)
+  Экип: tracker: 31, armor: 59, weapon: 120, engine: 90, ammunition: 120, foot: 120
+  Модули: red_bull
+  Заточки: damage: 19, health: 3, reload: 1

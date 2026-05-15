@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 14/05/2026_21:43:42.9720 ---
+Оппонент: Shark
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 2, damage: 20, dodge: 1, health: 7
+
+Slot 6: ronin (Lvl: 476, Stars: 15)
+  Экип: tracker: 93, armor: 120, weapon: 120, engine: 120, ammunition: 92, foot: 90
+  Модули: dodge
+  Заточки: crit: 4, damage: 4, dodge: 11, health: 7, reload: 1
+
+Slot 7: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 9, damage: 14, health: 5, reload: 2
+
+Slot 8: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 8, damage: 3, dodge: 9, dodge_medium: 1, reload: 9
+
+Slot 9: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack_speed, watch_the_target
+  Заточки: crit: 3, damage: 9, health: 12, reload: 6
+
+Slot 10: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: health, red_bull
+  Заточки: crit: 7, damage: 3, dodge: 1, health: 19

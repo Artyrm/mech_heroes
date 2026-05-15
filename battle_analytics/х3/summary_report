@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 05/05/2026_21:29:58.7210 ---
+Оппонент: х3
+
+Генерал: chong (Lvl: 476)
+  Экип: tracker: 120, armor: 120, weapon: 120, engine: 120, ammunition: 120, foot: 120
+  Модули: favourite, suppression_core
+  Заточки: crit: 9, damage: 7, dodge: 4, health: 5, reload: 10
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 6, damage: 6, dodge: 2, health: 4, reload: 12
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: criticals, watch_the_target
+  Заточки: crit: 24, health: 5, reload: 1
+
+Slot 8: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 8, damage: 11, dodge: 1, health: 3, reload: 7
+
+Slot 9: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: health
+  Заточки: crit: 2, damage: 2, health: 20, health_medium: 1, reload: 5
+
+Slot 10: ronin (Lvl: 476, Stars: 15)
+  Экип: tracker: 119, armor: 120, weapon: 119, engine: 90, ammunition: 120, foot: 120
+  Модули: dodge
+  Заточки: crit: 2, dodge: 23, reload: 2

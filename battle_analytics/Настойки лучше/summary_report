@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 14/05/2026_12:58:29.5820 ---
+Оппонент: Настойки лучше
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 9, damage: 7, health: 9, reload: 5
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 8, damage: 6, health: 5, reload: 11
+
+Slot 7: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 7, damage: 1, dodge: 10, health: 4, reload: 8
+
+Slot 8: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge, health
+  Заточки: crit: 7, damage: 2, dodge: 5, health: 7, reload: 9
+
+Slot 9: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack_speed, watch_the_target
+  Заточки: crit: 6, damage: 13, dodge: 1, health: 6, reload: 4
+
+Slot 10: muskrat (Lvl: 476, Stars: 14)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 8, damage: 9, health: 5, reload: 8

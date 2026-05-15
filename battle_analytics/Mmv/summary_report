@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 05/05/2026_15:07:29.4880 ---
+Оппонент: Mmv
+
+Генерал: mantiss (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 2, damage: 20, dodge: 2, health: 1, reload: 5
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 14, damage: 14, health: 2
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull
+  Заточки: crit: 27, dodge: 1, reload: 2
+
+Slot 8: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 1, damage: 28, dodge: 1
+
+Slot 9: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 6, damage: 8, dodge: 16
+
+Slot 10: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: healing_power
+  Заточки: crit: 2, damage: 8, dodge: 1, health: 17, reload: 2

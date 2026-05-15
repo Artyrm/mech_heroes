@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 07/05/2026_10:41:08.9710 ---
+Оппонент: Fuzzy
+
+Генерал: kali (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 5, damage: 5, dodge: 7, health: 6, reload: 7
+
+Slot 1: rust (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull
+  Заточки: crit: 3, damage: 12, dodge: 2, health: 8, reload: 5
+
+Slot 2: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 7, damage: 4, dodge: 8, health: 6, reload: 5
+
+Slot 3: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: health, vampirism
+  Заточки: crit: 4, damage: 5, dodge: 4, health: 8, reload: 9
+
+Slot 4: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 3, crit_weak: 1, damage: 2, damage_medium: 1, damage_weak: 1, dodge: 7, dodge_weak: 2, health: 6, health_medium: 2, reload: 4, reload_medium: 1
+
+Slot 5: bhramarah (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, regen
+  Заточки: crit: 9, damage: 2, damage_medium: 1, damage_weak: 2, dodge: 8, dodge_weak: 1, health: 2, health_weak: 1, reload: 2, reload_weak: 2

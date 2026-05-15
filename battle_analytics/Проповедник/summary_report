@@ -1,0 +1,37 @@
+--- ОБЗОР БОЯ: 28/04/2026_21:37:08.7860 ---
+Оппонент: Проповедник
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 9, damage: 11, dodge: 1, health: 5, reload: 4
+
+Slot 6: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: health, red_bull
+  Заточки: crit: 2, damage: 6, dodge: 4, health: 8, health_medium: 1, reload: 9
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 22, damage: 4, health: 4
+
+Slot 8: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 21, damage: 2, dodge: 1, health: 4, reload: 2
+
+Slot 9: predator (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 120, weapon: 120, engine: 90, ammunition: 120, foot: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 15, crit_weak: 2, damage: 5, dodge_medium: 1, health: 4, reload: 2
+
+Slot 10: rust (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 109, weapon: 120, engine: 120, ammunition: 120, foot: 120
+  Модули: red_bull
+  Заточки: crit: 13, crit_medium: 3, crit_weak: 3, damage: 4, dodge: 1, dodge_medium: 1, health: 4
+
+Slot 11: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: criticals, dodge
+  Заточки: crit: 11, damage: 4, dodge: 2, health: 7, reload: 6

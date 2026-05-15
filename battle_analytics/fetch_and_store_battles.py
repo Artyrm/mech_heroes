@@ -83,12 +83,14 @@ def generate_report(json_path):
 def process_battles(history, target_nicks):
     summary = []
     for nick in target_nicks:
+        # Strip trailing/leading spaces from nick for file operations
+        clean_nick = nick.strip()
         nick_battles = [b for b in history if b.get('nick') == nick]
         if not nick_battles:
             summary.append(f"{nick}: No battles found.")
             continue
             
-        folder = os.path.join(ANALYTICS_DIR, nick)
+        folder = os.path.join(ANALYTICS_DIR, clean_nick)
         os.makedirs(folder, exist_ok=True)
         
         new_count = 0

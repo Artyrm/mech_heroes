@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 14/05/2026_23:03:36.7530 ---
+Оппонент: Quack
+
+Генерал: levsha (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 9, crit_weak: 1, damage: 5, dodge: 2, health: 8, reload: 5
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 12, crit_medium: 1, damage: 11, health: 1, reload: 5
+
+Slot 7: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 13, damage: 12, health: 2, reload: 3
+
+Slot 8: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 26, crit_medium: 2, dodge: 1, reload: 1
+
+Slot 9: ronin (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 90, weapon: 90, engine: 119, ammunition: 90, foot: 120
+  Модули: dodge
+  Заточки: crit: 1, dodge: 25
+
+Slot 10: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: healing_power, health
+  Заточки: crit: 7, damage: 3, dodge: 1, health: 16, health_medium: 1, reload: 2

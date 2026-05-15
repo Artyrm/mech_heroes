@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 14/05/2026_19:27:57.0220 ---
+Оппонент: Трандуил
+
+Генерал: mantiss (Lvl: 476)
+  Экип: tracker: 120, armor: 120, weapon: 120, engine: 120, ammunition: 120, foot: 120
+  Модули: favourite, suppression_core
+  Заточки: crit: 1, crit_medium: 1, crit_weak: 2, damage: 7, damage_medium: 2, damage_weak: 2, dodge: 1, dodge_medium: 1, dodge_weak: 1, health: 1, reload: 3, reload_medium: 1, reload_weak: 8
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 7, damage: 5, dodge: 8, health: 5, reload: 5
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull
+  Заточки: crit: 3, crit_medium: 3, crit_weak: 8, dodge: 3, health: 5, health_medium: 5, health_weak: 1, reload: 1, reload_weak: 1
+
+Slot 8: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 2, damage: 3, damage_weak: 1, dodge: 5, health: 8, health_weak: 1, reload: 6, reload_medium: 3, reload_weak: 1
+
+Slot 9: ronin (Lvl: 476, Stars: 14)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 7, crit_medium: 2, crit_weak: 2, damage: 4, dodge: 5, dodge_medium: 2, dodge_weak: 3, health: 2, reload: 3
+
+Slot 10: fury (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 4, crit_medium: 5, crit_weak: 3, damage: 3, dodge: 5, health: 5, reload: 5

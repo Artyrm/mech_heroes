@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 05/05/2026_15:02:42.8750 ---
+Оппонент: Евгений
+
+Генерал: chong (Lvl: 356)
+  Экип: 60
+  Модули: favourite
+  Заточки: crit_medium: 1, crit_weak: 1, damage: 3, damage_medium: 1, damage_weak: 4, dodge: 1, dodge_medium: 1, health_medium: 1, reload: 1, reload_medium: 4
+
+Slot 6: ronin (Lvl: 476, Stars: 15)
+  Экип: tracker: 90, armor: 90, weapon: 90, engine: 90, ammunition: 90, foot: 119
+  Модули: criticals, dodge
+  Заточки: crit: 6, crit_medium: 3, crit_weak: 1, damage: 1, dodge: 10, dodge_medium: 1, health: 1, health_medium: 1
+
+Slot 7: raptor (Lvl: 476, Stars: 15)
+  Экип: tracker: 90, armor: 120, weapon: 90, engine: 120, ammunition: 120, foot: 120
+  Модули: red_bull
+  Заточки: crit: 4, damage: 10, damage_medium: 7, damage_weak: 3, health_medium: 1, reload_medium: 2, reload_weak: 1
+
+Slot 8: armageddon (Lvl: 396, Stars: 10)
+  Экип: tracker: 90, armor: 90, weapon: 90, engine: 90, ammunition: 65, foot: 90
+  Модули: criticals
+  Заточки: crit: 8, crit_medium: 7, crit_weak: 4, damage_weak: 1, dodge: 1, reload: 1, reload_medium: 1
+
+Slot 9: muskrat (Lvl: 476, Stars: 10)
+  Экип: tracker: 60, armor: 90, weapon: 60, engine: 90, ammunition: 60, foot: 90
+  Модули: attack_speed, red_bull
+  Заточки: crit: 2, crit_medium: 1, damage: 2, damage_medium: 3, damage_weak: 4, reload: 4, reload_medium: 3, reload_weak: 2
+
+Slot 10: rust (Lvl: 476, Stars: 8)
+  Экип: tracker: 60, armor: 60, weapon: 60, engine: 60, ammunition: 101, foot: 60
+  Модули: red_bull
+  Заточки: crit: 1, damage: 1, damage_medium: 1, damage_weak: 1, dodge: 2, dodge_weak: 1, health: 8, health_medium: 1, health_weak: 3

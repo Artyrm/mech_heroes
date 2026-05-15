@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 15/05/2026_07:40:32.0610 ---
+Оппонент: meshher 
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 7, damage: 4, dodge: 10, reload: 9
+
+Slot 6: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 3, crit_medium: 1, damage: 5, damage_medium: 2, damage_weak: 2, dodge: 3, dodge_medium: 2, health: 6, reload: 6
+
+Slot 7: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 2, damage: 5, dodge: 7, dodge_medium: 5, dodge_weak: 5, health: 2, reload: 4
+
+Slot 8: rm23beam (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull
+  Заточки: crit: 4, damage: 7, damage_medium: 1, dodge: 9, health: 2, reload: 7
+
+Slot 9: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack_speed, red_bull
+  Заточки: crit: 7, damage: 2, dodge: 7, health: 6, reload: 8
+
+Slot 10: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack
+  Заточки: crit: 5, crit_medium: 1, damage: 7, damage_medium: 3, damage_weak: 5, dodge: 3, health: 4, reload: 2

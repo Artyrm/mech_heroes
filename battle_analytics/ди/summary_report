@@ -1,0 +1,29 @@
+--- ОБЗОР БОЯ: 14/05/2026_21:19:23.8190 ---
+Оппонент: ди
+
+Генерал: brain (Lvl: 476)
+  Экип: tracker: 120, armor: 113, weapon: 120, engine: 120, ammunition: 120, foot: 90
+  Модули: favourite
+  Заточки: crit: 5, crit_weak: 1, damage: 8, dodge: 6, dodge_medium: 1, health: 3, reload: 4
+
+Slot 6: waratah (Lvl: 1, Stars: 9)
+
+Slot 7: bhramarah (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack
+  Заточки: crit: 5, damage: 14, damage_medium: 1, dodge: 3, health: 3, reload: 4
+
+Slot 8: rm23beam (Lvl: 476, Stars: 15)
+  Экип: tracker: 60, armor: 60, weapon: 120, engine: 120, ammunition: 120, foot: 61
+  Модули: dodge, red_bull
+  Заточки: crit: 3, crit_medium: 1, damage: 3, dodge: 8, dodge_medium: 2, health: 7
+
+Slot 9: hive (Lvl: 476, Stars: 15)
+  Экип: tracker: 90, armor: 90, weapon: 90, engine: 78, ammunition: 90, foot: 90
+  Модули: red_bull
+  Заточки: crit: 3, crit_medium: 1, damage: 1, damage_medium: 2, dodge: 2, dodge_weak: 1, health: 6, health_medium: 2, health_weak: 1, reload: 4
+
+Slot 10: fury (Lvl: 476, Stars: 15)
+  Экип: tracker: 120, armor: 69, weapon: 120, engine: 8, ammunition: 120, foot: 90
+  Модули: watch_the_target
+  Заточки: crit: 8, damage: 6, dodge: 2, health: 2, health_medium: 1, reload: 4

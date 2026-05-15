@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 14/05/2026_13:06:28.4650 ---
+Оппонент: unc1e_Sam
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 7, damage: 5, dodge: 5, health: 6, reload: 7
+
+Slot 6: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: criticals, watch_the_target
+  Заточки: crit: 10, damage: 7, dodge: 1, health: 6, reload: 6
+
+Slot 7: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 5, damage: 13, dodge: 4, health: 3, reload: 5
+
+Slot 8: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 14, damage: 7, health: 5, reload: 4
+
+Slot 9: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 8, damage: 5, dodge: 9, health: 4, reload: 4
+
+Slot 10: muskrat (Lvl: 476, Stars: 13)
+  Экип: tracker: 120, armor: 120, weapon: 120, engine: 90, ammunition: 104, foot: 120
+  Модули: dodge
+  Заточки: crit: 7, damage: 10, dodge: 5, health: 2, reload: 4

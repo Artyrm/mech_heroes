@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 06/05/2026_23:24:53.5890 ---
+Оппонент: ДИКАРИУС
+
+Генерал: chong (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 4, damage: 7, dodge: 5, health: 4, reload: 10
+
+Slot 6: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 10, damage: 4, dodge: 4, health: 3, reload: 9
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: watch_the_target
+  Заточки: crit: 8, damage: 1, dodge: 5, health: 8, reload: 8
+
+Slot 8: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 5, damage: 3, dodge: 11, health: 2, reload: 9
+
+Slot 9: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 11, damage: 8, dodge: 3, health: 2, reload: 6
+
+Slot 10: muskrat (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 6, damage: 6, dodge: 8, health: 3, reload: 7

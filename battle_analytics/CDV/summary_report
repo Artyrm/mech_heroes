@@ -1,0 +1,32 @@
+--- ОБЗОР БОЯ: 15/05/2026_07:35:24.7130 ---
+Оппонент: CDV
+
+Генерал: toxic (Lvl: 476)
+  Экип: 120
+  Модули: favourite
+  Заточки: crit: 9, damage: 5, dodge: 9, health: 1, reload: 6
+
+Slot 6: ronin (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: dodge
+  Заточки: crit: 5, damage: 12, dodge: 3, health: 9, reload: 1
+
+Slot 7: armageddon (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: crit: 3, damage: 6, dodge: 4, health: 7, reload: 10
+
+Slot 8: rust (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull
+  Заточки: crit: 2, damage: 7, dodge: 6, health: 9, reload: 6
+
+Slot 9: raptor (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: red_bull, watch_the_target
+  Заточки: damage: 20, health: 8, reload: 2
+
+Slot 10: predator (Lvl: 476, Stars: 15)
+  Экип: 120
+  Модули: attack, watch_the_target
+  Заточки: crit: 1, damage: 21, dodge: 1, health: 4, reload: 3
