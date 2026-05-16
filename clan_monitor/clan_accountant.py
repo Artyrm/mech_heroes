@@ -225,47 +225,85 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         weeks[wk]["days"][dk].append(e)
 
     all_ws = sorted(weeks.keys())
-    is_current_week = False
     for w_key in all_ws:
         is_current_week = (w_key == all_ws[-1])
-        # Use historical role snapshot for past weeks if available
         roles_snap = os.path.join(SNAPSHOTS_DIR, f"roles_{w_key}.json")
         week_names_map = load_json(roles_snap) if os.path.exists(roles_snap) else names_map
         week, players = weeks[w_key], set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
+        
         pl_res, clan_rats = {}, [None] * 7
-        for uid in players:
-            growths, total_acc, last_ref, pres = [], 0, 0, []
-            for i in range(7):
-                d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
-                sn, ex = week["days"].get(d_str, []), adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(ex, list): ex = [ex]
-                
-                # SENSE OF PRESENCE: Must be in the VERY LAST snapshot of the day to be 'present'
-                # or have an exit event (Manual Adjustment)
-                if is_current_week and i == today_idx:
-                    is_present = (uid in cur_ids) or bool(ex)
-                else:
-                    is_present = (uid in sn[-1]['pts']) if sn else False
-                    if not is_present and bool(ex): is_present = True
-                
-                pres.append(is_present)
-                day_growth, reference = 0, last_ref
-                for ev in ex: day_growth += max(0, ev - reference); reference = 0
-                if sn:
-                    final = sn[-1]['pts'].get(uid, 0)
-                    day_growth += (final if final < reference and not ex else max(0, final - reference)); last_ref = final
-                    if sn[-1].get('rating'): clan_rats[i] = sn[-1]['rating']
-                growths.append(day_growth); total_acc += day_growth
-            
-            try: first_p = pres.index(True)
-            except: first_p = 999
-            try: last_p = 6 - pres[::-1].index(True)
-            except: last_p = -1
-            pl_res[uid] = {"growths": growths, "total": total_acc, "presence": pres, "first_p": first_p, "last_p": last_p}
+        monday = week["monday"]
 
-        clan_growths = [sum(p["growths"][ev] for p in pl_res.values()) for ev in range(7)]
+        for uid in players:
+            # 1. Collect all events for this player in chronological order
+            events = []
+            for i in range(7):
+                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
+                # Snapshots
+                for sn in week["days"].get(d_str, []):
+                    if uid in sn['pts']:
+                        events.append({"time": sn['time'], "pts": sn['pts'][uid], "type": "snap"})
+                # Manual adjustments (treat as end-of-day exit points)
+                ex_vals = adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(ex_vals, list): ex_vals = [ex_vals]
+                for v in ex_vals:
+                    # Place 1 second before midnight of that day
+                    dt_exit = datetime.strptime(d_str, "%Y-%m-%d").replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
+                    events.append({"time": dt_exit, "pts": int(v), "type": "manual"})
+            
+            events.sort(key=lambda x: x["time"])
+
+            # 2. Calculate growth using stream logic
+            daily_growths = [0] * 7
+            presence = [False] * 7
+            total_acc = 0
+            current_base = 0
+            
+            # Determine initial base from previous weeks if available
+            pre_week_events = [e for e in sd if e['time'] < monday and uid in e['pts']]
+            if pre_week_events:
+                current_base = pre_week_events[-1]['pts'][uid]
+
+            for ev in events:
+                # Calculate index based on MSK time for consistency with the week grid
+                ev_msk = ev['time'].astimezone(timezone(timedelta(hours=3)))
+                mon_msk = monday.astimezone(timezone(timedelta(hours=3)))
+                day_idx = (ev_msk.date() - mon_msk.date()).days
+                
+                if day_idx < 0 or day_idx > 6: continue
+                
+                val = ev['pts']
+                presence[day_idx] = True
+                
+                if ev['type'] == "manual":
+                    growth = max(0, val - current_base)
+                    daily_growths[day_idx] += growth
+                    total_acc += growth
+                    current_base = 0 
+                else:
+                    if val < current_base:
+                        growth = val
+                    else:
+                        growth = val - current_base
+                    
+                    daily_growths[day_idx] += growth
+                    total_acc += growth
+                    current_base = val
+
+            if is_current_week:
+                presence[today_idx] = (uid in cur_ids) or any(presence)
+
+            pl_res[uid] = {
+                "growths": daily_growths, 
+                "total": total_acc, 
+                "presence": presence,
+                "first_p": next((i for i, p in enumerate(presence) if p), 999),
+                "last_p": next((6-i for i, p in enumerate(reversed(presence)) if p), -1)
+            }
+
+        clan_growths = [sum(p["growths"][i] for p in pl_res.values()) for i in range(7)]
         pre_week_sn = [e for e in sd if e['time'] < week["monday"]]
         prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
         clan_stats = []

@@ -1,4 +1,4 @@
---- ОБЗОР БОЯ: 15/05/2026_09:49:44.6410 ---
+--- ОБЗОР БОЯ: 15/05/2026_23:22:24.1950 ---
 Оппонент: acdc
 
 Генерал: chong (Lvl: 476)
@@ -6,27 +6,27 @@
   Модули: favourite
   Заточки: crit: 2, damage: 4, damage_medium: 1, dodge: 3, dodge_medium: 2, health: 4, health_medium: 2, reload: 10, reload_medium: 1, reload_weak: 1
 
-Slot 1: raptor (Lvl: 476, Stars: 15)
+Slot 6: raptor (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: red_bull
   Заточки: crit: 4, damage: 6, dodge: 6, health: 1, reload: 13
 
-Slot 2: armageddon (Lvl: 476, Stars: 15)
+Slot 7: armageddon (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: red_bull
   Заточки: crit: 11, crit_weak: 1, damage: 4, dodge: 4, health: 3, reload: 6, reload_weak: 1
 
-Slot 3: bhramarah (Lvl: 476, Stars: 15)
+Slot 8: bhramarah (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: attack, vampirism
   Заточки: crit: 7, damage: 6, dodge: 9, health: 5, reload: 3
 
-Slot 4: ronin (Lvl: 476, Stars: 15)
+Slot 9: ronin (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: dodge
   Заточки: crit: 7, damage: 6, dodge: 9, dodge_weak: 2, health: 2, reload: 4
 
-Slot 5: rm23beam (Lvl: 476, Stars: 15)
+Slot 10: rm23beam (Lvl: 476, Stars: 15)
   Экип: 120
   Модули: red_bull
   Заточки: crit_medium: 2, crit_weak: 1, damage: 3, dodge: 3, dodge_medium: 1, dodge_weak: 3, health: 11, health_medium: 1, reload: 3, reload_medium: 1, reload_weak: 1
