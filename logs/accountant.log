@@ -9926,3 +9926,51 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Генерация HTML-отчета...
 [*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
 [16.05.2026  3:55:06,16] Syncing with Git... 
+[main a0c1afd] Auto-update 16.05.2026  3:55:08,13
+ 31 files changed, 2765 insertions(+), 64 deletions(-)
+ create mode 100644 battle_analytics/Quack/battle_2026-05-15_23-46-51_5220.html
+ create mode 100644 battle_analytics/acdc/battle_2026-05-15_23-22-24_1950.html
+ create mode 100644 battle_analytics/meshher/battle_2026-05-15_23-29-15_1910.html
+ create mode 100644 battle_analytics/meshher/battle_2026-05-15_23-44-08_0160.html
+ create mode 100644 "battle_analytics/\320\232\320\275\321\217\320\267\321\214/battle_2026-05-15_23-50-42_5440.html"
+ create mode 100644 "battle_analytics/\320\243\320\272\321\201\321\203\321\201/battle_2026-05-15_23-17-39_1190.html"
+ create mode 100644 "battle_analytics/\320\243\320\272\321\201\321\203\321\201/battle_2026-05-15_23-41-57_9490.html"
+ create mode 100644 clan_monitor/analyze_ksotar_pro.py
+ create mode 100644 clan_monitor/analyze_ksotar_v3.py
+ create mode 100644 clan_monitor/analyze_ksotar_week.py
+ create mode 100644 clan_monitor/analyze_ksotar_week_v2.py
+ create mode 100644 clan_monitor/force_fetch.py
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_00-39.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_00-40.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_00-50.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_00-55.json
+ create mode 100644 ksotar_corrected.png
+ create mode 100644 ksotar_final_analysis.png
+ create mode 100644 ksotar_manual_correlation.png
+ create mode 100644 ksotar_points_analysis.png
+[16.05.2026  3:55:09,00] Pushing to repository... 
+Enumerating objects: 65, done.
+Counting objects:   1% (1/65)Counting objects:   3% (2/65)Counting objects:   4% (3/65)Counting objects:   6% (4/65)Counting objects:   7% (5/65)Counting objects:   9% (6/65)Counting objects:  10% (7/65)Counting objects:  12% (8/65)Counting objects:  13% (9/65)Counting objects:  15% (10/65)Counting objects:  16% (11/65)Counting objects:  18% (12/65)Counting objects:  20% (13/65)Counting objects:  21% (14/65)Counting objects:  23% (15/65)Counting objects:  24% (16/65)Counting objects:  26% (17/65)Counting objects:  27% (18/65)Counting objects:  29% (19/65)Counting objects:  30% (20/65)Counting objects:  32% (21/65)Counting objects:  33% (22/65)Counting objects:  35% (23/65)Counting objects:  36% (24/65)Counting objects:  38% (25/65)Counting objects:  40% (26/65)Counting objects:  41% (27/65)Counting objects:  43% (28/65)Counting objects:  44% (29/65)Counting objects:  46% (30/65)Counting objects:  47% (31/65)Counting objects:  49% (32/65)Counting objects:  50% (33/65)Counting objects:  52% (34/65)Counting objects:  53% (35/65)Counting objects:  55% (36/65)Counting objects:  56% (37/65)Counting objects:  58% (38/65)Counting objects:  60% (39/65)Counting objects:  61% (40/65)Counting objects:  63% (41/65)Counting objects:  64% (42/65)Counting objects:  66% (43/65)Counting objects:  67% (44/65)Counting objects:  69% (45/65)Counting objects:  70% (46/65)Counting objects:  72% (47/65)Counting objects:  73% (48/65)Counting objects:  75% (49/65)Counting objects:  76% (50/65)Counting objects:  78% (51/65)Counting objects:  80% (52/65)Counting objects:  81% (53/65)Counting objects:  83% (54/65)Counting objects:  84% (55/65)Counting objects:  86% (56/65)Counting objects:  87% (57/65)Counting objects:  89% (58/65)Counting objects:  90% (59/65)Counting objects:  92% (60/65)Counting objects:  93% (61/65)Counting objects:  95% (62/65)Counting objects:  96% (63/65)Counting objects:  98% (64/65)Counting objects: 100% (65/65)Counting objects: 100% (65/65), done.
+Delta compression using up to 4 threads
+Compressing objects:   2% (1/42)Compressing objects:   4% (2/42)Compressing objects:   7% (3/42)Compressing objects:   9% (4/42)Compressing objects:  11% (5/42)Compressing objects:  14% (6/42)Compressing objects:  16% (7/42)Compressing objects:  19% (8/42)Compressing objects:  21% (9/42)Compressing objects:  23% (10/42)Compressing objects:  26% (11/42)Compressing objects:  28% (12/42)Compressing objects:  30% (13/42)Compressing objects:  33% (14/42)Compressing objects:  35% (15/42)Compressing objects:  38% (16/42)Compressing objects:  40% (17/42)Compressing objects:  42% (18/42)Compressing objects:  45% (19/42)Compressing objects:  47% (20/42)Compressing objects:  50% (21/42)Compressing objects:  52% (22/42)Compressing objects:  54% (23/42)Compressing objects:  57% (24/42)Compressing objects:  59% (25/42)Compressing objects:  61% (26/42)Compressing objects:  64% (27/42)Compressing objects:  66% (28/42)Compressing objects:  69% (29/42)Compressing objects:  71% (30/42)Compressing objects:  73% (31/42)Compressing objects:  76% (32/42)Compressing objects:  78% (33/42)Compressing objects:  80% (34/42)Compressing objects:  83% (35/42)Compressing objects:  85% (36/42)Compressing objects:  88% (37/42)Compressing objects:  90% (38/42)Compressing objects:  92% (39/42)Compressing objects:  95% (40/42)Compressing objects:  97% (41/42)Compressing objects: 100% (42/42)Compressing objects: 100% (42/42), done.
+Writing objects:   2% (1/44)Writing objects:   4% (2/44)Writing objects:   6% (3/44)Writing objects:   9% (4/44)Writing objects:  13% (6/44)Writing objects:  15% (7/44)Writing objects:  18% (8/44)Writing objects:  25% (11/44)Writing objects:  27% (12/44)Writing objects:  29% (13/44)Writing objects:  31% (14/44)Writing objects:  34% (15/44)Writing objects:  36% (16/44)Writing objects:  38% (17/44)Writing objects:  40% (18/44)Writing objects:  43% (19/44)Writing objects:  45% (20/44)Writing objects:  47% (21/44)Writing objects:  50% (22/44)Writing objects:  52% (23/44)Writing objects:  54% (24/44)Writing objects:  56% (25/44)Writing objects:  59% (26/44)Writing objects:  61% (27/44)Writing objects:  63% (28/44)Writing objects:  65% (29/44)Writing objects:  68% (30/44)Writing objects:  70% (31/44)Writing objects:  72% (32/44)Writing objects:  75% (33/44)Writing objects:  77% (34/44)Writing objects:  79% (35/44)Writing objects:  81% (36/44)Writing objects:  84% (37/44)Writing objects:  86% (38/44)Writing objects:  88% (39/44)Writing objects:  90% (40/44)Writing objects:  93% (41/44)Writing objects:  95% (42/44)Writing objects:  97% (43/44)Writing objects: 100% (44/44)Writing objects: 100% (44/44), 293.05 KiB | 9.16 MiB/s, done.
+Total 44 (delta 26), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/26)        remote: Resolving deltas:   3% (1/26)        remote: Resolving deltas:   7% (2/26)        remote: Resolving deltas:  11% (3/26)        remote: Resolving deltas:  15% (4/26)        remote: Resolving deltas:  19% (5/26)        remote: Resolving deltas:  23% (6/26)        remote: Resolving deltas:  26% (7/26)        remote: Resolving deltas:  30% (8/26)        remote: Resolving deltas:  34% (9/26)        remote: Resolving deltas:  38% (10/26)        remote: Resolving deltas:  42% (11/26)        remote: Resolving deltas:  46% (12/26)        remote: Resolving deltas:  50% (13/26)        remote: Resolving deltas:  53% (14/26)        remote: Resolving deltas:  57% (15/26)        remote: Resolving deltas:  61% (16/26)        remote: Resolving deltas:  65% (17/26)        remote: Resolving deltas:  69% (18/26)        remote: Resolving deltas:  73% (19/26)        remote: Resolving deltas:  76% (20/26)        remote: Resolving deltas:  80% (21/26)        remote: Resolving deltas:  84% (22/26)        remote: Resolving deltas:  88% (23/26)        remote: Resolving deltas:  92% (24/26)        remote: Resolving deltas:  96% (25/26)        remote: Resolving deltas: 100% (26/26)        remote: Resolving deltas: 100% (26/26), completed with 16 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   2d5ca46..a0c1afd  main -> main
+[16.05.2026  3:55:12,74] SUCCESS: Data pushed to Git. 
+[16.05.2026  3:55:12,76] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026  4:55:01,76] STARTING PROCESS 
+[16.05.2026  4:55:01,82] Running Python script... 
+--- Starting Clan Accountant v0.2.5 ---
+[*] Время запуска: 2026-05-16 04:55:02
+[*] Проверка активности пользователя...
+[*] Попытка получения данных от API сервера...
+[*] Send /init request (VERSION: 1.24.0)...
+[*] Post /directcommand to get member details...
+[*] Данные успешно получены. Рейтинг клана: 9 478 568
+[*] Найдено участников: 40
+[*] Генерация HTML-отчета...
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[16.05.2026  4:55:10,60] Syncing with Git... 

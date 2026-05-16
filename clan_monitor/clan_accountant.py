@@ -237,70 +237,80 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         monday = week["monday"]
 
         for uid in players:
-            # 1. Collect all events for this player in chronological order
-            events = []
-            for i in range(7):
-                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
-                # Snapshots
-                for sn in week["days"].get(d_str, []):
-                    if uid in sn['pts']:
-                        events.append({"time": sn['time'], "pts": sn['pts'][uid], "type": "snap"})
-                # Manual adjustments (treat as end-of-day exit points)
-                ex_vals = adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(ex_vals, list): ex_vals = [ex_vals]
-                for v in ex_vals:
-                    # Place 1 second before midnight of that day
-                    dt_exit = datetime.strptime(d_str, "%Y-%m-%d").replace(hour=23, minute=59, second=59, tzinfo=timezone.utc)
-                    events.append({"time": dt_exit, "pts": int(v), "type": "manual"})
-            
-            events.sort(key=lambda x: x["time"])
-
-            # 2. Calculate growth using stream logic
             daily_growths = [0] * 7
             presence = [False] * 7
-            total_acc = 0
-            current_base = 0
             
-            # Determine initial base from previous weeks if available
-            pre_week_events = [e for e in sd if e['time'] < monday and uid in e['pts']]
-            if pre_week_events:
-                current_base = pre_week_events[-1]['pts'][uid]
+            # End of previous Sunday
+            pre_week_sn = [e for e in sd if e['time'] < monday and uid in e['pts']]
+            current_base = pre_week_sn[-1]['pts'][uid] if pre_week_sn else 0
 
-            for ev in events:
-                # Calculate index based on MSK time for consistency with the week grid
-                ev_msk = ev['time'].astimezone(timezone(timedelta(hours=3)))
-                mon_msk = monday.astimezone(timezone(timedelta(hours=3)))
-                day_idx = (ev_msk.date() - mon_msk.date()).days
+            for i in range(7):
+                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
+                day_snaps = week["days"].get(d_str, [])
+                manual_vals = adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(manual_vals, list): manual_vals = [manual_vals]
+                manual_vals = [int(v) for v in manual_vals]
                 
-                if day_idx < 0 or day_idx > 6: continue
+                manual_idx = 0
+                # Track max seen in the CURRENT session (since last reset)
+                session_max = current_base 
                 
-                val = ev['pts']
-                presence[day_idx] = True
-                
-                if ev['type'] == "manual":
-                    growth = max(0, val - current_base)
-                    daily_growths[day_idx] += growth
-                    total_acc += growth
-                    current_base = 0 
-                else:
-                    if val < current_base:
-                        growth = val
-                    else:
-                        growth = val - current_base
+                if not day_snaps:
+                    if manual_vals:
+                        presence[i] = True
+                        for mv in manual_vals:
+                            daily_growths[i] += max(0, mv - current_base)
+                            current_base = 0; session_max = 0
+                    continue
+
+                for sn in day_snaps:
+                    if uid not in sn['pts']: continue
+                    presence[i] = True
+                    val = sn['pts'][uid]
                     
-                    daily_growths[day_idx] += growth
-                    total_acc += growth
+                    if val < current_base:
+                        # RESET! Check if manual data shows a higher peak before this reset
+                        if manual_idx < len(manual_vals):
+                            mv = manual_vals[manual_idx]
+                            if mv > session_max:
+                                daily_growths[i] += (mv - session_max)
+                            manual_idx += 1
+                        
+                        daily_growths[i] += val
+                        session_max = val
+                    else:
+                        daily_growths[i] += (val - current_base)
+                        session_max = max(session_max, val)
+                    
                     current_base = val
+
+                # Handle remaining manual adjustments (if any) only if they represent a NEW peak
+                # and assume an exit followed
+                while manual_idx < len(manual_vals):
+                    mv = manual_vals[manual_idx]
+                    if mv > session_max:
+                        daily_growths[i] += (mv - session_max)
+                    current_base = 0 
+                    session_max = 0
+                    manual_idx += 1
 
             if is_current_week:
                 presence[today_idx] = (uid in cur_ids) or any(presence)
 
             pl_res[uid] = {
                 "growths": daily_growths, 
-                "total": total_acc, 
+                "total": sum(daily_growths), 
                 "presence": presence,
-                "first_p": next((i for i, p in enumerate(presence) if p), 999),
-                "last_p": next((6-i for i, p in enumerate(reversed(presence)) if p), -1)
+                "first_p": next((idx for idx, p in enumerate(presence) if p), 999),
+                "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)
+            }
+
+            pl_res[uid] = {
+                "growths": daily_growths, 
+                "total": sum(daily_growths), 
+                "presence": presence,
+                "first_p": next((idx for idx, p in enumerate(presence) if p), 999),
+                "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)
             }
 
         clan_growths = [sum(p["growths"][i] for p in pl_res.values()) for i in range(7)]
