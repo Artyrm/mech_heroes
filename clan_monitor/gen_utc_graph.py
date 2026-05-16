@@ -54,63 +54,84 @@ def plot(base, days):
     fig, ax = plt.subplots(figsize=(18, 11))
     
     current_base = base
+    global_max = base # Global peak achieved in the clan (starts from Sunday end)
     total_acc = 0
-    plot_times, plot_cum = [], []
+    
+    # Data for cumulative line
+    cum_times, cum_vals = [], []
+    # Data for instantaneous line (Raw snapshots)
+    raw_times, raw_vals = [], []
+    
     day_markers = []
+    now_utc = datetime.now(timezone.utc)
 
-    # Monday 00:00 UTC
-    plot_times.append(days[0]['start'])
-    plot_cum.append(0)
-    day_markers.append((days[0]['start'], 0))
+    # Initial state
+    cum_times.append(days[0]['start'])
+    cum_vals.append(0)
 
-    for day in days:
-        day_max = 0
+    for idx, day in enumerate(days):
+        is_monday = (idx == 0)
+        server_reset_done = not is_monday
         manual_vals = day['manual']
         manual_idx = 0
         
+        # In this logic, we don't care about sessions, only the absolute peak
         for sn in day['snaps']:
             val = sn['pts']
-            if val < current_base:
-                while manual_idx < len(manual_vals) and manual_vals[manual_idx] <= current_base:
-                    manual_idx += 1
-                total_acc += val
-                day_max = val
-            else:
-                total_acc += (val - current_base)
-                day_max = max(day_max, val)
+            raw_times.append(sn['time'])
+            raw_vals.append(val)
             
-            current_base = val
-            plot_times.append(sn['time'])
-            plot_cum.append(total_acc)
+            # Growth only counts if we exceed the global max
+            if val > global_max:
+                total_acc += (val - global_max)
+                global_max = val
+            
+            cum_times.append(sn['time'])
+            cum_vals.append(total_acc)
 
+        # Handle manual adjustments (as peak overrides)
         while manual_idx < len(manual_vals):
             mv = manual_vals[manual_idx]
-            if mv > day_max: total_acc += (mv - day_max)
-            current_base = 0
+            if mv > global_max:
+                total_acc += (mv - global_max)
+                global_max = mv
             manual_idx += 1
-            plot_times.append(day['start'] + timedelta(hours=23, minutes=59))
-            plot_cum.append(total_acc)
+            cum_times.append(cum_times[-1] + timedelta(minutes=1))
+            cum_vals.append(total_acc)
+            # Visual exit
+            raw_times.append(raw_times[-1] + timedelta(minutes=1))
+            raw_vals.append(0)
 
-        # Mark NEXT day start
-        day_markers.append((day['start'] + timedelta(days=1), total_acc))
+        # Connect boundary to host red markers
+        next_day_start = day['start'] + timedelta(days=1)
+        if next_day_start <= now_utc:
+            cum_times.append(next_day_start)
+            cum_vals.append(total_acc)
+            day_markers.append((next_day_start, total_acc))
 
-    ax.plot(plot_times, plot_cum, color='#3fb950', linewidth=6, label='Cumulative (UTC)')
+    # 1. Instantaneous Graph (Fill)
+    ax.fill_between(raw_times, raw_vals, color='#58a6ff', alpha=0.2, label='Instantaneous Pts (Area)')
+    ax.plot(raw_times, raw_vals, color='#58a6ff', linewidth=2, alpha=0.8, label='Instantaneous Pts (Blue Line)')
     
-    # Visual check: Plot raw snaps to ensure alignment
-    sn_x = [e['time'] for d in days for e in d['snaps']]
-    sn_y = [e['pts'] for d in days for e in d['snaps']]
-    ax.scatter(sn_x, sn_y, color='#58a6ff', s=30, alpha=0.4, label='Raw Snapshots (UTC)')
+    # Add explicit dots for actual snapshots
+    pure_raw_times = [sn['time'] for d in days for sn in d['snaps']]
+    pure_raw_vals = [sn['pts'] for d in days for sn in d['snaps']]
+    ax.scatter(pure_raw_times, pure_raw_vals, color='#58a6ff', s=40, edgecolors='white', linewidths=0.5, zorder=15, label='Actual Snapshots (Dots)')
+    
+    # 2. Cumulative Growth (Line)
+    ax.plot(cum_times, cum_vals, color='#3fb950', linewidth=5, label='Total Weekly Growth (Green)', zorder=10)
 
-    # Labels
-    mx, my = zip(*day_markers)
-    ax.scatter(mx, my, color='#f85149', s=200, edgecolors='white', zorder=10)
-    for x, y in day_markers:
-        if x > datetime.now(timezone.utc) + timedelta(hours=1): continue
-        ax.annotate(f"{int(y):,}".replace(',',' '), xy=(x, y), xytext=(0, 20),
-                    textcoords='offset points', color='#f85149', weight='bold', size=14, ha='center',
-                    bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#f85149", alpha=0.9))
+    # Markers for Daily Results
+    if day_markers:
+        mx, my = zip(*day_markers)
+        ax.scatter(mx, my, color='#f85149', s=150, edgecolors='white', zorder=20)
+        for x, y in day_markers:
+            ax.annotate(f"{int(y):,}".replace(',',' '), xy=(x, y), xytext=(0, 20),
+                        textcoords='offset points', color='#f85149', weight='bold', size=14, ha='center',
+                        bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#f85149", alpha=0.9))
 
-    ax.set_title(f"ksotar Performance: STRICT UTC TIMELINE\nLabels at 00:00 UTC", fontsize=22, pad=30)
+    ax.set_title(f"ksotar Analysis: Instantaneous vs Accumulated", fontsize=22, pad=30)
+    ax.set_ylabel('Points', fontsize=14)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d.%m\n00:00'))
     ax.xaxis.set_major_locator(mdates.DayLocator())
     ax.grid(True, alpha=0.1)
@@ -118,7 +139,7 @@ def plot(base, days):
     
     plt.tight_layout()
     plt.savefig("ksotar_utc_final.png", dpi=140)
-    print(f"UTC Graph saved to ksotar_utc_final.png. Final: {total_acc}")
+    print(f"Graph saved. Final Acc: {cum_vals[-1]}")
 
 if __name__ == "__main__":
     b, d = get_data()

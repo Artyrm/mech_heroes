@@ -245,6 +245,8 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             current_base = pre_week_sn[-1]['pts'][uid] if pre_week_sn else 0
 
             for i in range(7):
+                is_monday = (i == 0)
+                server_reset_done = not is_monday
                 d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
                 day_snaps = week["days"].get(d_str, [])
                 manual_vals = adj_db.get(d_str, {}).get(uid, [])
@@ -252,14 +254,14 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 manual_vals = [int(v) for v in manual_vals]
                 
                 manual_idx = 0
-                # Track max seen in the CURRENT session (since last reset)
                 session_max = current_base 
                 
                 if not day_snaps:
                     if manual_vals:
                         presence[i] = True
                         for mv in manual_vals:
-                            daily_growths[i] += max(0, mv - current_base)
+                            if mv > session_max:
+                                daily_growths[i] += (mv - session_max)
                             current_base = 0; session_max = 0
                     continue
 
@@ -269,23 +271,25 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                     val = sn['pts'][uid]
                     
                     if val < current_base:
-                        # RESET! Check if manual data shows a higher peak before this reset
-                        if manual_idx < len(manual_vals):
-                            mv = manual_vals[manual_idx]
-                            if mv > session_max:
-                                daily_growths[i] += (mv - session_max)
-                            manual_idx += 1
+                        # RESET!
+                        if not server_reset_done and val <= 500:
+                            server_reset_done = True
+                        else:
+                            # User Exit
+                            if manual_idx < len(manual_vals):
+                                mv = manual_vals[manual_idx]
+                                if mv > session_max:
+                                    daily_growths[i] += (mv - session_max)
+                                manual_idx += 1
                         
-                        daily_growths[i] += val
+                        current_base = val
                         session_max = val
                     else:
                         daily_growths[i] += (val - current_base)
+                        current_base = val
                         session_max = max(session_max, val)
-                    
-                    current_base = val
 
-                # Handle remaining manual adjustments (if any) only if they represent a NEW peak
-                # and assume an exit followed
+                # Handle remaining manual adjustments (if any)
                 while manual_idx < len(manual_vals):
                     mv = manual_vals[manual_idx]
                     if mv > session_max:
@@ -296,14 +300,6 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
 
             if is_current_week:
                 presence[today_idx] = (uid in cur_ids) or any(presence)
-
-            pl_res[uid] = {
-                "growths": daily_growths, 
-                "total": sum(daily_growths), 
-                "presence": presence,
-                "first_p": next((idx for idx, p in enumerate(presence) if p), 999),
-                "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)
-            }
 
             pl_res[uid] = {
                 "growths": daily_growths, 
