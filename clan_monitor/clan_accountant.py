@@ -6,7 +6,13 @@ import socket
 import subprocess
 import re
 from datetime import datetime, timedelta, timezone
-from deep_translator import GoogleTranslator
+import numpy as np
+
+# ==============================================================================
+# CLAN ACCOUNTANT v0.2.5 (2026-05-16)
+# Core: Mathematical Parity with gen_utc_graph.py
+# Logic: UTC-boundary interpolation + Integer truncation
+# ==============================================================================
 
 # ==============================================================================
 # IDENTITY & CONFIG
@@ -235,68 +241,101 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         
         pl_res, clan_rats = {}, [None] * 7
         monday = week["monday"]
+        
+        all_week_sn = []
+        for i in range(7):
+            d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
+            all_week_sn.extend(week["days"].get(d_str, []))
+        all_week_sn.sort(key=lambda x: x['time'])
 
         for uid in players:
+            # --- Interpolation-based Daily Growth (Sync with Graph Markers) ---
+            import numpy as np
             daily_growths = [0] * 7
             presence = [False] * 7
             
-            # End of previous Sunday
-            pre_week_sn = [e for e in sd if e['time'] < monday and uid in e['pts']]
-            current_base = pre_week_sn[-1]['pts'][uid] if pre_week_sn else 0
-
+            # EXACT LOGIC FROM gen_utc_graph.py
+            # Filter all snapshots (sd) exactly like the graph does
+            week_snaps = [s for s in sd if monday <= s['time'] < monday + timedelta(days=7)]
+            
+            days_data = []
             for i in range(7):
-                is_monday = (i == 0)
-                server_reset_done = not is_monday
-                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
-                day_snaps = week["days"].get(d_str, [])
-                manual_vals = adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(manual_vals, list): manual_vals = [manual_vals]
-                manual_vals = [int(v) for v in manual_vals]
-                
-                manual_idx = 0
-                session_max = current_base 
-                
-                if not day_snaps:
-                    if manual_vals:
-                        presence[i] = True
-                        for mv in manual_vals:
-                            if mv > session_max:
-                                daily_growths[i] += (mv - session_max)
-                            current_base = 0; session_max = 0
-                    continue
+                d_start = monday + timedelta(days=i)
+                d_str = d_start.strftime("%Y-%m-%d")
+                day_snaps = [s for s in week_snaps if d_start <= s['time'] < d_start + timedelta(days=1) and uid in s['pts']]
+                manual = adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(manual, list): manual = [manual]
+                manual = [int(v) for v in manual]
+                days_data.append({'start': d_start, 'snaps': day_snaps, 'manual': manual})
+            
+            total_acc = 0
+            current_base = 0 # Monday 00:00 starts at 0
+            stream_times = [monday]
+            stream_vals = [0]
 
-                for sn in day_snaps:
-                    if uid not in sn['pts']: continue
-                    presence[i] = True
+            for idx, day in enumerate(days_data):
+                manual_vals = day['manual']
+                manual_idx = 0
+                session_max = current_base
+
+                for sn in day['snaps']:
                     val = sn['pts'][uid]
-                    
                     if val < current_base:
-                        # RESET!
-                        if not server_reset_done and val <= 500:
-                            server_reset_done = True
-                        else:
-                            # User Exit
-                            if manual_idx < len(manual_vals):
-                                mv = manual_vals[manual_idx]
-                                if mv > session_max:
-                                    daily_growths[i] += (mv - session_max)
-                                manual_idx += 1
-                        
+                        # DROP / EXIT
+                        missed = 0
+                        if manual_idx < len(manual_vals):
+                            mv = manual_vals[manual_idx]
+                            if mv > session_max: missed = mv - session_max
+                            manual_idx += 1
+                        total_acc += missed
                         current_base = val
                         session_max = val
                     else:
-                        daily_growths[i] += (val - current_base)
+                        # GROWTH
+                        total_acc += (val - current_base)
                         current_base = val
                         session_max = max(session_max, val)
+                    stream_times.append(sn['time'])
+                    stream_vals.append(total_acc)
 
-                # Handle remaining manual adjustments (if any)
+                # End of day manual
                 while manual_idx < len(manual_vals):
                     mv = manual_vals[manual_idx]
                     if mv > session_max:
-                        daily_growths[i] += (mv - session_max)
-                    current_base = 0 
+                        total_acc += (mv - session_max)
                     session_max = 0
+                    current_base = 0
                     manual_idx += 1
+                    stream_times.append(stream_times[-1] + timedelta(minutes=1))
+                    stream_vals.append(total_acc)
+
+            # 2. Interpolate values at every 00:00 UTC boundary
+            boundary_vals = []
+            ts = np.array([t.timestamp() for t in stream_times])
+            vs = np.array(stream_vals)
+            
+            # 2. Interpolate values at every 00:00 UTC boundary
+            boundary_vals = []
+            ts = np.array([t.timestamp() for t in stream_times])
+            vs = np.array(stream_vals)
+            
+            for i in range(8): # Mon 00:00 to Mon 00:00 next week
+                b_dt = monday + timedelta(days=i)
+                bt = b_dt.timestamp()
+                if bt < ts[0]:
+                    v_i = 0
+                elif bt > ts[-1]:
+                    v_i = total_acc
+                else:
+                    v_i = np.interp(bt, ts, vs)
+                boundary_vals.append(v_i)
+            
+            # 3. Daily growth = Difference between truncated boundaries
+            for i in range(7):
+                daily_growths[i] = int(boundary_vals[i+1]) - int(boundary_vals[i])
+                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
+                if week["days"].get(d_str, []) or daily_growths[i] > 0:
+                    presence[i] = True
 
             if is_current_week:
                 presence[today_idx] = (uid in cur_ids) or any(presence)

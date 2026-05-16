@@ -1,128 +1,139 @@
-import os
 import json
-import re
-from datetime import datetime, timezone, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
-SNAPSHOTS_DIR = 'clan_monitor/snapshots'
-ADJ_FILE = 'clan_monitor/manual_adjustments.json'
-UID = '227408'
-START_DATE = '2026-05-11' # Monday UTC
+import numpy as np
 
 def get_data():
-    snaps = sorted([f for f in os.listdir(SNAPSHOTS_DIR) if f.startswith('points_utc_2026-05-')])
-    all_events = []
-    for f in snaps:
-        m = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', f)
-        dt_utc = datetime.strptime(m.group(0), '%Y-%m-%d_%H-%M').replace(tzinfo=timezone.utc)
-        with open(os.path.join(SNAPSHOTS_DIR, f), encoding='utf-8') as fs:
-            d = json.load(fs)
-            p = d.get('pts', {}).get(UID)
-            if p is not None:
-                all_events.append({"time": dt_utc, "pts": int(p)})
+    uid = "227408"
+    monday = datetime(2026, 5, 11, tzinfo=timezone.utc)
     
-    with open(ADJ_FILE, encoding='utf-8') as f:
-        adj = json.load(f)
+    all_snaps = []
+    sn_dir = 'clan_monitor/snapshots'
+    if not os.path.exists(sn_dir): sn_dir = 'snapshots'
+        
+    for fn in os.listdir(sn_dir):
+        if not fn.endswith('.json') or not fn.startswith('points_utc_'): continue
+        try:
+            parts = fn.replace('.json','').split('_')
+            ts_str = f"{parts[2]} {parts[3].replace('-',':')}"
+            dt = datetime.strptime(ts_str, "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+            with open(os.path.join(sn_dir, fn), 'r') as f:
+                data = json.load(f)
+                if uid in data.get('pts', {}):
+                    all_snaps.append({'time': dt, 'pts': data['pts'][uid]})
+        except: continue
     
-    monday_utc = datetime.strptime(START_DATE, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+    all_snaps.sort(key=lambda x: x['time'])
+    week_snaps = [s for s in all_snaps if monday <= s['time'] < monday + timedelta(days=7)]
     
-    # Base from previous Sunday
-    pre_week = [e for e in all_events if e['time'] < monday_utc]
-    initial_base = pre_week[-1]['pts'] if pre_week else 0
+    adj_path = 'clan_monitor/manual_adjustments.json'
+    if not os.path.exists(adj_path): adj_path = 'manual_adjustments.json'
+    with open(adj_path, 'r') as f:
+        adj_db = json.load(f)
     
     days_data = []
     for i in range(7):
-        curr_day = monday_utc + timedelta(days=i)
-        d_str = curr_day.strftime('%Y-%m-%d')
-        next_day = curr_day + timedelta(days=1)
-        
-        day_snaps = [e for e in all_events if curr_day <= e['time'] < next_day]
-        manual_vals = adj.get(d_str, {}).get(UID, [])
-        if not isinstance(manual_vals, list): manual_vals = [manual_vals]
-        
-        days_data.append({
-            "start": curr_day,
-            "snaps": day_snaps,
-            "manual": [int(v) for v in manual_vals]
-        })
-        
-    return initial_base, days_data
+        d_start = monday + timedelta(days=i)
+        d_str = d_start.strftime("%Y-%m-%d")
+        day_snaps = [s for s in week_snaps if d_start <= s['time'] < d_start + timedelta(days=1)]
+        manual = adj_db.get(d_str, {}).get(uid, [])
+        if not isinstance(manual, list): manual = [manual]
+        manual = [int(v) for v in manual]
+        days_data.append({'start': d_start, 'snaps': day_snaps, 'manual': manual})
+    
+    return days_data
 
-def plot(base, days):
+def plot(days):
     plt.style.use('dark_background')
     fig, ax = plt.subplots(figsize=(18, 11))
     
-    current_base = base
-    global_max = base # Global peak achieved in the clan (starts from Sunday end)
+    # SIMPLE ROBUST STREAM LOGIC
     total_acc = 0
+    current_base = 0 # Monday 00:00 starts at 0
     
-    # Data for cumulative line
     cum_times, cum_vals = [], []
-    # Data for instantaneous line (Raw snapshots)
     raw_times, raw_vals = [], []
-    
     day_markers = []
     now_utc = datetime.now(timezone.utc)
 
-    # Initial state
+    # Initial anchor at 00:00 Monday
     cum_times.append(days[0]['start'])
     cum_vals.append(0)
 
     for idx, day in enumerate(days):
-        is_monday = (idx == 0)
-        server_reset_done = not is_monday
         manual_vals = day['manual']
         manual_idx = 0
-        
-        # In this logic, we don't care about sessions, only the absolute peak
+        session_max = current_base
+
         for sn in day['snaps']:
             val = sn['pts']
             raw_times.append(sn['time'])
             raw_vals.append(val)
             
-            # Growth only counts if we exceed the global max
-            if val > global_max:
-                total_acc += (val - global_max)
-                global_max = val
+            if val < current_base:
+                # DROP / EXIT
+                missed = 0
+                if manual_idx < len(manual_vals):
+                    mv = manual_vals[manual_idx]
+                    if mv > session_max: missed = mv - session_max
+                    manual_idx += 1
+                
+                total_acc += missed
+                current_base = val
+                session_max = val
+            else:
+                # GROWTH
+                total_acc += (val - current_base)
+                current_base = val
+                session_max = max(session_max, val)
             
             cum_times.append(sn['time'])
             cum_vals.append(total_acc)
 
-        # Handle manual adjustments (as peak overrides)
+        # End of day manual
         while manual_idx < len(manual_vals):
             mv = manual_vals[manual_idx]
-            if mv > global_max:
-                total_acc += (mv - global_max)
-                global_max = mv
+            if mv > session_max:
+                total_acc += (mv - session_max)
+            session_max = 0
+            current_base = 0
             manual_idx += 1
             cum_times.append(cum_times[-1] + timedelta(minutes=1))
             cum_vals.append(total_acc)
-            # Visual exit
-            raw_times.append(raw_times[-1] + timedelta(minutes=1))
-            raw_vals.append(0)
+            if raw_times:
+                raw_times.append(raw_times[-1] + timedelta(minutes=1))
+                raw_vals.append(0)
 
-        # Connect boundary to host red markers
-        next_day_start = day['start'] + timedelta(days=1)
-        if next_day_start <= now_utc:
-            cum_times.append(next_day_start)
-            cum_vals.append(total_acc)
-            day_markers.append((next_day_start, total_acc))
+    # Intersection Interpolation
+    if cum_times:
+        ts = np.array([t.timestamp() for t in cum_times])
+        vs = np.array(cum_vals)
+        for i in range(8): # Check up to Sunday end
+            d_b = days[0]['start'] + timedelta(days=i)
+            if d_b > now_utc and i < 7: continue
+            if d_b.timestamp() < ts[0] or d_b.timestamp() > ts[-1]: continue
+            v_i = np.interp(d_b.timestamp(), ts, vs)
+            day_markers.append((d_b, v_i))
 
-    # 1. Instantaneous Graph (Fill)
-    ax.fill_between(raw_times, raw_vals, color='#58a6ff', alpha=0.2, label='Instantaneous Pts (Area)')
-    ax.plot(raw_times, raw_vals, color='#58a6ff', linewidth=2, alpha=0.8, label='Instantaneous Pts (Blue Line)')
+    # Plot
+    if raw_times:
+        ax.fill_between(raw_times, raw_vals, color='#58a6ff', alpha=0.2, label='Instantaneous Pts (Area)')
+        ax.plot(raw_times, raw_vals, color='#58a6ff', linewidth=2, alpha=0.8, label='Instantaneous Pts (Blue Line)')
     
-    # Add explicit dots for actual snapshots
     pure_raw_times = [sn['time'] for d in days for sn in d['snaps']]
     pure_raw_vals = [sn['pts'] for d in days for sn in d['snaps']]
     ax.scatter(pure_raw_times, pure_raw_vals, color='#58a6ff', s=40, edgecolors='white', linewidths=0.5, zorder=15, label='Actual Snapshots (Dots)')
     
-    # 2. Cumulative Growth (Line)
-    ax.plot(cum_times, cum_vals, color='#3fb950', linewidth=5, label='Total Weekly Growth (Green)', zorder=10)
+    if cum_times:
+        ax.plot(cum_times, cum_vals, color='#3fb950', linewidth=5, label='Total Weekly Growth (Green)', zorder=10)
 
-    # Markers for Daily Results
     if day_markers:
+        print("\n--- DAY BOUNDARY MARKERS (RED DOTS) ---")
+        for x, y in day_markers:
+            print(f"{x.strftime('%Y-%m-%d %H:%M')} UTC: {int(y)}")
+        print("---------------------------------------\n")
         mx, my = zip(*day_markers)
         ax.scatter(mx, my, color='#f85149', s=150, edgecolors='white', zorder=20)
         for x, y in day_markers:
@@ -139,8 +150,9 @@ def plot(base, days):
     
     plt.tight_layout()
     plt.savefig("ksotar_utc_final.png", dpi=140)
-    print(f"Graph saved. Final Acc: {cum_vals[-1]}")
+    print(f"Graph saved. Final Acc: {int(total_acc)}")
+    plt.close()
 
 if __name__ == "__main__":
-    b, d = get_data()
-    plot(b, d)
+    d = get_data()
+    plot(d)
