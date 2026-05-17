@@ -11645,3 +11645,60 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/arena.html
 ==================================================
 [17.05.2026 11:00:10,50] Syncing with Git... 
+[main d23c0a8] Auto-update 17.05.2026 11:00:45,23
+ 6 files changed, 76 insertions(+), 5 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-17_07-56.json
+[17.05.2026 11:00:56,40] Pushing to repository... 
+fatal: unable to access 'https://github.com/Artyrm/mech_heroes.git/': HTTP/2 stream 1 was not closed cleanly before end of the underlying stream
+[17.05.2026 11:02:16,62] SUCCESS: Data pushed to Git. 
+[17.05.2026 11:02:17,02] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026 11:55:06,34] STARTING PROCESS 
+[17.05.2026 11:55:12,61] Running Python script... 
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[17.05.2026 11:57:17,36] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches arena_17-05-2026T04-01-11.json), skipping save.
+Top-1: х3 (4499)
+Requesting latest Arena Top-50 via /command...
+Warning: /command failed with status 404. Using data from /init.
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 28 potential init dumps.
+Existing snapshots: 15 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 26
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 15 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as arena.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/arena.html
+==================================================
+[17.05.2026 11:59:50,56] Syncing with Git... 
