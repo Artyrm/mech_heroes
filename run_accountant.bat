@@ -29,7 +29,20 @@ if NOT "%PY_ERROR%"=="0" (
     goto DONE
 )
 
-:: --- 2. GIT SYNC ---
+:: --- 2. ARENA UPDATE & DEPLOY ---
+echo [%date% %time%] Running Arena Update (arena_update.py)...
+echo [%date% %time%] Running Arena Update... >> "%LOG_FILE%"
+
+cd /d "%BASE_DIR%"
+C:\tools\Anaconda3\python.exe -u arena_update.py >> "%LOG_FILE%" 2>&1
+set ARENA_ERROR=%errorlevel%
+
+if NOT "%ARENA_ERROR%"=="0" (
+    echo [!] ARENA UPDATE FAILED WITH CODE %ARENA_ERROR%
+    echo [%date% %time%] ERROR: Arena update failed with code %ARENA_ERROR% >> "%LOG_FILE%"
+)
+
+:: --- 3. GIT SYNC ---
 echo [%date% %time%] Syncing with Git...
 echo [%date% %time%] Syncing with Git... >> "%LOG_FILE%"
 

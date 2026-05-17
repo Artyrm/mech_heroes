@@ -11068,3 +11068,214 @@ Original error was: DLL load failed while importing _multiarray_umath: Не найден
 [!] Р’РќРРњРђРќРР•: РћР±РЅР°СЂСѓР¶РµРЅР° Р°РєС‚РёРІРЅР°СЏ РёРіСЂРѕРІР°СЏ СЃРµСЃСЃРёСЏ. Р§С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ РєРѕРЅС„Р»РёРєС‚Р°, Р±РѕС‚ Р·Р°РІРµСЂС€Р°РµС‚ СЂР°Р±РѕС‚Сѓ.
 [*] РСЃРїРѕР»СЊР·СѓР№С‚Рµ С„Р»Р°Рі --force РґР»СЏ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ Р·Р°РїСѓСЃРєР°.
 [17.05.2026  3:37:23,32] Syncing with Git... 
+[main 95b5fdc] Auto-update 17.05.2026  3:37:24,70
+ 12 files changed, 468 insertions(+), 36 deletions(-)
+ create mode 100644 clan_monitor/clan_accountant_vold.py
+ create mode 100644 clan_monitor/clan_accountant_yesterday.py
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_15-50.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_15-55.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_15-59.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-17_00-29.json
+[17.05.2026  3:37:25,39] Pushing to repository... 
+Enumerating objects: 30, done.
+Counting objects:   3% (1/30)Counting objects:   6% (2/30)Counting objects:  10% (3/30)Counting objects:  13% (4/30)Counting objects:  16% (5/30)Counting objects:  20% (6/30)Counting objects:  23% (7/30)Counting objects:  26% (8/30)Counting objects:  30% (9/30)Counting objects:  33% (10/30)Counting objects:  36% (11/30)Counting objects:  40% (12/30)Counting objects:  43% (13/30)Counting objects:  46% (14/30)Counting objects:  50% (15/30)Counting objects:  53% (16/30)Counting objects:  56% (17/30)Counting objects:  60% (18/30)Counting objects:  63% (19/30)Counting objects:  66% (20/30)Counting objects:  70% (21/30)Counting objects:  73% (22/30)Counting objects:  76% (23/30)Counting objects:  80% (24/30)Counting objects:  83% (25/30)Counting objects:  86% (26/30)Counting objects:  90% (27/30)Counting objects:  93% (28/30)Counting objects:  96% (29/30)Counting objects: 100% (30/30)Counting objects: 100% (30/30), done.
+Delta compression using up to 4 threads
+Compressing objects:   7% (1/14)Compressing objects:  14% (2/14)Compressing objects:  21% (3/14)Compressing objects:  28% (4/14)Compressing objects:  35% (5/14)Compressing objects:  42% (6/14)Compressing objects:  50% (7/14)Compressing objects:  57% (8/14)Compressing objects:  64% (9/14)Compressing objects:  71% (10/14)Compressing objects:  78% (11/14)Compressing objects:  85% (12/14)Compressing objects:  92% (13/14)Compressing objects: 100% (14/14)Compressing objects: 100% (14/14), done.
+Writing objects:   5% (1/17)Writing objects:  11% (2/17)Writing objects:  17% (3/17)Writing objects:  23% (4/17)Writing objects:  29% (5/17)Writing objects:  35% (6/17)Writing objects:  41% (7/17)Writing objects:  47% (8/17)Writing objects:  52% (9/17)Writing objects:  58% (10/17)Writing objects:  64% (11/17)Writing objects:  70% (12/17)Writing objects:  76% (13/17)Writing objects:  82% (14/17)Writing objects:  88% (15/17)Writing objects:  94% (16/17)Writing objects: 100% (17/17)Writing objects: 100% (17/17), 14.89 KiB | 354.00 KiB/s, done.
+Total 17 (delta 9), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/9)        remote: Resolving deltas:  11% (1/9)        remote: Resolving deltas:  22% (2/9)        remote: Resolving deltas:  33% (3/9)        remote: Resolving deltas:  44% (4/9)        remote: Resolving deltas:  55% (5/9)        remote: Resolving deltas:  66% (6/9)        remote: Resolving deltas:  77% (7/9)        remote: Resolving deltas:  88% (8/9)        remote: Resolving deltas: 100% (9/9)        remote: Resolving deltas: 100% (9/9), completed with 9 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   1b66e21..95b5fdc  main -> main
+[17.05.2026  3:37:30,21] SUCCESS: Data pushed to Git. 
+[17.05.2026  3:37:30,23] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  3:55:03,29] STARTING PROCESS 
+[17.05.2026  3:55:03,30] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[17.05.2026  3:55:03,98] ERROR: Python script failed with code 1 
+[17.05.2026  3:55:04,24] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  4:55:03,32] STARTING PROCESS 
+[17.05.2026  4:55:03,57] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[17.05.2026  4:55:04,72] ERROR: Python script failed with code 1 
+[17.05.2026  4:55:05,00] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  5:55:59,71] STARTING PROCESS 
+[17.05.2026  5:56:00,39] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[17.05.2026  5:56:44,15] ERROR: Python script failed with code 1 
+[17.05.2026  5:56:44,78] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  6:10:32,66] STARTING PROCESS 
+[17.05.2026  6:10:33,54] Running Python script... 
+[*] РћРўР§Р•Рў РЈРЎРџР•РЁРќРћ РћР‘РќРћР’Р›Р•Рќ.
+[17.05.2026  6:10:44,89] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches arena_17-05-2026T02-59-49.json), skipping save.
+Top-1: С…3 (4499)
+Requesting latest Arena Top-50 via /command...
+Warning: /command failed with status 404. Using data from /init.
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 22 potential init dumps.
+Existing snapshots: 14 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 20
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 14 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as arena.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/arena.html
+==================================================
+[17.05.2026  6:11:01,35] Syncing with Git... 

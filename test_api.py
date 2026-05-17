@@ -9,7 +9,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 # Your Identity
 USER_ID = 227408
 AUTH_KEY = "2B8ADCBE7A00EE8AF838139813C3ABBB"
-VERSION = "1.23.0"
+VERSION = "1.24.0"
 
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 

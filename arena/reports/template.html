@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Arena Top-50 Analytics</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #e0e0e0; margin: 20px; }
+        .container { max-width: 1200px; margin: auto; }
+        h1 { color: #ffcc00; text-align: center; margin-bottom: 5px; }
+        .last-update { text-align: center; color: #888; margin-bottom: 20px; font-size: 0.9rem; }
+        .controls { background: #2d2d2d; padding: 20px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; justify-content: center; }
+        select { padding: 8px; background: #3d3d3d; color: white; border: 1px solid #555; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; background: #2d2d2d; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #3d3d3d; }
+        th { background: #3d3d3d; color: #ffcc00; }
+        tr:hover { background: #353535; }
+        .delta-pos { color: #4caf50; font-size: 0.9em; font-weight: bold; }
+        .delta-neg { color: #f44336; font-size: 0.9em; font-weight: bold; }
+        .new-player { background: rgba(76, 175, 80, 0.1); }
+        .rank-up { color: #4caf50; font-weight: bold; }
+        .rank-down { color: #f44336; font-weight: bold; }
+        .power { font-family: 'Courier New', Courier, monospace; }
+        .clan-tag { color: #888; font-size: 0.85em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Arena Analytics — Top 50</h1>
+        <div id="last-update-info" class="last-update"></div>
+        
+        <div class="controls">
+            <div>
+                <label>Точка T1 (База): </label>
+                <select id="t1-select" onchange="updateTable()"></select>
+            </div>
+            <div>
+                <label>Точка T2 (Сравнение): </label>
+                <select id="t2-select" onchange="updateTable()"></select>
+            </div>
+        </div>
+
+        <table id="arena-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Игрок</th>
+                    <th>Клан</th>
+                    <th>Рейтинг</th>
+                    <th>Мощь</th>
+                    <th>Победы</th>
+                    <th>Поражения</th>
+                    <th>Winrate</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Data injected by JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const snapshots = SNAPSHOTS_DATA; 
+        
+        const t1Select = document.getElementById('t1-select');
+        const t2Select = document.getElementById('t2-select');
+        const tableBody = document.getElementById('table-body');
+        const lastUpdateDiv = document.getElementById('last-update-info');
+
+        function parseInternalDate(s) {
+            // Парсим серверную дату как UTC
+            try {
+                const [d, t] = s.split('_');
+                const [day, month, year] = d.split('/');
+                const [h, m, sec] = t.split(':');
+                return new Date(Date.UTC(year, month - 1, day, h, m, sec.split('.')[0]));
+            } catch(e) { return new Date(0); }
+        }
+
+        function formatDateMSK(s) {
+            // Конвертирует серверную дату (UTC) в строку UTC+3 (МСК)
+            const utc = parseInternalDate(s);
+            const msk = new Date(utc.getTime() + 3 * 3600 * 1000);
+            const dd = String(msk.getUTCDate()).padStart(2, '0');
+            const mm = String(msk.getUTCMonth() + 1).padStart(2, '0');
+            const yyyy = msk.getUTCFullYear();
+            const hh = String(msk.getUTCHours()).padStart(2, '0');
+            const mi = String(msk.getUTCMinutes()).padStart(2, '0');
+            const ss = String(msk.getUTCSeconds()).padStart(2, '0');
+            return `${dd}.${mm}.${yyyy} ${hh}:${mi}:${ss} МСК`;
+        }
+
+        function formatNumber(num) {
+            if (num === undefined || num === null) return "0";
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
+
+        const dates = Object.keys(snapshots).sort((a, b) => parseInternalDate(a) - parseInternalDate(b));
+        
+        if (dates.length === 0) {
+            tableBody.innerHTML = "<tr><td colspan='8' style='text-align:center'>Нет данных для отображения</td></tr>";
+        } else {
+            dates.forEach((date, i) => {
+                const label = formatDateMSK(date);
+                t1Select.add(new Option(label, date));
+                t2Select.add(new Option(label, date));
+            });
+
+            const lastIdx = dates.length - 1;
+            t2Select.selectedIndex = lastIdx;
+            
+            const latestDate = parseInternalDate(dates[lastIdx]);
+            const startOfToday = new Date(Date.UTC(latestDate.getUTCFullYear(), latestDate.getUTCMonth(), latestDate.getUTCDate()));
+            
+            let t1Idx = 0;
+            for (let i = 0; i < dates.length; i++) {
+                if (parseInternalDate(dates[i]) >= startOfToday) {
+                    t1Idx = i;
+                    break;
+                }
+            }
+            if (t1Idx === lastIdx && dates.length > 1) t1Idx = lastIdx - 1;
+            t1Select.selectedIndex = t1Idx;
+        }
+
+        function renderDelta(val) {
+            if (val === 0) return "";
+            const cls = val > 0 ? "delta-pos" : "delta-neg";
+            const sign = val > 0 ? "+" : "";
+            return ` <span class="${cls}">(${sign}${formatNumber(val)})</span>`;
+        }
+
+        function getPowerInt(pStr) {
+            return Math.floor(parseFloat(pStr.toString().replace(',', '.')));
+        }
+
+        function updateTable() {
+            if (dates.length === 0) return;
+            
+            const t1Date = t1Select.value;
+            const t2Date = t2Select.value;
+            
+            if (lastUpdateDiv) lastUpdateDiv.innerText = `Последнее обновление данных: ${formatDateMSK(t2Date)}`;
+            
+            const players1 = snapshots[t1Date] ? snapshots[t1Date].players : [];
+            const players2 = snapshots[t2Date] ? snapshots[t2Date].players : [];
+
+            const map1 = {};
+            players1.forEach((p, idx) => { map1[p.userID] = { ...p, rank: idx + 1 }; });
+
+            tableBody.innerHTML = "";
+
+            players2.forEach((p2, idx) => {
+                const rank2 = idx + 1;
+                const p1 = map1[p2.userID];
+                const tr = document.createElement('tr');
+                
+                let rankHtml = rank2;
+                if (p1) {
+                    const dr = p1.rank - rank2;
+                    if (dr > 0) rankHtml += ` <span class="rank-up">↑${dr}</span>`;
+                    else if (dr < 0) rankHtml += ` <span class="rank-down">↓${Math.abs(dr)}</span>`;
+                } else {
+                    tr.classList.add('new-player');
+                    rankHtml += ` <span class="rank-up">NEW</span>`;
+                }
+
+                const ratingDelta = p1 ? (parseInt(p2.rating) - parseInt(p1.rating)) : 0;
+                const winDelta = p1 ? (p2.profileState.winCount - p1.profileState.winCount) : 0;
+                const loseDelta = p1 ? (p2.profileState.defeatCount - p1.profileState.defeatCount) : 0;
+                
+                const p2Power = getPowerInt(p2.power);
+                const p1Power = p1 ? getPowerInt(p1.power) : p2Power;
+                const powerDelta = p2Power - p1Power;
+
+                const wr = (p2.profileState.winCount / (p2.profileState.winCount + p2.profileState.defeatCount) * 100).toFixed(2);
+
+                tr.innerHTML = `
+                    <td>${rankHtml}</td>
+                    <td><b>${p2.profileState.nickname}</b></td>
+                    <td>${p2.clanProfile.clanName || '-'} <span class="clan-tag">[${p2.clanProfile.clanTag || ''}]</span></td>
+                    <td>${formatNumber(p2.rating)}${renderDelta(ratingDelta)}</td>
+                    <td class="power">${formatNumber(p2Power)}${renderDelta(powerDelta)}</td>
+                    <td>${formatNumber(p2.profileState.winCount)}${renderDelta(winDelta)}</td>
+                    <td>${formatNumber(p2.profileState.defeatCount)}${renderDelta(loseDelta)}</td>
+                    <td>${wr}%</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        if (dates.length > 0) updateTable();
+    </script>
+</body>
+</html>
