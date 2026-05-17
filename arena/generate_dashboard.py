@@ -1,7 +1,7 @@
 import json
 import os
 import glob
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def parseInternalDate(s):
     """Parse server timestamp like '17/05/2026_10:58:41.0000' into datetime."""
@@ -132,6 +132,11 @@ def generate():
     
     users_with_squads_json = json.dumps(users_with_squads)
     html = html.replace('USERS_WITH_SQUADS', users_with_squads_json)
+    
+    # Inject last check time (MSK)
+    now_msk = datetime.utcnow() + timedelta(hours=3)
+    now_str = now_msk.strftime("%d.%m.%Y %H:%M:%S МСК")
+    html = html.replace('LAST_CHECK_TIME', now_str)
     
     # Save output
     with open(output_path, 'w', encoding='utf-8') as of:

@@ -126,6 +126,23 @@ def fetch_squads():
         user_dir = os.path.join(squads_dir, uid)
         os.makedirs(user_dir, exist_ok=True)
         
+        # Сохраняем историю онлайна отдельно
+        last_visit = u.get('lastVisit')
+        if last_visit:
+            online_file = os.path.join(user_dir, "online_history.json")
+            online_history = []
+            if os.path.exists(online_file):
+                try:
+                    with open(online_file, 'r', encoding='utf-8') as f:
+                        online_history = json.load(f)
+                except:
+                    pass
+            
+            if not online_history or online_history[-1] != last_visit:
+                online_history.append(last_visit)
+                with open(online_file, 'w', encoding='utf-8') as f:
+                    json.dump(online_history, f, ensure_ascii=False, indent=2)
+        
         history_file = os.path.join(user_dir, "history.json")
         history = []
         if os.path.exists(history_file):

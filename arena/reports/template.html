@@ -27,7 +27,7 @@
 <body>
     <div class="container">
         <h1>Arena Analytics — Top 50</h1>
-        <div id="last-update-info" class="last-update"></div>
+        <div class="last-update">Проверка обновлений: LAST_CHECK_TIME</div>
         
         <div class="controls">
             <div>
@@ -67,7 +67,6 @@
         const t1Select = document.getElementById('t1-select');
         const t2Select = document.getElementById('t2-select');
         const tableBody = document.getElementById('table-body');
-        const lastUpdateDiv = document.getElementById('last-update-info');
 
         function parseInternalDate(s) {
             // Парсим серверную дату как UTC
@@ -141,8 +140,6 @@
             
             const t1Date = t1Select.value;
             const t2Date = t2Select.value;
-            
-            if (lastUpdateDiv) lastUpdateDiv.innerText = `Последнее обновление данных: ${formatDateMSK(t2Date)}`;
             
             const players1 = snapshots[t1Date] ? snapshots[t1Date].players : [];
             const players2 = snapshots[t2Date] ? snapshots[t2Date].players : [];
