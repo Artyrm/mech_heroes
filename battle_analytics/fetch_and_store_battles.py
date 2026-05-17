@@ -29,6 +29,21 @@ def save_json(path, data):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def fetch_history():
+    # 0. Try to reuse a fresh dump from init_dumps
+    dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
+    if os.path.exists(dumps_dir):
+        import glob
+        dumps = sorted(glob.glob(os.path.join(dumps_dir, "init_*.json")))
+        if dumps:
+            latest_dump = dumps[-1]
+            mtime = os.path.getmtime(latest_dump)
+            # If the file is less than 15 minutes old, reuse it
+            if datetime.datetime.now().timestamp() - mtime < 15 * 60:
+                print(f"INFO: Found fresh init dump: {os.path.basename(latest_dump)}. Reusing it!")
+                r = load_json(latest_dump)
+                history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
+                return history
+
     conf = load_json(CONFIG_FILE)
     user_id = conf.get('USER_ID')
     auth_key = conf.get('AUTH_KEY')

@@ -44,6 +44,7 @@ def main():
     steps = [
         ("FETCHING LATEST DATA", "arena/fetch_arena.py"),
         ("SYNCING FROM INIT DUMPS", "arena/sync_from_init.py"),
+        ("DISTRIBUTING BATTLES", "battle_analytics/fetch_and_store_battles.py"),
         ("FETCHING SQUADS", "arena/fetch_squads.py"),
         ("GENERATING SQUAD REPORTS", "arena/generate_squad_reports.py"),
         ("GENERATING HTML DASHBOARD", "arena/generate_dashboard.py"),

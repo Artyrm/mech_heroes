@@ -8,27 +8,44 @@
 
 ## 1. Глобальный конвейер (Pipeline)
 
-Запуск [arena_update.py](file:///g:/Video/%21%D0%9C%D0%B5%D0%B4%D0%B2%D0%B5%D0%B4%D0%B8/Mech%20Heroes/%D0%9A%D0%BB%D0%B0%D0%BD%20%D0%9E%D1%80%D0%BA%D0%B8/accountant_bot/arena_update.py) последовательно выполняет 4 шага:
+Запуск [arena_update.py](file:///g:/Video/%21%D0%9C%D0%B5%D0%B4%D0%B2%D0%B5%D0%B4%D0%B8/Mech%20Heroes/%D0%9A%D0%BB%D0%B0%D0%BD%20%D0%9E%D1%80%D0%BA%D0%B8/accountant_bot/arena_update.py) последовательно выполняет 7 шагов:
 
 ```mermaid
 graph TD
     A[arena_update.py Orchestrator] --> B[1. arena/fetch_arena.py]
     A --> C[2. arena/sync_from_init.py]
-    A --> D[3. arena/generate_dashboard.py]
-    A --> E[4. deploy.py]
+    A --> D[3. battle_analytics/fetch_and_store_battles.py]
+    A --> E[4. arena/fetch_squads.py]
+    A --> F[5. arena/generate_squad_reports.py]
+    A --> G[6. arena/generate_dashboard.py]
+    A --> H[7. deploy.py]
     
     B -->|Запрос к API & Сохранение| S[(arena/snapshots/)]
     C -->|Парсинг дампов init & Импорт| S
-    S -->|Чтение всех снэпшотов| D
-    D -->|Генерация отчета с JSON| H[arena/reports/dashboard.html]
-    E -->|Загрузка по FTP| F[ovalhalla.ru/my/mech/arena.html]
+    D -->|Распределение боев| BTL[battle_analytics/{Nick}/]
+    S -->|Чтение всех снэпшотов| G
+    G -->|Генерация отчета с JSON| DASH[arena/reports/dashboard.html]
+    H -->|Загрузка по FTP| WEB[ovalhalla.ru/my/mech/arena.html]
 ```
-
-Каждая фаза конвейера разработана с отказоустойчивостью: сбой на критическом шаге останавливает дальнейшее выполнение, а некритические ошибки обрабатываются мягко (fallback).
 
 ---
 
-## 2. Разбор компонентов и скриптов
+## 2. Безопасность и Оптимизация
+
+### 2.1. Контроль активной сессии (Session Safety)
+Оркестратор `arena_update.py` перед началом работы проверяет наличие активного сетевого соединения с серверами игры (IP: `84.201.164.35`). 
+- **Если соединение установлено**: Скрипт завершает работу с предупреждением, чтобы не прервать игровую сессию пользователя (API-запрос `/init` с другого устройства/скрипта может привести к дисконнекту в игре).
+- **Принудительный запуск**: Использование флага `--force` игнорирует проверку, но крайне не рекомендуется при активной игре.
+
+### 2.2. Переиспользование дампов (No-Redundancy)
+Для минимизации запросов к API и исключения конфликтов сессий, скрипты `fetch_arena.py` и `fetch_and_store_battles.py` используют механизм кеширования:
+1. Перед запросом к API проверяется папка `init_dumps/`.
+2. Если в ней найден файл `init_*.json`, созданный менее 15 минут назад, скрипт **не делает сетевой запрос**, а загружает данные из этого файла.
+3. Это позволяет запускать несколько компонентов аналитики подряд, используя один и тот же "свежий" слепок данных.
+
+---
+
+## 3. Разбор компонентов и скриптов
 
 ### 2.1. Сбор свежих данных — `arena/fetch_arena.py`
 Скрипт [fetch_arena.py](file:///g:/Video/%21%D0%9C%D0%B5%D0%B4%D0%B2%D0%B5%D0%B4%D0%B8/Mech%20Heroes/%D0%9A%D0%BB%D0%B0%D0%BD%20%D0%9E%D1%80%D0%BA%D0%B8/accountant_bot/arena/fetch_arena.py) отвечает за прямое взаимодействие с API игры:
