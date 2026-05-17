@@ -5,7 +5,7 @@ import glob
 def generate():
     snaps_dir = "arena/snapshots"
     template_path = "arena/reports/template.html"
-    output_path = "arena/reports/dashboard.html"
+    output_path = "arena/reports/arena.html"
     
     if not os.path.exists(template_path):
         print("Template not found!")

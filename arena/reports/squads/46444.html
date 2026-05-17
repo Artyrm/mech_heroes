@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отряд: Мрак</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1f; color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; }
+        .header { text-align: center; margin-bottom: 30px; background: #25252d; padding: 20px; border-radius: 8px; border: 1px solid #333; }
+        .header h1 { margin: 5px 0; color: #ffcc00; }
+        .back-link { float: left; color: #2196f3; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .controls { background: #2d2d35; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; justify-content: center; }
+        select { padding: 8px; border-radius: 4px; background: #3d3d3d; color: white; border: 1px solid #555; font-size: 14px; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: #25252d; }
+        th, td { border: 1px solid #333; padding: 12px; vertical-align: top; }
+        th { background: #2d2d35; font-size: 1.1em; color: #ffcc00; text-align: center; }
+        .row-header { background: #353540; text-align: center; font-weight: bold; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1.5px; color: #ffeb3b; }
+        
+        .diff-summary { background: #4a1a1a; color: #ffabac; font-size: 0.9em; text-align: center; font-weight: bold; padding: 6px; border: 1px solid #f44336; }
+        .unit-name { font-weight: bold; color: #ffeb3b; font-size: 1.1em; }
+        .diff { background: #2c1e1e; border-left: 5px solid #f44336; }
+        .same { opacity: 0.8; }
+        
+        .label { color: #888; font-size: 0.8em; text-transform: uppercase; }
+        .val-mods { color: #8bc34a; font-weight: bold; font-size: 0.9em; }
+        .val-sharps { color: #ffc107; font-weight: bold; font-size: 0.9em; }
+        .changes-tag { background: #f44336; color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 3px; margin-left: 10px; vertical-align: middle; }
+        
+        .equips-list { padding-left: 15px; margin: 5px 0 0 0; list-style-type: square; font-size: 0.85em; color: #aaa; }
+        .sharpening { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="../arena.html" class="back-link">&larr; Назад к Арене</a>
+            <h1>Отряд игрока: Мрак</h1>
+            <p style="color: #888; margin: 0;">ID: 46444</p>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>Точка T1 (Ранее): </label>
+                <select id="t1-select" onchange="compare()"></select>
+            </div>
+            <div>
+                <label>Точка T2 (Сейчас): </label>
+                <select id="t2-select" onchange="compare()"></select>
+            </div>
+        </div>
+
+        <div id="comparison-container">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <script>
+        const history = [{"timestamp": "17-05-2026T12-24-57", "hash": "84c564c20d178e58d2a145603a67fcce", "power": "4078", "squad": {"general": {"defId": "brain", "equipables": {"1219": {"id": "eye_for_an_eye_weapon", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_health_sharpening"}, "stateId": 1219}, "1424": {"id": "eye_for_an_eye_ammunition", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1424}, "1777": {"id": "eye_for_an_eye_tracker", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_reload_sharpening", "30": "e_health_sharpening", "60": "e_damage_sharpening", "90": "e_crit_sharpening"}, "stateId": 1777}, "1779": {"id": "eye_for_an_eye_armor", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_damage_sharpening_weak", "30": "e_reload_sharpening", "60": "e_health_sharpening", "90": "e_crit_sharpening"}, "stateId": 1779}, "1860": {"id": "eye_for_an_eye_foot", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_dodge_sharpening", "120": "e_crit_sharpening_weak", "30": "e_damage_sharpening", "60": "e_health_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1860}, "1872": {"id": "eye_for_an_eye_engine", "itemType": "Equipment", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_damage_sharpening_medium", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_health_sharpening"}, "stateId": 1872}}, "isTrial": false, "level": "476", "stateId": 1066}, "units": [{"defId": "armageddon", "equipables": {"1188": {"id": "red_bull_tracker", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_crit_sharpening_weak", "30": "e_health_sharpening", "60": "e_dodge_sharpening", "90": "e_health_sharpening"}, "stateId": 1188}, "1499": {"id": "red_bull_engine", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_reload_sharpening", "30": "e_reload_sharpening", "60": "e_reload_sharpening", "90": "e_crit_sharpening"}, "stateId": 1499}, "1628": {"id": "red_bull_weapon", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_crit_sharpening_weak", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_health_sharpening"}, "stateId": 1628}, "2193": {"id": "red_bull_foot", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_dodge_sharpening_weak", "30": "e_crit_sharpening_weak", "60": "e_health_sharpening_medium", "90": "e_dodge_sharpening"}, "stateId": 2193}, "3335": {"id": "red_bull_armor", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_crit_sharpening_medium", "30": "e_crit_sharpening", "60": "e_crit_sharpening_medium", "90": "e_crit_sharpening"}, "stateId": 3335}, "3371": {"id": "red_bull_ammunition", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_damage_sharpening", "30": "e_crit_sharpening", "60": "e_health_sharpening_medium", "90": "e_reload_sharpening"}, "stateId": 3371}}, "isTrial": false, "level": "476", "stars": "15", "stateId": 1038, "unitType": "Ordinary"}, {"defId": "fury", "equipables": {"1086": {"id": "watch_the_target_armor", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_health_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_damage_sharpening"}, "stateId": 1086}, "1088": {"id": "watch_the_target_weapon", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_health_sharpening", "30": "e_reload_sharpening", "60": "e_crit_sharpening", "90": "e_damage_sharpening"}, "stateId": 1088}, "1150": {"id": "watch_the_target_engine", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_dodge_sharpening", "30": "e_reload_sharpening", "60": "e_health_sharpening", "90": "e_crit_sharpening"}, "stateId": 1150}, "1197": {"id": "watch_the_target_foot", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_reload_sharpening", "90": "e_damage_sharpening"}, "stateId": 1197}, "1207": {"id": "watch_the_target_tracker", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_health_sharpening", "30": "e_dodge_sharpening", "60": "e_reload_sharpening", "90": "e_damage_sharpening"}, "stateId": 1207}, "1208": {"id": "watch_the_target_ammunition", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_crit_sharpening", "30": "e_crit_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening"}, "stateId": 1208}}, "isTrial": false, "level": "476", "stars": "15", "stateId": 1135, "unitType": "Ordinary"}, {"defId": "predator", "equipables": {"1147": {"id": "criticals_engine_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_dodge_sharpening", "30": "e_crit_sharpening", "60": "e_damage_sharpening", "90": "e_crit_sharpening"}, "stateId": 1147}, "1151": {"id": "criticals_ammunition_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_reload_sharpening", "30": "e_dodge_sharpening", "60": "e_reload_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1151}, "1161": {"id": "criticals_foot_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening", "90": "e_reload_sharpening"}, "stateId": 1161}, "1198": {"id": "criticals_weapon_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_crit_sharpening", "90": "e_health_sharpening"}, "stateId": 1198}, "1269": {"id": "criticals_tracker_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_health_sharpening", "30": "e_crit_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1269}, "1366": {"id": "criticals_armor_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_dodge_sharpening", "90": "e_crit_sharpening"}, "stateId": 1366}}, "isTrial": false, "level": "476", "stars": "15", "stateId": 1039, "unitType": "Ordinary"}, {"defId": "bhramarah", "equipables": {"1075": {"id": "attack_foot_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_dodge_sharpening", "90": "e_crit_sharpening"}, "stateId": 1075}, "1112": {"id": "attack_weapon_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_dodge_sharpening", "30": "e_crit_sharpening", "60": "e_dodge_sharpening", "90": "e_reload_sharpening"}, "stateId": 1112}, "1163": {"id": "attack_armor_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_reload_sharpening", "30": "e_reload_sharpening", "60": "e_reload_sharpening", "90": "e_damage_sharpening"}, "stateId": 1163}, "1200": {"id": "attack_ammunition_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_reload_sharpening", "30": "e_health_sharpening", "60": "e_reload_sharpening", "90": "e_reload_sharpening"}, "stateId": 1200}, "1348": {"id": "attack_tracker_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_dodge_sharpening", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_reload_sharpening"}, "stateId": 1348}, "1508": {"id": "attack_engine_legendary", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_reload_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening", "90": "e_reload_sharpening"}, "stateId": 1508}}, "isTrial": false, "level": "476", "stars": "14", "stateId": 2641, "unitType": "Ordinary"}, {"defId": "muskrat", "equipables": {"1103": {"id": "red_bull_armor", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_health_sharpening", "120": "e_health_sharpening", "30": "e_crit_sharpening", "60": "e_reload_sharpening", "90": "e_crit_sharpening"}, "stateId": 1103}, "1272": {"id": "red_bull_weapon", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_damage_sharpening", "120": "e_damage_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_damage_sharpening"}, "stateId": 1272}, "1347": {"id": "red_bull_tracker", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_reload_sharpening", "30": "e_reload_sharpening", "60": "e_health_sharpening", "90": "e_crit_sharpening"}, "stateId": 1347}, "1601": {"id": "red_bull_ammunition", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_dodge_sharpening", "120": "e_dodge_sharpening", "30": "e_health_sharpening", "60": "e_reload_sharpening", "90": "e_crit_sharpening"}, "stateId": 1601}, "1614": {"id": "red_bull_foot", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_reload_sharpening", "120": "e_damage_sharpening", "30": "e_dodge_sharpening", "60": "e_damage_sharpening", "90": "e_crit_sharpening"}, "stateId": 1614}, "2728": {"id": "red_bull_engine", "itemType": "Gear", "level": "120", "sharpening": {"1": "e_crit_sharpening", "120": "e_crit_sharpening_medium", "30": "e_damage_sharpening", "60": "e_damage_sharpening_medium", "90": "e_dodge_sharpening_medium"}, "stateId": 2728}}, "isTrial": false, "level": "476", "stars": "15", "stateId": 1067, "unitType": "Ordinary"}]}}];
+        const SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot'];
+
+        // Populate selects
+        const t1Select = document.getElementById('t1-select');
+        const t2Select = document.getElementById('t2-select');
+
+        history.forEach((entry, idx) => {
+            const label = `${entry.timestamp} (Рейтинг: ${entry.power || 'N/A'})`;
+            t1Select.add(new Option(label, idx));
+            t2Select.add(new Option(label, idx));
+        });
+
+        // Default selection: T1 is first (oldest), T2 is last (newest)
+        if (history.length > 0) {
+            t1Select.selectedIndex = 0;
+            t2Select.selectedIndex = history.length - 1;
+        }
+
+        function formatLevel(rawLvl) {
+            try {
+                let raw = parseInt(rawLvl);
+                let lvl = Math.floor(raw / 4) + 1;
+                let step = (raw % 4) + 1;
+                return step === 1 ? lvl.toString() : `${lvl}.${step}`;
+            } catch(e) { return rawLvl; }
+        }
+
+        function cleanStat(s) {
+            if (!s) return "";
+            if (s.startsWith('e_')) s = s.substring(2);
+            return s.replace('_sharpening', '').replace('sharpening_', '').replace('sharpening', '');
+        }
+
+        function getModType(idStr) {
+            if (!idStr) return "?";
+            let parts = idStr.split('_');
+            let res = [];
+            for (let p of parts) {
+                if (SLOT_ORDER.includes(p) || p === 'legendary') break;
+                res.push(p);
+            }
+            return res.join('_');
+        }
+
+        function getSlotName(idStr) {
+            for (let s of SLOT_ORDER) {
+                if (idStr.includes(s)) return s;
+            }
+            return "other";
+        }
+
+        function aggregateUnit(uData) {
+            if (!uData) return null;
+            
+            let defId = uData.defId || "Unknown";
+            let level = uData.level || "?";
+            let stars = uData.stars || "?";
+            let equip = uData.equipables || {};
+            
+            let sharps = {};
+            let mods = new Set();
+            let slotLvls = {};
+            
+            for (let k in equip) {
+                let eq = equip[k];
+                let eqId = eq.id || "";
+                let slot = getSlotName(eqId);
+                let lvl = parseInt(eq.level || 0);
+                slotLvls[slot] = lvl;
+                mods.add(getModType(eqId));
+                
+                let eqSharps = eq.sharpening || {};
+                for (let sk in eqSharps) {
+                    let sVal = cleanStat(eqSharps[sk]);
+                    sharps[sVal] = (sharps[sVal] || 0) + 1;
+                }
+            }
+            
+            let orderedLvls = [];
+            for (let s of SLOT_ORDER) {
+                if (slotLvls[s] !== undefined) {
+                    orderedLvls.push(`${s}: ${slotLvls[s]}`);
+                }
+            }
+            
+            let eqStr = "";
+            let values = Object.values(slotLvls);
+            if (values.length === 6 && values.every(v => v === values[0])) {
+                eqStr = values[0].toString();
+            } else {
+                eqStr = orderedLvls.join(", ");
+            }
+            
+            return {
+                defId,
+                lvl: formatLevel(level),
+                stars,
+                mods: Array.from(mods).sort(),
+                sharps,
+                eqLvlsStr: eqStr,
+                slotLvls
+            };
+        }
+
+        function getDiffSummary(u1, u2) {
+            if (!u1) return "Юнит добавлен.";
+            if (!u2) return "Юнит убран.";
+            
+            let diffs = [];
+            if (u1.lvl !== u2.lvl) diffs.push(`Ур: ${u1.lvl} → ${u2.lvl}`);
+            if (u1.stars !== u2.stars) diffs.push(`★: ${u1.stars} → ${u2.stars}`);
+            if (JSON.stringify(u1.slotLvls) !== JSON.stringify(u2.slotLvls)) {
+                diffs.push(`Экип: ${u1.eqLvlsStr} → ${u2.eqLvlsStr}`);
+            }
+            
+            let allKeys = new Set([...Object.keys(u1.sharps), ...Object.keys(u2.sharps)]);
+            let sharpDiffs = [];
+            for (let k of Array.from(allKeys).sort()) {
+                let v1 = u1.sharps[k] || 0;
+                let v2 = u2.sharps[k] || 0;
+                if (v1 !== v2) {
+                    sharpDiffs.push(`${k}: ${v1}→${v2}`);
+                }
+            }
+            
+            if (sharpDiffs.length > 0) {
+                diffs.push("Заточки: " + sharpDiffs.join(", "));
+            }
+            
+            return diffs.length > 0 ? diffs.join("; ") : "Без изменений.";
+        }
+
+        function renderUnitComparison(u1, u2, title) {
+            if (!u1 && !u2) return "";
+            
+            let diffText = getDiffSummary(u1, u2);
+            let isDiff = diffText !== "Без изменений.";
+            
+            let statusClass = isDiff ? "diff" : "same";
+            let diffTag = isDiff ? '<span class="changes-tag">ИЗМЕНЕНО</span>' : '';
+            
+            function renderCell(u) {
+                if (!u) return "<td>-</td>";
+                let sharpsArr = [];
+                for (let k in u.sharps) sharpsArr.push(`${k}: ${u.sharps[k]}`);
+                let sharpsStr = sharpsArr.sort().join(", ");
+                
+                return `
+                    <td class="${statusClass}">
+                        <div class="unit-name">${u.defId} (Ур. ${u.lvl} | ${u.stars}★)</div>
+                        <div style="margin-top:5px;">
+                            <span class="label">Ур. Экипа:</span> <span class="val-sharps">${u.eqLvlsStr}</span><br>
+                            <span class="label">Модули:</span> <span class="val-mods">${u.mods.join(", ")}</span><br>
+                            <span class="label">Заточки:</span> <span class="val-sharps">${sharpsStr}</span>
+                        </div>
+                    </td>
+                `;
+            }
+
+            return `
+                <tr class="unit-row"><td colspan="2" class="row-header">${title} ${diffTag}</td></tr>
+                ${isDiff ? `<tr><td colspan="2" class="diff-summary">${diffText}</td></tr>` : ''}
+                <tr>${renderCell(u1)}${renderCell(u2)}</tr>
+            `;
+        }
+
+        function compare() {
+            const idx1 = t1Select.value;
+            const idx2 = t2Select.value;
+            
+            const s1 = history[idx1].squad;
+            const s2 = history[idx2].squad;
+            
+            const container = document.getElementById('comparison-container');
+            
+            let html = `
+                <table class="comparison-table">
+                    <tr>
+                        <th>Ранее (${history[idx1].timestamp})</th>
+                        <th>Сейчас (${history[idx2].timestamp})</th>
+                    </tr>
+            `;
+            
+            // Render General
+            let g1 = aggregateUnit(s1.general);
+            let g2 = aggregateUnit(s2.general);
+            html += renderUnitComparison(g1, g2, "ГЕНЕРАЛ");
+            
+            // Render Units
+            // Match by defId to see evolution
+            let u1Map = {};
+            if (s1.units) s1.units.forEach(u => { if (u.defId) u1Map[u.defId] = aggregateUnit(u); });
+            
+            let u2Map = {};
+            if (s2.units) s2.units.forEach(u => { if (u.defId) u2Map[u.defId] = aggregateUnit(u); });
+            
+            let allDefIds = Array.from(new Set([...Object.keys(u1Map), ...Object.keys(u2Map)])).sort();
+            
+            allDefIds.forEach(defId => {
+                html += renderUnitComparison(u1Map[defId], u2Map[defId], `ЮНИТ: ${defId.toUpperCase()}`);
+            });
+            
+            html += "</table>";
+            container.innerHTML = html;
+        }
+
+        // Initial run
+        compare();
+    </script>
+</body>
+</html>
+        

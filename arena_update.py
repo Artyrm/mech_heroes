@@ -26,6 +26,8 @@ def main():
     steps = [
         ("FETCHING LATEST DATA", "arena/fetch_arena.py"),
         ("SYNCING FROM INIT DUMPS", "arena/sync_from_init.py"),
+        ("FETCHING SQUADS", "arena/fetch_squads.py"),
+        ("GENERATING SQUAD REPORTS", "arena/generate_squad_reports.py"),
         ("GENERATING HTML DASHBOARD", "arena/generate_dashboard.py"),
         ("DEPLOYING TO SERVER", "deploy.py")
     ]

@@ -16,7 +16,7 @@ def deploy():
 
     # Files to upload
     files_to_upload = {
-        "arena/reports/dashboard.html": "arena.html",
+        "arena/reports/arena.html": "arena.html",
         # Adding clan accountant report if it exists
         "clan_monitor/clan_accountant_report.html": "clan.html" 
     }
@@ -46,6 +46,19 @@ def deploy():
                     ftp.storbinary(f"STOR {remote_name}", f)
             else:
                 print(f"Warning: {local_path} not found, skipping.")
+                
+        # Upload squads
+        squads_dir = "arena/reports/squads"
+        if os.path.exists(squads_dir):
+            try: ftp.mkd("squads")
+            except: pass
+            
+            for fname in os.listdir(squads_dir):
+                if fname.endswith('.html'):
+                    local_path = os.path.join(squads_dir, fname)
+                    with open(local_path, "rb") as f:
+                        ftp.storbinary(f"STOR squads/{fname}", f)
+            print(f"Uploaded squads HTML files.")
         
         ftp.quit()
         print("\nDeployment successful!")

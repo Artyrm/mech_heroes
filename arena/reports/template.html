@@ -19,8 +19,9 @@
         .new-player { background: rgba(76, 175, 80, 0.1); }
         .rank-up { color: #4caf50; font-weight: bold; }
         .rank-down { color: #f44336; font-weight: bold; }
-        .power { font-family: 'Courier New', Courier, monospace; }
         .clan-tag { color: #888; font-size: 0.85em; }
+        .player-link { color: #2196f3; text-decoration: none; }
+        .player-link:hover { text-decoration: underline; color: #64b5f6; }
     </style>
 </head>
 <body>
@@ -176,7 +177,7 @@
 
                 tr.innerHTML = `
                     <td>${rankHtml}</td>
-                    <td><b>${p2.profileState.nickname}</b></td>
+                    <td><a href="squads/${p2.userID}.html" class="player-link"><b>${p2.profileState.nickname}</b></a></td>
                     <td>${p2.clanProfile.clanName || '-'} <span class="clan-tag">[${p2.clanProfile.clanTag || ''}]</span></td>
                     <td>${formatNumber(p2.rating)}${renderDelta(ratingDelta)}</td>
                     <td class="power">${formatNumber(p2Power)}${renderDelta(powerDelta)}</td>
