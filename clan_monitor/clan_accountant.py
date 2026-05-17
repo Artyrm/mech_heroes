@@ -54,12 +54,14 @@ USER_ID, AUTH_KEY, VERSION = CONF['USER_ID'], CONF['AUTH_KEY'], CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
 SNAPSHOTS_DIR, SCRIPT_DIR = 'snapshots', os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(SCRIPT_DIR)
+INIT_DUMPS_DIR = os.path.join(REPO_ROOT, 'init_dumps')
 OUTPUT_ROOT = os.path.join(SCRIPT_DIR, 'clan', 'ORDA')
 REPORTS_DIR, MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'reports'), os.path.join(OUTPUT_ROOT, 'index.html')
-REPO_ROOT, MEMBERS_DB = os.path.dirname(SCRIPT_DIR), 'members_name_db.json'
+MEMBERS_DB = 'members_name_db.json'
 AUTO_PUSH = True 
 
-for d in [SNAPSHOTS_DIR, REPORTS_DIR]:
+for d in [SNAPSHOTS_DIR, REPORTS_DIR, INIT_DUMPS_DIR]:
     if not os.path.exists(d): os.makedirs(d)
 
 TRANS_CACHE = load_json(TRANS_CACHE_FILE)
@@ -120,6 +122,16 @@ def fetch_data():
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
         print(f"[*] Send /init request (VERSION: {VERSION})...")
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        
+        # Save full raw dump for battle analytics
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        dump_path = os.path.join(INIT_DUMPS_DIR, f'init_{timestamp}.json')
+        try:
+            with open(dump_path, 'w', encoding='utf-8') as f:
+                json.dump(r, f, ensure_ascii=False, indent=4)
+        except Exception as de:
+            print(f"[!] Warning: Could not save init dump: {de}")
+
         if "error" in r:
             err = r['error']
             print(f"[!] API ERROR on /init: {err}")
@@ -333,12 +345,20 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             # 3. Daily growth = Difference between truncated boundaries
             for i in range(7):
                 daily_growths[i] = int(boundary_vals[i+1]) - int(boundary_vals[i])
-                d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
-                if week["days"].get(d_str, []) or daily_growths[i] > 0:
-                    presence[i] = True
-
-            if is_current_week:
-                presence[today_idx] = (uid in cur_ids) or any(presence)
+                
+                # RESTORE PRECISE PRESENCE LOGIC (X and -)
+                d_start = monday + timedelta(days=i)
+                d_str = d_start.strftime("%Y-%m-%d")
+                sn = week["days"].get(d_str, [])
+                ex = adj_db.get(d_str, {}).get(uid, [])
+                if not isinstance(ex, list): ex = [ex]
+                
+                if is_current_week and i == today_idx:
+                    is_present = (uid in cur_ids) or bool(ex)
+                else:
+                    is_present = (uid in sn[-1]['pts']) if sn else False
+                    if not is_present and bool(ex): is_present = True
+                presence[i] = is_present
 
             pl_res[uid] = {
                 "growths": daily_growths, 
@@ -348,15 +368,21 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)
             }
 
+        # 3. Clan Statistics (Restored to Yesterday's Logic)
         clan_growths = [sum(p["growths"][i] for p in pl_res.values()) for i in range(7)]
-        pre_week_sn = [e for e in sd if e['time'] < week["monday"]]
+        clan_rats = [None] * 7
+        for i in range(7):
+            d_start = monday + timedelta(days=i)
+            day_snaps = [s for s in sd if d_start <= s['time'] < d_start + timedelta(days=1) and s.get('rating') is not None]
+            if day_snaps:
+                clan_rats[i] = day_snaps[-1]['rating']
+
+        pre_week_sn = [e for e in sd if e['time'] < monday]
         prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
         clan_stats = []
         for i in range(7):
             curr_r = clan_rats[i]
-            d_str = (week["monday"] + timedelta(days=i)).strftime("%Y-%m-%d")
-            
-            # Check for manual burned override in the adjustments file
+            d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d")
             manual_burned = adj_db.get(d_str, {}).get("burned_override")
             
             if curr_r is not None and prev_r is not None:
@@ -414,9 +440,8 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.9rem; color: var(--green); font-weight: 700; }}
     .absent {{ color: var(--error); font-weight: 900; font-size: 1.1rem; font-family: 'Orbitron'; }}
 </style></head><body><div class="container"><header>
-<h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE v{VERSION_NUM}</div></header>
+<h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE</div></header>
 <nav>{nav}</nav>
-<div class="update-time">Данные обновлены: {update_str}</div>
 <div class="table-container"><table>
     <thead><tr><th style="width:30px">№</th><th>Участник</th><th>Звание</th><th style="text-align:center">Всего</th>
     {" ".join([f'<th>{(week["monday"]+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
@@ -459,13 +484,18 @@ if __name__ == "__main__":
         sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach(), 'replace')
         sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach(), 'replace')
 
-    print(f"--- Starting Clan Accountant v{VERSION_NUM} ---")
+    force_run = "--force" in sys.argv
+    print(f"--- Starting Clan Accountant v{VERSION_NUM} {'[FORCE MODE]' if force_run else ''} ---")
     print(f"[*] Время запуска: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     
-    print("[*] Проверка активности пользователя...")
-    if is_user_active():
-        print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.")
-        sys.exit(0)
+    if not force_run:
+        print("[*] Проверка активности пользователя...")
+        if is_user_active():
+            print("[!] ВНИМАНИЕ: Обнаружена активная игровая сессия. Чтобы избежать конфликта, бот завершает работу.")
+            print("[*] Используйте флаг --force для принудительного запуска.")
+            sys.exit(0)
+    else:
+        print("[!] ВНИМАНИЕ: Запуск в режиме --force (проверка активности пропущена).")
 
     print("[*] Попытка получения данных от API сервера...")
     h, u, r = fetch_data()

@@ -10667,3 +10667,404 @@ To https://github.com/Artyrm/mech_heroes.git
 [*] Р“РµРЅРµСЂР°С†РёСЏ HTML-РѕС‚С‡РµС‚Р°...
 [*] РћРўР§Р•Рў РЈРЎРџР•РЁРќРћ РћР‘РќРћР’Р›Р•Рќ.
 [16.05.2026 18:10:33,53] Syncing with Git... 
+[main 1b66e21] Auto-update 16.05.2026 18:10:33,92
+ 5 files changed, 57 insertions(+), 7 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-16_15-10.json
+[16.05.2026 18:10:34,48] Pushing to repository... 
+Enumerating objects: 24, done.
+Counting objects:   4% (1/24)Counting objects:   8% (2/24)Counting objects:  12% (3/24)Counting objects:  16% (4/24)Counting objects:  20% (5/24)Counting objects:  25% (6/24)Counting objects:  29% (7/24)Counting objects:  33% (8/24)Counting objects:  37% (9/24)Counting objects:  41% (10/24)Counting objects:  45% (11/24)Counting objects:  50% (12/24)Counting objects:  54% (13/24)Counting objects:  58% (14/24)Counting objects:  62% (15/24)Counting objects:  66% (16/24)Counting objects:  70% (17/24)Counting objects:  75% (18/24)Counting objects:  79% (19/24)Counting objects:  83% (20/24)Counting objects:  87% (21/24)Counting objects:  91% (22/24)Counting objects:  95% (23/24)Counting objects: 100% (24/24)Counting objects: 100% (24/24), done.
+Delta compression using up to 4 threads
+Compressing objects:   9% (1/11)Compressing objects:  18% (2/11)Compressing objects:  27% (3/11)Compressing objects:  36% (4/11)Compressing objects:  45% (5/11)Compressing objects:  54% (6/11)Compressing objects:  63% (7/11)Compressing objects:  72% (8/11)Compressing objects:  81% (9/11)Compressing objects:  90% (10/11)Compressing objects: 100% (11/11)Compressing objects: 100% (11/11), done.
+Writing objects:   7% (1/13)Writing objects:  15% (2/13)Writing objects:  23% (3/13)Writing objects:  30% (4/13)Writing objects:  38% (5/13)Writing objects:  46% (6/13)Writing objects:  53% (7/13)Writing objects:  61% (8/13)Writing objects:  69% (9/13)Writing objects:  76% (10/13)Writing objects:  84% (11/13)Writing objects:  92% (12/13)Writing objects: 100% (13/13)Writing objects: 100% (13/13), 2.93 KiB | 230.00 KiB/s, done.
+Total 13 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/7)        remote: Resolving deltas:  14% (1/7)        remote: Resolving deltas:  28% (2/7)        remote: Resolving deltas:  42% (3/7)        remote: Resolving deltas:  57% (4/7)        remote: Resolving deltas:  71% (5/7)        remote: Resolving deltas:  85% (6/7)        remote: Resolving deltas: 100% (7/7)        remote: Resolving deltas: 100% (7/7), completed with 7 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   9b079b4..1b66e21  main -> main
+[16.05.2026 18:10:37,95] SUCCESS: Data pushed to Git. 
+[16.05.2026 18:10:37,96] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 18:55:01,89] STARTING PROCESS 
+[16.05.2026 18:55:01,90] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 18:55:03,10] ERROR: Python script failed with code 1 
+[16.05.2026 18:55:03,56] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 19:55:01,82] STARTING PROCESS 
+[16.05.2026 19:55:03,65] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 19:55:04,78] ERROR: Python script failed with code 1 
+[16.05.2026 19:55:05,04] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 20:55:03,20] STARTING PROCESS 
+[16.05.2026 20:55:03,48] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 20:55:05,76] ERROR: Python script failed with code 1 
+[16.05.2026 20:55:06,03] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 21:55:01,77] STARTING PROCESS 
+[16.05.2026 21:55:03,09] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 21:55:04,61] ERROR: Python script failed with code 1 
+[16.05.2026 21:55:04,92] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 22:55:01,80] STARTING PROCESS 
+[16.05.2026 22:55:05,21] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 22:55:06,45] ERROR: Python script failed with code 1 
+[16.05.2026 22:55:07,45] PROCESS FINISHED 
+------------------------------------------ 
+[16.05.2026 23:55:01,84] STARTING PROCESS 
+[16.05.2026 23:55:03,13] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[16.05.2026 23:55:04,49] ERROR: Python script failed with code 1 
+[16.05.2026 23:55:04,81] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  0:55:01,84] STARTING PROCESS 
+[17.05.2026  0:55:02,62] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[17.05.2026  0:55:04,10] ERROR: Python script failed with code 1 
+[17.05.2026  0:55:04,45] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  2:55:16,74] STARTING PROCESS 
+[17.05.2026  2:55:32,67] Running Python script... 
+C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py:148: UserWarning: mkl-service package failed to import, therefore Intel(R) MKL initialization ensuring its correct out-of-the box operation under condition when Gnu OpenMP had already been loaded by Python process is not assured. Please install mkl-service package, see http://github.com/IntelPython/mkl-service
+  from . import _distributor_init
+Traceback (most recent call last):
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 22, in <module>
+    from . import multiarray
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\multiarray.py", line 12, in <module>
+    from . import overrides
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\overrides.py", line 7, in <module>
+    from numpy.core._multiarray_umath import (
+ImportError: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 9, in <module>
+    import numpy as np
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\__init__.py", line 150, in <module>
+    from . import core
+  File "C:\tools\Anaconda3\lib\site-packages\numpy\core\__init__.py", line 48, in <module>
+    raise ImportError(msg)
+ImportError: 
+
+IMPORTANT: PLEASE READ THIS FOR ADVICE ON HOW TO SOLVE THIS ISSUE!
+
+Importing the numpy C-extensions failed. This error can happen for
+many reasons, often due to issues with your setup or how NumPy was
+installed.
+
+We have compiled some common reasons and troubleshooting tips at:
+
+    https://numpy.org/devdocs/user/troubleshooting-importerror.html
+
+Please note and check the following:
+
+  * The Python version is: Python3.9 from "C:\tools\Anaconda3\python.exe"
+  * The NumPy version is: "1.21.5"
+
+and make sure that they are the versions you expect.
+Please carefully study the documentation linked above for further help.
+
+Original error was: DLL load failed while importing _multiarray_umath: Не найден указанный модуль.
+
+[17.05.2026  2:56:13,71] ERROR: Python script failed with code 1 
+[17.05.2026  2:56:14,41] PROCESS FINISHED 
+------------------------------------------ 
+[17.05.2026  3:37:21,04] STARTING PROCESS 
+[17.05.2026  3:37:21,35] Running Python script... 
+--- Starting Clan Accountant v0.2.5  ---
+[*] Р’СЂРµРјСЏ Р·Р°РїСѓСЃРєР°: 2026-05-17 03:37:23
+[*] РџСЂРѕРІРµСЂРєР° Р°РєС‚РёРІРЅРѕСЃС‚Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ...
+[!] РћР‘РќРђР РЈР–Р•РќРћ РђРљРўРР’РќРћР• РЎРћР•Р”РРќР•РќРР• СЃ СЃРµСЂРІРµСЂРѕРј РёРіСЂС‹.
+[!] Р’РќРРњРђРќРР•: РћР±РЅР°СЂСѓР¶РµРЅР° Р°РєС‚РёРІРЅР°СЏ РёРіСЂРѕРІР°СЏ СЃРµСЃСЃРёСЏ. Р§С‚РѕР±С‹ РёР·Р±РµР¶Р°С‚СЊ РєРѕРЅС„Р»РёРєС‚Р°, Р±РѕС‚ Р·Р°РІРµСЂС€Р°РµС‚ СЂР°Р±РѕС‚Сѓ.
+[*] РСЃРїРѕР»СЊР·СѓР№С‚Рµ С„Р»Р°Рі --force РґР»СЏ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ Р·Р°РїСѓСЃРєР°.
+[17.05.2026  3:37:23,32] Syncing with Git... 
