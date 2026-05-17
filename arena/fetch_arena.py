@@ -94,7 +94,7 @@ def fetch_arena():
             print(f"Top-1: {players[0]['profileState']['nickname']} ({players[0]['rating']})")
         else:
             # Данные реально новые — используем текущее UTC-время для имени файла
-            now_str = datetime.utcnow().strftime("%d-%m-%YT%H-%M-%S")
+            now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
             target_path = os.path.join(snapshots_dir, f"arena_{now_str}.json")
 
             snapshot = {

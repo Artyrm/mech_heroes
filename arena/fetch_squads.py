@@ -34,14 +34,35 @@ def fetch_squads():
         print("No arena snapshot found.")
         return
 
-    players = arena_data.get('players', [])
-    user_ids = [p['userID'] for p in players]
+    # Collect ALL known user IDs from all snapshots + existing squad dirs
+    all_user_ids = set()
+    
+    # From all arena snapshots
+    for snap_file in glob.glob(os.path.join("arena", "snapshots", "arena_*.json")):
+        try:
+            with open(snap_file, 'r', encoding='utf-8') as f:
+                snap = json.load(f)
+            for p in snap.get('players', []):
+                all_user_ids.add(p['userID'])
+        except:
+            pass
+    
+    # From existing squad directories (in case some were tracked but missing from snapshots)
+    squads_base = os.path.join("arena", "squads")
+    if os.path.exists(squads_base):
+        for uid_dir in os.listdir(squads_base):
+            try:
+                all_user_ids.add(int(uid_dir))
+            except ValueError:
+                pass
+
+    user_ids = list(all_user_ids)
     
     if not user_ids:
-        print("No users found in latest snapshot.")
+        print("No users found in any snapshot.")
         return
 
-    print(f"Fetching squads for {len(user_ids)} Top-50 players...")
+    print(f"Fetching squads for {len(user_ids)} tracked players...")
 
     # 1. Start with /init to get a valid sessionID
     init_url = f"{BASE_URL}/init?userid={USER_ID}"
@@ -88,7 +109,7 @@ def fetch_squads():
     squads_dir = os.path.join("arena", "squads")
     os.makedirs(squads_dir, exist_ok=True)
     
-    now_str = datetime.utcnow().strftime("%d-%m-%YT%H-%M-%S")
+    now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
     updates_count = 0
 
     for u in fetched_users:

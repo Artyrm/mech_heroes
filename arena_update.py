@@ -39,7 +39,7 @@ def main():
 
     print("\n" + "="*50)
     print("   ALL STEPS COMPLETED SUCCESSFULLY!")
-    print("   Arena Report: http://ovalhalla.ru/my/mech/arena.html")
+    print("   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html")
     print("="*50)
 
 if __name__ == "__main__":

@@ -57,10 +57,12 @@
                 <!-- Data injected by JS -->
             </tbody>
         </table>
+
     </div>
 
     <script>
         const snapshots = SNAPSHOTS_DATA; 
+        const usersWithSquads = USERS_WITH_SQUADS;
         
         const t1Select = document.getElementById('t1-select');
         const t2Select = document.getElementById('t2-select');
@@ -155,14 +157,19 @@
                 const p1 = map1[p2.userID];
                 const tr = document.createElement('tr');
                 
-                let rankHtml = rank2;
-                if (p1) {
-                    const dr = p1.rank - rank2;
-                    if (dr > 0) rankHtml += ` <span class="rank-up">↑${dr}</span>`;
-                    else if (dr < 0) rankHtml += ` <span class="rank-down">↓${Math.abs(dr)}</span>`;
+                let rankHtml = p2.isDropped ? '—' : rank2;
+                
+                if (p2.isDropped) {
+                    tr.style.opacity = '0.7';
                 } else {
-                    tr.classList.add('new-player');
-                    rankHtml += ` <span class="rank-up">NEW</span>`;
+                    if (p1) {
+                        const dr = p1.rank - rank2;
+                        if (dr > 0) rankHtml += ` <span class="rank-up">↑${dr}</span>`;
+                        else if (dr < 0) rankHtml += ` <span class="rank-down">↓${Math.abs(dr)}</span>`;
+                    } else {
+                        tr.classList.add('new-player');
+                        rankHtml += ` <span class="rank-up">NEW</span>`;
+                    }
                 }
 
                 const ratingDelta = p1 ? (parseInt(p2.rating) - parseInt(p1.rating)) : 0;
@@ -175,9 +182,15 @@
 
                 const wr = (p2.profileState.winCount / (p2.profileState.winCount + p2.profileState.defeatCount) * 100).toFixed(2);
 
+                const nick = p2.profileState.nickname.trim() || '&lt;без имени&gt;';
+                const hasSquad = usersWithSquads.includes(parseInt(p2.userID));
+                const nameHtml = hasSquad 
+                    ? `<a href="squads/${p2.userID}.html" class="player-link"><b>${nick}</b></a>`
+                    : `<span style="color:#aaa;" title="История отряда недоступна"><b>${nick}</b></span>`;
+
                 tr.innerHTML = `
                     <td>${rankHtml}</td>
-                    <td><a href="squads/${p2.userID}.html" class="player-link"><b>${p2.profileState.nickname}</b></a></td>
+                    <td>${p2.hasSuppressionCore ? '<img src="suppression_core.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;" title="Ядро подавления">' : ''}${nameHtml}</td>
                     <td>${p2.clanProfile.clanName || '-'} <span class="clan-tag">[${p2.clanProfile.clanTag || ''}]</span></td>
                     <td>${formatNumber(p2.rating)}${renderDelta(ratingDelta)}</td>
                     <td class="power">${formatNumber(p2Power)}${renderDelta(powerDelta)}</td>

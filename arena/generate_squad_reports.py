@@ -76,7 +76,7 @@ def generate_squad_reports():
 <body>
     <div class="container">
         <div class="header">
-            <a href="../arena.html" class="back-link">&larr; Назад к Арене</a>
+            <a href="../dashboard.html" class="back-link">&larr; Назад к Арене</a>
             <h1>Отряд игрока: {nick}</h1>
             <p style="color: #888; margin: 0;">ID: {uid}</p>
         </div>
@@ -101,12 +101,30 @@ def generate_squad_reports():
         const history = {json.dumps(history, ensure_ascii=False)};
         const SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot'];
 
+        function formatDateMSK(s) {{
+            try {{
+                const [d, t] = s.split('T');
+                const [year, month, day] = d.split('-');
+                const [h, m, sec] = t.split('-');
+                const date = new Date(Date.UTC(year, month - 1, day, h, m, sec));
+                const msk = new Date(date.getTime() + 3 * 3600 * 1000);
+                
+                const dd = String(msk.getUTCDate()).padStart(2, '0');
+                const mm = String(msk.getUTCMonth() + 1).padStart(2, '0');
+                const yyyy = msk.getUTCFullYear();
+                const hh = String(msk.getUTCHours()).padStart(2, '0');
+                const mi = String(msk.getUTCMinutes()).padStart(2, '0');
+                const ss = String(msk.getUTCSeconds()).padStart(2, '0');
+                return `${{dd}}.${{mm}}.${{yyyy}} ${{hh}}:${{mi}}:${{ss}} МСК`;
+            }} catch(e) {{ return s; }}
+        }}
+
         // Populate selects
         const t1Select = document.getElementById('t1-select');
         const t2Select = document.getElementById('t2-select');
 
         history.forEach((entry, idx) => {{
-            const label = `${{entry.timestamp}} (Рейтинг: ${{entry.power || 'N/A'}})`;
+            const label = `${{formatDateMSK(entry.timestamp)}} (Рейтинг: ${{entry.power || 'N/A'}})`;
             t1Select.add(new Option(label, idx));
             t2Select.add(new Option(label, idx));
         }});
@@ -277,8 +295,8 @@ def generate_squad_reports():
             let html = `
                 <table class="comparison-table">
                     <tr>
-                        <th>Ранее (${{history[idx1].timestamp}})</th>
-                        <th>Сейчас (${{history[idx2].timestamp}})</th>
+                        <th>Ранее (${{formatDateMSK(history[idx1].timestamp)}})</th>
+                        <th>Сейчас (${{formatDateMSK(history[idx2].timestamp)}})</th>
                     </tr>
             `;
             

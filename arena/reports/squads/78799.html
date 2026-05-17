@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Отряд: RaRik</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1f; color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 1400px; margin: auto; }
+        .header { text-align: center; margin-bottom: 30px; background: #25252d; padding: 20px; border-radius: 8px; border: 1px solid #333; }
+        .header h1 { margin: 5px 0; color: #ffcc00; }
+        .back-link { float: left; color: #2196f3; text-decoration: none; font-weight: bold; }
+        .back-link:hover { text-decoration: underline; }
+        
+        .controls { background: #2d2d35; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 20px; align-items: center; justify-content: center; }
+        select { padding: 8px; border-radius: 4px; background: #3d3d3d; color: white; border: 1px solid #555; font-size: 14px; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: #25252d; }
+        th, td { border: 1px solid #333; padding: 12px; vertical-align: top; }
+        th { background: #2d2d35; font-size: 1.1em; color: #ffcc00; text-align: center; }
+        .row-header { background: #353540; text-align: center; font-weight: bold; text-transform: uppercase; font-size: 0.85em; letter-spacing: 1.5px; color: #ffeb3b; }
+        
+        .diff-summary { background: #4a1a1a; color: #ffabac; font-size: 0.9em; text-align: center; font-weight: bold; padding: 6px; border: 1px solid #f44336; }
+        .unit-name { font-weight: bold; color: #ffeb3b; font-size: 1.1em; }
+        .diff { background: #2c1e1e; border-left: 5px solid #f44336; }
+        .same { opacity: 0.8; }
+        
+        .label { color: #888; font-size: 0.8em; text-transform: uppercase; }
+        .val-mods { color: #8bc34a; font-weight: bold; font-size: 0.9em; }
+        .val-sharps { color: #ffc107; font-weight: bold; font-size: 0.9em; }
+        .changes-tag { background: #f44336; color: #fff; font-size: 0.7em; padding: 2px 6px; border-radius: 3px; margin-left: 10px; vertical-align: middle; }
+        
+        .equips-list { padding-left: 15px; margin: 5px 0 0 0; list-style-type: square; font-size: 0.85em; color: #aaa; }
+        .sharpening { color: #666; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="../dashboard.html" class="back-link">&larr; Назад к Арене</a>
+            <h1>Отряд игрока: RaRik</h1>
+            <p style="color: #888; margin: 0;">ID: 78799</p>
+        </div>
+
+        <div class="controls">
+            <div>
+                <label>Точка T1 (Ранее): </label>
+                <select id="t1-select" onchange="compare()"></select>
+            </div>
+            <div>
+                <label>Точка T2 (Сейчас): </label>
+                <select id="t2-select" onchange="compare()"></select>
+            </div>
+        </div>
+
+        <div id="comparison-container">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <script>
+        const history = [{"timestamp": "2026-05-17T13-33-42", "hash": "4e05cb5c9edc0fb7a9fe7ee9982a5a08", "power": "4096", "squad": {"general": {"defId": "brain", "equipables": {"1053": {"id": "favourite_ammunition", "itemType": "Equipment", "level": "60", "sharpening": {"1": "e_crit_sharpening", "30": "e_reload_sharpening", "60": "e_reload_sharpening"}, "stateId": 1053}, "1062": {"id": "favourite_armor", "itemType": "Equipment", "level": "60", "sharpening": {"1": "e_crit_sharpening", "30": "e_damage_sharpening", "60": "e_reload_sharpening"}, "stateId": 1062}, "1151": {"id": "favourite_tracker", "itemType": "Equipment", "level": "73", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_damage_sharpening"}, "stateId": 1151}, "1153": {"id": "favourite_engine", "itemType": "Equipment", "level": "60", "sharpening": {"1": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_reload_sharpening"}, "stateId": 1153}, "1188": {"id": "favourite_weapon", "itemType": "Equipment", "level": "60", "sharpening": {"1": "e_health_sharpening", "30": "e_dodge_sharpening", "60": "e_damage_sharpening_medium"}, "stateId": 1188}, "1202": {"id": "favourite_foot", "itemType": "Equipment", "level": "60", "sharpening": {"1": "e_crit_sharpening", "30": "e_crit_sharpening", "60": "e_health_sharpening"}, "stateId": 1202}}, "isTrial": false, "level": "320", "stateId": 1052}, "units": [{"defId": "raptor", "equipables": {"1213": {"id": "watch_the_target_ammunition", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_reload_sharpening_medium"}, "stateId": 1213}, "1240": {"id": "red_bull_foot", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_reload_sharpening", "30": "e_reload_sharpening", "60": "e_health_sharpening", "90": "e_damage_sharpening"}, "stateId": 1240}, "1287": {"id": "red_bull_engine", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_reload_sharpening", "30": "e_reload_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 1287}, "1381": {"id": "red_bull_tracker", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 1381}, "2918": {"id": "watch_the_target_armor", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 2918}, "2934": {"id": "watch_the_target_weapon", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 2934}}, "isTrial": false, "level": "476", "stars": "12", "stateId": 1125, "unitType": "Ordinary"}, {"defId": "ronin", "equipables": {"1179": {"id": "dodge_engine_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_crit_sharpening", "30": "e_reload_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1179}, "1180": {"id": "dodge_tracker_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_dodge_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1180}, "1249": {"id": "criticals_foot_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_dodge_sharpening", "30": "e_crit_sharpening_medium", "60": "e_crit_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1249}, "1288": {"id": "dodge_armor_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_health_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1288}, "1418": {"id": "criticals_weapon_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_dodge_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1418}, "1556": {"id": "criticals_ammunition_legendary", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_crit_sharpening", "30": "e_crit_sharpening_medium", "60": "e_crit_sharpening", "90": "e_dodge_sharpening"}, "stateId": 1556}}, "isTrial": false, "level": "476", "stars": "12", "stateId": 1006, "unitType": "Ordinary"}, {"defId": "rm23beam", "equipables": {"1468": {"id": "red_bull_weapon", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_damage_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening_weak"}, "stateId": 1468}, "1808": {"id": "red_bull_foot", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening_medium"}, "stateId": 1808}, "1896": {"id": "red_bull_ammunition", "itemType": "Gear", "level": "100", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening"}, "stateId": 1896}, "1966": {"id": "red_bull_tracker", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening_medium"}, "stateId": 1966}, "2423": {"id": "red_bull_engine", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_health_sharpening", "30": "e_dodge_sharpening", "60": "e_dodge_sharpening", "90": "e_dodge_sharpening_medium"}, "stateId": 2423}, "2905": {"id": "red_bull_armor", "itemType": "Gear", "level": "114", "sharpening": {"1": "e_health_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening"}, "stateId": 2905}}, "isTrial": false, "level": "476", "stars": "11", "stateId": 1028, "unitType": "Ordinary"}, {"defId": "helper", "equipables": {"1114": {"id": "red_bull_ammunition", "itemType": "Gear", "level": "108", "sharpening": {"1": "e_health_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening_weak", "90": "e_damage_sharpening_medium"}, "stateId": 1114}, "1128": {"id": "red_bull_foot", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_health_sharpening", "30": "e_damage_sharpening", "60": "e_crit_sharpening", "90": "e_health_sharpening_medium"}, "stateId": 1128}, "1225": {"id": "red_bull_weapon", "itemType": "Gear", "level": "113", "sharpening": {"1": "e_dodge_sharpening", "30": "e_reload_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening_medium"}, "stateId": 1225}, "1237": {"id": "red_bull_tracker", "itemType": "Gear", "level": "62", "sharpening": {"1": "e_dodge_sharpening", "30": "e_damage_sharpening", "60": "e_health_sharpening"}, "stateId": 1237}, "1392": {"id": "red_bull_armor", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_reload_sharpening", "30": "e_dodge_sharpening", "60": "e_health_sharpening", "90": "e_health_sharpening_weak"}, "stateId": 1392}, "1552": {"id": "red_bull_engine", "itemType": "Gear", "level": "86", "sharpening": {"1": "e_crit_sharpening", "30": "e_health_sharpening", "60": "e_health_sharpening"}, "stateId": 1552}}, "isTrial": false, "level": "360", "stars": "3", "stateId": 1001, "unitType": "Ordinary"}, {"defId": "predator", "equipables": {"1320": {"id": "watch_the_target_weapon", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_health_sharpening", "30": "e_crit_sharpening", "60": "e_health_sharpening", "90": "e_damage_sharpening"}, "stateId": 1320}, "1370": {"id": "watch_the_target_armor", "itemType": "Gear", "level": "119", "sharpening": {"1": "e_health_sharpening", "30": "e_reload_sharpening", "60": "e_damage_sharpening", "90": "e_reload_sharpening"}, "stateId": 1370}, "1753": {"id": "watch_the_target_tracker", "itemType": "Gear", "level": "91", "sharpening": {"1": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 1753}, "1840": {"id": "attack_ammunition_legendary", "itemType": "Gear", "level": "100", "sharpening": {"1": "e_reload_sharpening", "30": "e_health_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening"}, "stateId": 1840}, "2810": {"id": "attack_engine_legendary", "itemType": "Gear", "level": "89", "sharpening": {"1": "e_damage_sharpening", "30": "e_damage_sharpening", "60": "e_damage_sharpening"}, "stateId": 2810}, "3393": {"id": "attack_foot_legendary", "itemType": "Gear", "level": "90", "sharpening": {"1": "e_damage_sharpening", "30": "e_reload_sharpening", "60": "e_damage_sharpening", "90": "e_damage_sharpening_medium"}, "stateId": 3393}}, "isTrial": false, "level": "468", "stars": "6", "stateId": 1118, "unitType": "Ordinary"}]}}];
+        const SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot'];
+
+        function formatDateMSK(s) {
+            try {
+                const [d, t] = s.split('T');
+                const [year, month, day] = d.split('-');
+                const [h, m, sec] = t.split('-');
+                const date = new Date(Date.UTC(year, month - 1, day, h, m, sec));
+                const msk = new Date(date.getTime() + 3 * 3600 * 1000);
+                
+                const dd = String(msk.getUTCDate()).padStart(2, '0');
+                const mm = String(msk.getUTCMonth() + 1).padStart(2, '0');
+                const yyyy = msk.getUTCFullYear();
+                const hh = String(msk.getUTCHours()).padStart(2, '0');
+                const mi = String(msk.getUTCMinutes()).padStart(2, '0');
+                const ss = String(msk.getUTCSeconds()).padStart(2, '0');
+                return `${dd}.${mm}.${yyyy} ${hh}:${mi}:${ss} МСК`;
+            } catch(e) { return s; }
+        }
+
+        // Populate selects
+        const t1Select = document.getElementById('t1-select');
+        const t2Select = document.getElementById('t2-select');
+
+        history.forEach((entry, idx) => {
+            const label = `${formatDateMSK(entry.timestamp)} (Рейтинг: ${entry.power || 'N/A'})`;
+            t1Select.add(new Option(label, idx));
+            t2Select.add(new Option(label, idx));
+        });
+
+        // Default selection: T1 is first (oldest), T2 is last (newest)
+        if (history.length > 0) {
+            t1Select.selectedIndex = 0;
+            t2Select.selectedIndex = history.length - 1;
+        }
+
+        function formatLevel(rawLvl) {
+            try {
+                let raw = parseInt(rawLvl);
+                let lvl = Math.floor(raw / 4) + 1;
+                let step = (raw % 4) + 1;
+                return step === 1 ? lvl.toString() : `${lvl}.${step}`;
+            } catch(e) { return rawLvl; }
+        }
+
+        function cleanStat(s) {
+            if (!s) return "";
+            if (s.startsWith('e_')) s = s.substring(2);
+            return s.replace('_sharpening', '').replace('sharpening_', '').replace('sharpening', '');
+        }
+
+        function getModType(idStr) {
+            if (!idStr) return "?";
+            let parts = idStr.split('_');
+            let res = [];
+            for (let p of parts) {
+                if (SLOT_ORDER.includes(p) || p === 'legendary') break;
+                res.push(p);
+            }
+            return res.join('_');
+        }
+
+        function getSlotName(idStr) {
+            for (let s of SLOT_ORDER) {
+                if (idStr.includes(s)) return s;
+            }
+            return "other";
+        }
+
+        function aggregateUnit(uData) {
+            if (!uData) return null;
+            
+            let defId = uData.defId || "Unknown";
+            let level = uData.level || "?";
+            let stars = uData.stars || "?";
+            let equip = uData.equipables || {};
+            
+            let sharps = {};
+            let mods = new Set();
+            let slotLvls = {};
+            
+            for (let k in equip) {
+                let eq = equip[k];
+                let eqId = eq.id || "";
+                let slot = getSlotName(eqId);
+                let lvl = parseInt(eq.level || 0);
+                slotLvls[slot] = lvl;
+                mods.add(getModType(eqId));
+                
+                let eqSharps = eq.sharpening || {};
+                for (let sk in eqSharps) {
+                    let sVal = cleanStat(eqSharps[sk]);
+                    sharps[sVal] = (sharps[sVal] || 0) + 1;
+                }
+            }
+            
+            let orderedLvls = [];
+            for (let s of SLOT_ORDER) {
+                if (slotLvls[s] !== undefined) {
+                    orderedLvls.push(`${s}: ${slotLvls[s]}`);
+                }
+            }
+            
+            let eqStr = "";
+            let values = Object.values(slotLvls);
+            if (values.length === 6 && values.every(v => v === values[0])) {
+                eqStr = values[0].toString();
+            } else {
+                eqStr = orderedLvls.join(", ");
+            }
+            
+            return {
+                defId,
+                lvl: formatLevel(level),
+                stars,
+                mods: Array.from(mods).sort(),
+                sharps,
+                eqLvlsStr: eqStr,
+                slotLvls
+            };
+        }
+
+        function getDiffSummary(u1, u2) {
+            if (!u1) return "Юнит добавлен.";
+            if (!u2) return "Юнит убран.";
+            
+            let diffs = [];
+            if (u1.lvl !== u2.lvl) diffs.push(`Ур: ${u1.lvl} → ${u2.lvl}`);
+            if (u1.stars !== u2.stars) diffs.push(`★: ${u1.stars} → ${u2.stars}`);
+            if (JSON.stringify(u1.slotLvls) !== JSON.stringify(u2.slotLvls)) {
+                diffs.push(`Экип: ${u1.eqLvlsStr} → ${u2.eqLvlsStr}`);
+            }
+            
+            let allKeys = new Set([...Object.keys(u1.sharps), ...Object.keys(u2.sharps)]);
+            let sharpDiffs = [];
+            for (let k of Array.from(allKeys).sort()) {
+                let v1 = u1.sharps[k] || 0;
+                let v2 = u2.sharps[k] || 0;
+                if (v1 !== v2) {
+                    sharpDiffs.push(`${k}: ${v1}→${v2}`);
+                }
+            }
+            
+            if (sharpDiffs.length > 0) {
+                diffs.push("Заточки: " + sharpDiffs.join(", "));
+            }
+            
+            return diffs.length > 0 ? diffs.join("; ") : "Без изменений.";
+        }
+
+        function renderUnitComparison(u1, u2, title) {
+            if (!u1 && !u2) return "";
+            
+            let diffText = getDiffSummary(u1, u2);
+            let isDiff = diffText !== "Без изменений.";
+            
+            let statusClass = isDiff ? "diff" : "same";
+            let diffTag = isDiff ? '<span class="changes-tag">ИЗМЕНЕНО</span>' : '';
+            
+            function renderCell(u) {
+                if (!u) return "<td>-</td>";
+                let sharpsArr = [];
+                for (let k in u.sharps) sharpsArr.push(`${k}: ${u.sharps[k]}`);
+                let sharpsStr = sharpsArr.sort().join(", ");
+                
+                return `
+                    <td class="${statusClass}">
+                        <div class="unit-name">${u.defId} (Ур. ${u.lvl} | ${u.stars}★)</div>
+                        <div style="margin-top:5px;">
+                            <span class="label">Ур. Экипа:</span> <span class="val-sharps">${u.eqLvlsStr}</span><br>
+                            <span class="label">Модули:</span> <span class="val-mods">${u.mods.join(", ")}</span><br>
+                            <span class="label">Заточки:</span> <span class="val-sharps">${sharpsStr}</span>
+                        </div>
+                    </td>
+                `;
+            }
+
+            return `
+                <tr class="unit-row"><td colspan="2" class="row-header">${title} ${diffTag}</td></tr>
+                ${isDiff ? `<tr><td colspan="2" class="diff-summary">${diffText}</td></tr>` : ''}
+                <tr>${renderCell(u1)}${renderCell(u2)}</tr>
+            `;
+        }
+
+        function compare() {
+            const idx1 = t1Select.value;
+            const idx2 = t2Select.value;
+            
+            const s1 = history[idx1].squad;
+            const s2 = history[idx2].squad;
+            
+            const container = document.getElementById('comparison-container');
+            
+            let html = `
+                <table class="comparison-table">
+                    <tr>
+                        <th>Ранее (${formatDateMSK(history[idx1].timestamp)})</th>
+                        <th>Сейчас (${formatDateMSK(history[idx2].timestamp)})</th>
+                    </tr>
+            `;
+            
+            // Render General
+            let g1 = aggregateUnit(s1.general);
+            let g2 = aggregateUnit(s2.general);
+            html += renderUnitComparison(g1, g2, "ГЕНЕРАЛ");
+            
+            // Render Units
+            // Match by defId to see evolution
+            let u1Map = {};
+            if (s1.units) s1.units.forEach(u => { if (u.defId) u1Map[u.defId] = aggregateUnit(u); });
+            
+            let u2Map = {};
+            if (s2.units) s2.units.forEach(u => { if (u.defId) u2Map[u.defId] = aggregateUnit(u); });
+            
+            let allDefIds = Array.from(new Set([...Object.keys(u1Map), ...Object.keys(u2Map)])).sort();
+            
+            allDefIds.forEach(defId => {
+                html += renderUnitComparison(u1Map[defId], u2Map[defId], `ЮНИТ: ${defId.toUpperCase()}`);
+            });
+            
+            html += "</table>";
+            container.innerHTML = html;
+        }
+
+        // Initial run
+        compare();
+    </script>
+</body>
+</html>
+        

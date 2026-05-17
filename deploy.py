@@ -16,7 +16,8 @@ def deploy():
 
     # Files to upload
     files_to_upload = {
-        "arena/reports/arena.html": "arena.html",
+        "arena/reports/dashboard.html": "dashboard.html",
+        "arena/reports/suppression_core.png": "suppression_core.png",
         # Adding clan accountant report if it exists
         "clan_monitor/clan_accountant_report.html": "clan.html" 
     }
