@@ -78,8 +78,41 @@ def translate_traits_batch(traits_list):
 
 HEADERS = {"Content-Type": "application/json", "Origin": "https://app-476209.games.s3.yandex.net", "Referer": "https://app-476209.games.s3.yandex.net/", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
 
-def fetch_data():
+def fetch_data(explicit_dump=None):
     global VERSION, BASE_URL
+    
+    # 0. Если указан конкретный дамп через аргумент --dump
+    if explicit_dump:
+        if os.path.exists(explicit_dump):
+            print(f"[*] ОБРАБОТКА ЯВНО УКАЗАННОГО ДАМПА: {explicit_dump}")
+            r = load_json(explicit_dump)
+            if "data" in r:
+                d = r.get("data", {})
+                sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
+                rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+                users = r.get("users_raw_infos", [])
+                return hier, users, rating
+        else:
+            print(f"ERROR: Dump file not found: {explicit_dump}")
+            return None, None, None
+
+    # 1. Попытка переиспользовать свежий автоматический дамп
+    if os.path.exists(INIT_DUMPS_DIR):
+        import glob
+        dumps = sorted(glob.glob(os.path.join(INIT_DUMPS_DIR, "init_*.json")))
+        if dumps:
+            latest_dump = dumps[-1]
+            mtime = os.path.getmtime(latest_dump)
+            if (datetime.now().timestamp() - mtime) < 30 * 60:
+                print(f"[*] ИСПОЛЬЗУЕМ СВЕЖИЙ АВТО-ДАМП: {os.path.basename(latest_dump)}")
+                r = load_json(latest_dump)
+                if "data" in r:
+                    d = r.get("data", {})
+                    sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
+                    rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+                    users = r.get("users_raw_infos", [])
+                    return hier, users, rating
+
     try:
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
@@ -110,7 +143,9 @@ def fetch_data():
 def generate_web_report(hier, users, current_rating, last_update_time=None):
     now_utc = last_update_time.astimezone(timezone.utc) if last_update_time else datetime.now(timezone.utc)
     now_mskq = now_utc.astimezone(timezone(timedelta(hours=3)))
-    today_idx = now_mskq.weekday()
+    # Используем UTC для индекса дня, так как недели считаются по UTC.
+    # Это предотвращает преждевременное скрытие данных за прошедшую неделю в период с 00:00 до 03:00 МСК.
+    today_idx = now_utc.weekday()
     names_map = load_json(MEMBERS_DB)
     cur_ids = {str(hier['leader']['member']['userId'])} | {str(s['member']['userId']) for s in hier['slots'] if s.get('member', {}).get('userId', -1) != -1}
     for u in users:
@@ -291,8 +326,14 @@ if __name__ == "__main__":
         import codecs
         sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach(), 'replace')
         sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach(), 'replace')
-    force_run = "--force" in sys.argv
-    h, u, r = fetch_data()
+    
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--force", action="store_true", help="Force API fetch even if user is active")
+    parser.add_argument("--dump", help="Path to a specific JSON dump to process")
+    args = parser.parse_args()
+
+    h, u, r = fetch_data(explicit_dump=args.dump)
     if h: 
         generate_web_report(h, u, r, last_update_time=datetime.now())
         print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")
