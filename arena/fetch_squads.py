@@ -64,22 +64,35 @@ def fetch_squads():
 
     print(f"Fetching squads for {len(user_ids)} tracked players...")
 
-    # 1. Start with /init to get a valid sessionID
-    init_url = f"{BASE_URL}/init?userid={USER_ID}"
-    init_payload = {
-        "data": {"userID": USER_ID, "authKey": AUTH_KEY},
-        "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION
-    }
-    
-    r = requests.post(init_url, json=init_payload, headers=HEADERS)
-    if r.status_code != 200:
-        print(f"Error: /init failed with status {r.status_code}")
-        return
-        
-    session_id = r.json().get('data', {}).get('sessionID')
+    # 1. Try to reuse session ID from arena/session.json (saved by fetch_arena.py)
+    session_id = None
+    session_file = os.path.join("arena", "session.json")
+    if os.path.exists(session_file):
+        try:
+            with open(session_file, 'r', encoding='utf-8') as f:
+                sd = json.load(f)
+                session_id = sd.get('sessionID')
+                print(f"Reusing session ID from {session_file}")
+        except:
+            pass
+
     if not session_id:
-        print("Error: No sessionID found.")
-        return
+        print("No valid session found in arena/session.json. Calling /init fallback...")
+        init_url = f"{BASE_URL}/init?userid={USER_ID}"
+        init_payload = {
+            "data": {"userID": USER_ID, "authKey": AUTH_KEY},
+            "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION
+        }
+        
+        r = requests.post(init_url, json=init_payload, headers=HEADERS)
+        if r.status_code != 200:
+            print(f"Error: /init failed with status {r.status_code}")
+            return
+            
+        session_id = r.json().get('data', {}).get('sessionID')
+        if not session_id:
+            print("Error: No sessionID found.")
+            return
 
     # 2. Get Users Raw Infos
     cmd_url = f"{BASE_URL}/directcommand?userid={USER_ID}"

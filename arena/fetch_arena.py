@@ -54,26 +54,50 @@ def fetch_arena():
     snapshots_dir = "arena/snapshots"
     os.makedirs(snapshots_dir, exist_ok=True)
 
-    # 1. Start with /init to get a valid sessionID
-    init_url = f"{BASE_URL}/init?userid={USER_ID}"
-    init_payload = {
-        "data": {"userID": USER_ID, "authKey": AUTH_KEY},
-        "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION
-    }
-    
-    print("Connecting to game API...")
-    r = requests.post(init_url, json=init_payload, headers=HEADERS)
-    if r.status_code != 200:
-        print(f"Error: /init failed with status {r.status_code}")
-        return
-    
-    init_data = r.json()
+    # 0. Попытка переиспользовать свежий дамп из init_dumps
+    init_data = None
+    dumps_dir = "init_dumps"
+    if os.path.exists(dumps_dir):
+        dumps = sorted(glob.glob(os.path.join(dumps_dir, "init_*.json")))
+        if dumps:
+            latest_dump = dumps[-1]
+            mtime = os.path.getmtime(latest_dump)
+            # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
+            if datetime.now().timestamp() - mtime < 15 * 60:
+                print(f"Found fresh init dump: {latest_dump}. Reusing it!")
+                try:
+                    with open(latest_dump, 'r', encoding='utf-8') as f:
+                        init_data = json.load(f)
+                except:
+                    pass
+
+    if not init_data:
+        # 1. Start with /init to get a valid sessionID
+        init_url = f"{BASE_URL}/init?userid={USER_ID}"
+        init_payload = {
+            "data": {"userID": USER_ID, "authKey": AUTH_KEY},
+            "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION
+        }
+        
+        print("Connecting to game API...")
+        r = requests.post(init_url, json=init_payload, headers=HEADERS)
+        if r.status_code != 200:
+            print(f"Error: /init failed with status {r.status_code}")
+            return
+        
+        init_data = r.json()
     if "error" in init_data:
         print(f"API Error: {init_data['error']}")
         return
     
     resp_data = init_data.get('data', {})
     session_id = resp_data.get('sessionID')
+    
+    if session_id:
+        os.makedirs("arena", exist_ok=True)
+        with open(os.path.join("arena", "session.json"), "w", encoding="utf-8") as f:
+            json.dump({"sessionID": session_id, "timestamp": datetime.utcnow().isoformat()}, f, indent=2)
+            
     user_state = resp_data.get('userState', {})
     
     if isinstance(user_state, str):

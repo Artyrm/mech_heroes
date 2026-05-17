@@ -18,10 +18,28 @@ def run_step(name, command):
         print(f"--- [EXCEPTION] {name}: {e}")
         return False
 
+def is_user_active() -> bool:
+    target_ip = "84.201.164.35"
+    try:
+        cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+        import subprocess as sp
+        proc = sp.run(cmd, shell=True, capture_output=True, text=True)
+        if "ESTABLISHED" in proc.stdout:
+            return True
+    except Exception:
+        pass
+    return False
+
 def main():
     print("="*50)
     print("      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY")
     print("="*50)
+
+    force_run = "--force" in sys.argv
+    if is_user_active() and not force_run:
+        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры. Пропуск обновления.")
+        print("[*] Используйте флаг --force для принудительного обновления.")
+        sys.exit(0)
 
     steps = [
         ("FETCHING LATEST DATA", "arena/fetch_arena.py"),
