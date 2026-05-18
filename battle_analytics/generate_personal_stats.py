@@ -52,23 +52,20 @@ def analyze_battles():
             b = load_json(bf)
             delta = int(b.get('ourRatingDelta', 0))
             
-            # Logic:
-            # delta > 0 -> Win (Attacked)
-            # delta == 0 -> Could be attack win (+0) or loss (rare). 
-            # delta < 0 -> Loss
-            # Typically: +10/+11/+12 is Attack Win. -7/-8 is Defense Loss. 
-            # -10/-11/-12 is Attack Loss. +7/+8 is Defense Win.
+            # Win/Loss: delta > 0 is win, delta <= 0 is loss
+            is_win = delta > 0
             
-            is_win = delta > 0 or (delta == 0 and "win" in bf.lower()) # fallback
-            is_attack = abs(delta) >= 10 or delta == 0 # Heuristic: attacks have higher deltas or 0
-            if abs(delta) <= 8 and delta != 0: is_attack = False # Defense deltas are small
+            # Attack/Defense logic from documentation: 
+            # Check slot numbers in statistics. Player slots 1-5 vs Enemy 6-10 (Attack)
+            # or Player slots 6-10 vs Enemy 1-5 (Defense).
+            stats_data = b.get('statistics', {})
+            p_units = stats_data.get('player', {}).get('units', {})
+            e_units = stats_data.get('enemy', {}).get('units', {})
             
-            # Refined Win logic for Defense: if delta > 0 but small (+7) -> Defense Win.
-            if 0 < delta <= 8: is_win = True; is_attack = False
-            # If delta < 0 and small (-7) -> Defense Loss.
-            if -8 <= delta < 0: is_win = False; is_attack = False
-            # If delta < -9 -> Attack Loss.
-            if delta <= -9: is_win = False; is_attack = True
+            p_min = min([int(s) for s in p_units.keys()]) if p_units else 99
+            e_min = min([int(s) for s in e_units.keys()]) if e_units else 99
+            
+            is_attack = p_min < e_min
             
             player_battles.append({
                 'time_str': b.get('fightTime'),
