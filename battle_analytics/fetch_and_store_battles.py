@@ -47,7 +47,7 @@ def load_config():
     with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-def fetch_history(explicit_dump=None):
+def fetch_history(explicit_dump=None, force_run=False):
     # 0. Если указан конкретный дамп через аргумент --dump
     if explicit_dump:
         if os.path.exists(explicit_dump):
@@ -58,8 +58,6 @@ def fetch_history(explicit_dump=None):
         else:
             print(f"ERROR: Dump file not found: {explicit_dump}")
             return None
-            
-    force_run = "--force" in sys.argv
 
     # 1. Try to reuse a fresh dump from init_dumps
     dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
@@ -179,7 +177,7 @@ if __name__ == "__main__":
     parser.add_argument("--force", action="store_true", help="Force API fetch even if user is active")
     args = parser.parse_args()
 
-    history = fetch_history(explicit_dump=args.dump)
+    history = fetch_history(explicit_dump=args.dump, force_run=args.force)
     if history:
         # Automatically detect all unique nicknames in the fetched history
         nicks = list(set(b.get('nick') for b in history if b.get('nick')))

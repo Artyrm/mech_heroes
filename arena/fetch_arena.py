@@ -184,34 +184,30 @@ def fetch_arena():
         print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск /command в fetch_arena.py.")
         return
 
-    command_url = f"{BASE_URL}/command?userid={USER_ID}"
+    command_url = f"{BASE_URL}/directcommand?userid={USER_ID}"
     command_payload = {
         "data": {
             "userId": USER_ID,
             "sessionID": session_id,
-            "commands": [{
-                "commandNumber": 100,
-                "hash": 0,
-                "id": "UseServiceCommand",
-                "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}),
-                "time": datetime.now().strftime("%d/%m/%Y_%H:%M:%S.0000")
-            }],
-            "clanVersion": 0
+            "type": "RefreshArenaLeaderboards",
+            "request": "{}"
         },
         "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION
     }
 
-    print("Requesting latest Arena Top-50 via /command...")
+    print("Requesting latest Arena Top-50 via /directcommand...")
     try:
         r = requests.post(command_url, json=command_payload, headers=HEADERS, timeout=10)
         if r.status_code == 200:
-            cmd_data = r.json()
-            # Note: Parsing serviceChanges is complex, /init data is usually sufficient.
-            print("Command RefreshArenaLeaderboards sent successfully.")
+            print("Command RefreshArenaLeaderboards sent successfully via /directcommand.")
+            # Since RefreshArenaLeaderboards doesn't return the list directly, 
+            # we might need to call /init again to see the updated cache, 
+            # or just rely on the fact that the server cache is now refreshed.
+            # But usually, the next /init call will have the new data.
         else:
-            print(f"Warning: /command failed with status {r.status_code}. Using data from /init.")
+            print(f"Warning: /directcommand failed with status {r.status_code}. Using data from /init.")
     except Exception as e:
-        print(f"Warning: /command failed with error: {e}. Using data from /init.")
+        print(f"Warning: /directcommand failed with error: {e}. Using data from /init.")
 
 if __name__ == "__main__":
     fetch_arena()
