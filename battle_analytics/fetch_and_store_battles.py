@@ -40,6 +40,13 @@ def is_user_active() -> bool:
         pass
     return False
 
+def load_config():
+    if not os.path.exists(CONFIG_FILE):
+        print(f"CRITICAL: Config file not found at {CONFIG_FILE}")
+        sys.exit(1)
+    with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
 def fetch_history(explicit_dump=None):
     # 0. Если указан конкретный дамп через аргумент --dump
     if explicit_dump:
@@ -73,7 +80,7 @@ def fetch_history(explicit_dump=None):
         print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_and_store_battles.py.")
         return None
 
-    conf = load_json(CONFIG_FILE)
+    conf = load_config()
     user_id = conf.get('USER_ID')
     auth_key = conf.get('AUTH_KEY')
     version = conf.get('VERSION')
@@ -169,6 +176,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--dump", help="Path to a specific JSON dump to process")
+    parser.add_argument("--force", action="store_true", help="Force API fetch even if user is active")
     args = parser.parse_args()
 
     history = fetch_history(explicit_dump=args.dump)

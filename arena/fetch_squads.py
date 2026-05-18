@@ -10,9 +10,22 @@ from datetime import datetime
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-USER_ID = 227408
-AUTH_KEY = "2B8ADCBE7A00EE8AF838139813C3ABBB"
-VERSION = "1.24.0"
+# Smart path detection for config
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+CONFIG_FILE = os.path.join(ROOT_DIR, 'clan_monitor', 'config.json')
+
+def load_config():
+    if not os.path.exists(CONFIG_FILE):
+        print(f"CRITICAL: Config file not found at {CONFIG_FILE}")
+        sys.exit(1)
+    with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+CONF = load_config()
+USER_ID = CONF['USER_ID']
+AUTH_KEY = CONF['AUTH_KEY']
+VERSION = CONF['VERSION']
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
 HEADERS = {
