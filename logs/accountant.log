@@ -13898,3 +13898,103 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
 ==================================================
 [18.05.2026 12:55:17,84] Syncing with Git... 
+[main 9ece36e] Auto-update 18.05.2026 12:55:18,49
+ 8 files changed, 108 insertions(+), 9 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-18_09-55.json
+[18.05.2026 12:55:19,12] Pushing to repository... 
+Enumerating objects: 36, done.
+Counting objects:   2% (1/36)Counting objects:   5% (2/36)Counting objects:   8% (3/36)Counting objects:  11% (4/36)Counting objects:  13% (5/36)Counting objects:  16% (6/36)Counting objects:  19% (7/36)Counting objects:  22% (8/36)Counting objects:  25% (9/36)Counting objects:  27% (10/36)Counting objects:  30% (11/36)Counting objects:  33% (12/36)Counting objects:  36% (13/36)Counting objects:  38% (14/36)Counting objects:  41% (15/36)Counting objects:  44% (16/36)Counting objects:  47% (17/36)Counting objects:  50% (18/36)Counting objects:  52% (19/36)Counting objects:  55% (20/36)Counting objects:  58% (21/36)Counting objects:  61% (22/36)Counting objects:  63% (23/36)Counting objects:  66% (24/36)Counting objects:  69% (25/36)Counting objects:  72% (26/36)Counting objects:  75% (27/36)Counting objects:  77% (28/36)Counting objects:  80% (29/36)Counting objects:  83% (30/36)Counting objects:  86% (31/36)Counting objects:  88% (32/36)Counting objects:  91% (33/36)Counting objects:  94% (34/36)Counting objects:  97% (35/36)Counting objects: 100% (36/36)Counting objects: 100% (36/36), done.
+Delta compression using up to 4 threads
+Compressing objects:   5% (1/17)Compressing objects:  11% (2/17)Compressing objects:  17% (3/17)Compressing objects:  23% (4/17)Compressing objects:  29% (5/17)Compressing objects:  35% (6/17)Compressing objects:  41% (7/17)Compressing objects:  47% (8/17)Compressing objects:  52% (9/17)Compressing objects:  58% (10/17)Compressing objects:  64% (11/17)Compressing objects:  70% (12/17)Compressing objects:  76% (13/17)Compressing objects:  82% (14/17)Compressing objects:  88% (15/17)Compressing objects:  94% (16/17)Compressing objects: 100% (17/17)Compressing objects: 100% (17/17), done.
+Writing objects:   5% (1/19)Writing objects:  10% (2/19)Writing objects:  15% (3/19)Writing objects:  21% (4/19)Writing objects:  26% (5/19)Writing objects:  31% (6/19)Writing objects:  36% (7/19)Writing objects:  42% (8/19)Writing objects:  47% (9/19)Writing objects:  52% (10/19)Writing objects:  57% (11/19)Writing objects:  63% (12/19)Writing objects:  68% (13/19)Writing objects:  73% (14/19)Writing objects:  78% (15/19)Writing objects:  84% (16/19)Writing objects:  89% (17/19)Writing objects:  94% (18/19)Writing objects: 100% (19/19)Writing objects: 100% (19/19), 2.65 KiB | 905.00 KiB/s, done.
+Total 19 (delta 13), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/13)        remote: Resolving deltas:   7% (1/13)        remote: Resolving deltas:  15% (2/13)        remote: Resolving deltas:  23% (3/13)        remote: Resolving deltas:  30% (4/13)        remote: Resolving deltas:  38% (5/13)        remote: Resolving deltas:  46% (6/13)        remote: Resolving deltas:  53% (7/13)        remote: Resolving deltas:  61% (8/13)        remote: Resolving deltas:  69% (9/13)        remote: Resolving deltas:  76% (10/13)        remote: Resolving deltas:  84% (11/13)        remote: Resolving deltas:  92% (12/13)        remote: Resolving deltas: 100% (13/13)        remote: Resolving deltas: 100% (13/13), completed with 13 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   d510e45..9ece36e  main -> main
+[18.05.2026 12:55:22,28] SUCCESS: Data pushed to Git. 
+[18.05.2026 12:55:22,30] PROCESS FINISHED 
+------------------------------------------ 
+[18.05.2026 13:55:04,05] STARTING PROCESS 
+[18.05.2026 13:55:04,06] Running Python script... 
+[*] Ð˜Ð¡ÐŸÐžÐ›Ð¬Ð—Ð£Ð•Ðœ Ð¡Ð’Ð•Ð–Ð˜Ð™ ÐÐ’Ð¢Ðž-Ð”ÐÐœÐŸ: init_2026-05-18_13-55-05.json
+[*] ÐžÐ¢Ð§Ð•Ð¢ Ð£Ð¡ÐŸÐ•Ð¨ÐÐž ÐžÐ‘ÐÐžÐ’Ð›Ð•Ð.
+[18.05.2026 13:55:15,23] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Found fresh init dump: init_dumps\init_2026-05-18_13-55-09.json. Reusing it!
+Saved snapshot from /init: arena_2026-05-18T10-55-16.json
+Top-1: Ñ…3 (4507)
+Requesting latest Arena Top-50 via /command...
+Warning: /command failed with status 404. Using data from /init.
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 56 potential init dumps.
+Existing snapshots: 24 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 53
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-18_13-55-09.json. Reusing it!
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Fuzzy: Found 1 battles, 1 new saved and reported.
+òåòêà ñ âåñëîì: Found 2 battles, 0 new saved and reported.
+Strel: Found 2 battles, 2 new saved and reported.
+Ëèñà: Found 1 battles, 0 new saved and reported.
+Ñåì¸í 444: Found 1 battles, 1 new saved and reported.
+Shark: Found 2 battles, 1 new saved and reported.
+acdc: Found 6 battles, 6 new saved and reported.
+ëþáèòåëü ïèâà: Found 1 battles, 1 new saved and reported.
+Õîááèò: Found 4 battles, 3 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 59 tracked players...
+Reusing session ID from arena\session.json
+Updated squad for Ð Ð°Ð·ÑŠÐµÐ±Ð°Ð¹ (78875)
+Updated squad for ksotar (227408)
+Squad synchronization complete. 2 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 59 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 24 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[18.05.2026 13:55:30,90] Syncing with Git... 
