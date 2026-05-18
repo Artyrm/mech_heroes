@@ -36,10 +36,13 @@ def main():
     print("="*50)
 
     force_run = "--force" in sys.argv
-    if is_user_active() and not force_run:
-        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры. Пропуск обновления.")
-        print("[*] Используйте флаг --force для принудительного обновления.")
-        sys.exit(0)
+    is_active = is_user_active()
+    
+    if is_active and not force_run:
+        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.")
+        print("[*] Скрипты будут использовать локальные дампы, пропуская запросы к API.")
+        # We don't exit, but we might want to pass a flag to scripts if they don't check session themselves.
+        # But our scripts (fetch_arena, fetch_and_store_battles) already check session or dumps.
 
     steps = [
         ("FETCHING LATEST DATA", "arena/fetch_arena.py"),

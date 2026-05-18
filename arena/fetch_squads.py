@@ -28,11 +28,25 @@ def get_latest_arena_snapshot():
     with open(snapshots[-1], 'r', encoding='utf-8') as f:
         return json.load(f)
 
+def is_user_active() -> bool:
+    target_ip = "84.201.164.35"
+    try:
+        import subprocess as sp
+        cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+        proc = sp.run(cmd, shell=True, capture_output=True, text=True)
+        if "ESTABLISHED" in proc.stdout:
+            return True
+    except Exception:
+        pass
+    return False
+
 def fetch_squads():
     arena_data = get_latest_arena_snapshot()
     if not arena_data:
         print("No arena snapshot found.")
         return
+
+    force_run = "--force" in sys.argv
 
     # Collect ALL known user IDs from all snapshots + existing squad dirs
     all_user_ids = set()
@@ -77,6 +91,10 @@ def fetch_squads():
             pass
 
     if not session_id:
+        if is_user_active() and not force_run:
+            print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_squads.py.")
+            return
+
         print("No valid session found in arena/session.json. Calling /init fallback...")
         init_url = f"{BASE_URL}/init?userid={USER_ID}"
         init_payload = {
@@ -95,6 +113,10 @@ def fetch_squads():
             return
 
     # 2. Get Users Raw Infos
+    if is_user_active() and not force_run:
+        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск /directcommand в fetch_squads.py.")
+        return
+
     cmd_url = f"{BASE_URL}/directcommand?userid={USER_ID}"
     cmd_payload = {
         "data": {

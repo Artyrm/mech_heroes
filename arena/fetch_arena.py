@@ -50,9 +50,23 @@ def load_existing_hashes(snapshots_dir):
             pass
     return hashes
 
+def is_user_active() -> bool:
+    target_ip = "84.201.164.35"
+    try:
+        import subprocess as sp
+        cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+        proc = sp.run(cmd, shell=True, capture_output=True, text=True)
+        if "ESTABLISHED" in proc.stdout:
+            return True
+    except Exception:
+        pass
+    return False
+
 def fetch_arena():
     snapshots_dir = "arena/snapshots"
     os.makedirs(snapshots_dir, exist_ok=True)
+    
+    force_run = "--force" in sys.argv
 
     # 0. Попытка переиспользовать свежий дамп из init_dumps
     init_data = None
@@ -72,6 +86,11 @@ def fetch_arena():
                     pass
 
     if not init_data:
+        # ПРОВЕРКА СЕССИИ перед запросом к API
+        if is_user_active() and not force_run:
+            print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_arena.py.")
+            return
+
         # 1. Start with /init to get a valid sessionID
         init_url = f"{BASE_URL}/init?userid={USER_ID}"
         init_payload = {

@@ -28,8 +28,33 @@ def save_json(path, data):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def fetch_history():
-    # 0. Try to reuse a fresh dump from init_dumps
+def is_user_active() -> bool:
+    target_ip = "84.201.164.35"
+    try:
+        import subprocess as sp
+        cmd = f'netstat -n -p TCP | findstr "{target_ip}"'
+        proc = sp.run(cmd, shell=True, capture_output=True, text=True)
+        if "ESTABLISHED" in proc.stdout:
+            return True
+    except Exception:
+        pass
+    return False
+
+def fetch_history(explicit_dump=None):
+    # 0. Если указан конкретный дамп через аргумент --dump
+    if explicit_dump:
+        if os.path.exists(explicit_dump):
+            print(f"INFO: Processing explicit dump for battles: {os.path.basename(explicit_dump)}")
+            r = load_json(explicit_dump)
+            history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
+            return history
+        else:
+            print(f"ERROR: Dump file not found: {explicit_dump}")
+            return None
+            
+    force_run = "--force" in sys.argv
+
+    # 1. Try to reuse a fresh dump from init_dumps
     dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
     if os.path.exists(dumps_dir):
         import glob
@@ -37,12 +62,16 @@ def fetch_history():
         if dumps:
             latest_dump = dumps[-1]
             mtime = os.path.getmtime(latest_dump)
-            # If the file is less than 15 minutes old, reuse it
+            # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
             if datetime.datetime.now().timestamp() - mtime < 15 * 60:
                 print(f"INFO: Found fresh init dump: {os.path.basename(latest_dump)}. Reusing it!")
                 r = load_json(latest_dump)
                 history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
                 return history
+
+    if is_user_active() and not force_run:
+        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_and_store_battles.py.")
+        return None
 
     conf = load_json(CONFIG_FILE)
     user_id = conf.get('USER_ID')
@@ -137,7 +166,12 @@ def process_battles(history, target_nicks):
     print("---------------------------------")
 
 if __name__ == "__main__":
-    history = fetch_history()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dump", help="Path to a specific JSON dump to process")
+    args = parser.parse_args()
+
+    history = fetch_history(explicit_dump=args.dump)
     if history:
         # Automatically detect all unique nicknames in the fetched history
         nicks = list(set(b.get('nick') for b in history if b.get('nick')))
