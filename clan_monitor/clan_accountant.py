@@ -78,7 +78,7 @@ def translate_traits_batch(traits_list):
 
 HEADERS = {"Content-Type": "application/json", "Origin": "https://app-476209.games.s3.yandex.net", "Referer": "https://app-476209.games.s3.yandex.net/", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
 
-def fetch_data(explicit_dump=None):
+def fetch_data(explicit_dump=None, force_run=False):
     global VERSION, BASE_URL
     
     # 0. Если указан конкретный дамп через аргумент --dump
@@ -112,6 +112,11 @@ def fetch_data(explicit_dump=None):
                     rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
                     users = r.get("users_raw_infos", [])
                     return hier, users, rating
+
+    # ПРОВЕРКА СЕССИИ перед любым запросом к API
+    if is_user_active() and not force_run:
+        print("[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).")
+        return None, None, None
 
     try:
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}

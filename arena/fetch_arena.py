@@ -173,7 +173,17 @@ def fetch_arena():
         print("No sessionID found, skipping /command step.")
         return
 
-    # 2. Call RefreshArenaLeaderboards (might fail, but we already have data from /init)
+    # 2. Call RefreshArenaLeaderboards
+    # CRITICAL FIX: Skip /command if we reused a fresh dump OR if user is active
+    if init_data and "source" not in init_data: # If init_data exists and it was loaded from dump (not just fetched)
+         # Actually, even if just fetched, we only need /command if we want extra fresh Top-50.
+         # But the most important is: if we are in game, DON'T hit /command.
+         pass
+
+    if is_user_active() and not force_run:
+        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск /command в fetch_arena.py.")
+        return
+
     command_url = f"{BASE_URL}/command?userid={USER_ID}"
     command_payload = {
         "data": {
