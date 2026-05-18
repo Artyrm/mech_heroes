@@ -1,0 +1,425 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+    <title>Личная статистика боёв</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 25px; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Orbitron'; font-size: 2.5rem; color: #fff; margin: 0; letter-spacing: 4px; }
+        .subtitle { color: var(--gold); letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase; }
+        .table-container { max-width: 1000px; margin: 0 auto; background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #0b0e14; padding: 15px; color: #8b949e; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
+        tr:hover { background: #1c2128; }
+        .nick-link { color: #fff; font-weight: 700; text-decoration: none; }
+        .nick-link:hover { color: var(--accent); }
+        .nav-links { text-align: center; margin-bottom: 20px; }
+        .nav-links a { color: var(--accent); text-decoration: none; margin: 0 15px; font-size: 0.9rem; }
+    </style></head><body>
+    <header><h1>MY ARENA PROWESS</h1><div class="subtitle">Личная эффективность против Топ-50</div></header>
+    <div class="nav-links"><a href="reports/dashboard.html">← Общий дашборд Арены</a></div>
+    <div class="table-container"><table><thead><tr>
+        <th style="width:50px">Ранг</th><th>Противник</th><th>Winrate</th><th>Счет (W/L)</th><th>Боёв</th><th>Последний</th>
+    </tr></thead><tbody>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="х3/summary.html" class="nick-link">х3</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>4</span></td>
+            <td style="text-align:center"><a href='х3/summary.html' style='color:#58a6ff; text-decoration:none'>4</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">05.05 21:29</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="LordDragon/summary.html" class="nick-link">LordDragon</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>10</span></td>
+            <td style="text-align:center"><a href='LordDragon/summary.html' style='color:#58a6ff; text-decoration:none'>10</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">17.05 23:41</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Хоббит/summary.html" class="nick-link">Хоббит</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>11.9%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>7</span> / <span style='color:#f85149'>52</span></td>
+            <td style="text-align:center"><a href='Хоббит/summary.html' style='color:#58a6ff; text-decoration:none'>59</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 10:22</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Проповедник/summary.html" class="nick-link">Проповедник</a></td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='Проповедник/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 12:02</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Уксус/summary.html" class="nick-link">Уксус</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>27.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>8</span></td>
+            <td style="text-align:center"><a href='Уксус/summary.html' style='color:#58a6ff; text-decoration:none'>11</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">17.05 23:44</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Shark/summary.html" class="nick-link">Shark</a></td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>61.5%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>8</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='Shark/summary.html' style='color:#58a6ff; text-decoration:none'>13</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 10:20</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Лиса/summary.html" class="nick-link">Лиса</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>14.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>6</span></td>
+            <td style="text-align:center"><a href='Лиса/summary.html' style='color:#58a6ff; text-decoration:none'>7</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">17.05 23:48</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="ди/summary.html" class="nick-link">ди</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>37.5%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='ди/summary.html' style='color:#58a6ff; text-decoration:none'>8</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">17.05 18:10</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Князь/summary.html" class="nick-link">Князь</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>83.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>10</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Князь/summary.html' style='color:#58a6ff; text-decoration:none'>12</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 13:37</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="meshher /summary.html" class="nick-link">meshher </a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="тетка с веслом/summary.html" class="nick-link">тетка с веслом</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>4</span></td>
+            <td style="text-align:center"><a href='тетка с веслом/summary.html' style='color:#58a6ff; text-decoration:none'>4</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">17.05 23:53</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="acdc/summary.html" class="nick-link">acdc</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>33.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>5</span> / <span style='color:#f85149'>10</span></td>
+            <td style="text-align:center"><a href='acdc/summary.html' style='color:#58a6ff; text-decoration:none'>15</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 10:15</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="ksotar/summary.html" class="nick-link">ksotar</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Quack/summary.html" class="nick-link">Quack</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>37.5%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='Quack/summary.html' style='color:#58a6ff; text-decoration:none'>8</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">16.05 23:52</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Семён 444/summary.html" class="nick-link">Семён 444</a></td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Семён 444/summary.html' style='color:#58a6ff; text-decoration:none'>4</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 10:17</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Фаервол/summary.html" class="nick-link">Фаервол</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>33.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Фаервол/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">15.05 07:33</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Mike/summary.html" class="nick-link">Mike</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="CDV/summary.html" class="nick-link">CDV</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>33.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>4</span></td>
+            <td style="text-align:center"><a href='CDV/summary.html' style='color:#58a6ff; text-decoration:none'>6</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">15.05 07:35</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Mmv/summary.html" class="nick-link">Mmv</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Mmv/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">16.05 23:29</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="-=Hefas†agon=-/summary.html" class="nick-link">-=Hefas†agon=-</a></td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='-=Hefas†agon=-/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">14.05 13:08</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Hunter/summary.html" class="nick-link">Hunter</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Hunter/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">16.05 23:27</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="любитель пива/summary.html" class="nick-link">любитель пива</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='любитель пива/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 10:05</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="ДИКАРИУС/summary.html" class="nick-link">ДИКАРИУС</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='ДИКАРИУС/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">06.05 23:24</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="       /summary.html" class="nick-link">       </a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Трандуил/summary.html" class="nick-link">Трандуил</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Трандуил/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">14.05 19:27</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="unc1e_Sam/summary.html" class="nick-link">unc1e_Sam</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='unc1e_Sam/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">14.05 13:06</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Настойки лучше/summary.html" class="nick-link">Настойки лучше</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Настойки лучше/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">14.05 12:58</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Flashserker/summary.html" class="nick-link">Flashserker</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="SIS/summary.html" class="nick-link">SIS</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Fuzzy/summary.html" class="nick-link">Fuzzy</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Fuzzy/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 09:33</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="ProStou/summary.html" class="nick-link">ProStou</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Strel/summary.html" class="nick-link">Strel</a></td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>31.4%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>11</span> / <span style='color:#f85149'>24</span></td>
+            <td style="text-align:center"><a href='Strel/summary.html' style='color:#58a6ff; text-decoration:none'>35</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">18.05 12:25</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Shagger/summary.html" class="nick-link">Shagger</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Winner_123167/summary.html" class="nick-link">Winner_123167</a></td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>66.7%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='Winner_123167/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">06.05 23:23</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="WoTЛунтик/summary.html" class="nick-link">WoTЛунтик</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='WoTЛунтик/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">04.05 23:53</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Мрак/summary.html" class="nick-link">Мрак</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="RaRik/summary.html" class="nick-link">RaRik</a></td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='RaRik/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e">15.05 07:41</td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="MvM/summary.html" class="nick-link">MvM</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Multik /summary.html" class="nick-link">Multik </a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Andrik24/summary.html" class="nick-link">Andrik24</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Исток/summary.html" class="nick-link">Исток</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Zmei665/summary.html" class="nick-link">Zmei665</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="ПК/summary.html" class="nick-link">ПК</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="DED/summary.html" class="nick-link">DED</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="NikNik/summary.html" class="nick-link">NikNik</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Maggod/summary.html" class="nick-link">Maggod</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="AMIS/summary.html" class="nick-link">AMIS</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Expert/summary.html" class="nick-link">Expert</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="palevo/summary.html" class="nick-link">palevo</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr>
+        <tr>
+            <td style="text-align:center; color:#8b949e">None</td>
+            <td><a href="Dark/summary.html" class="nick-link">Dark</a></td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.85rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr></tbody></table></div>
+    </body></html>

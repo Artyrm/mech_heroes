@@ -18,7 +18,7 @@ def deploy():
     files_to_upload = {
         "arena/reports/dashboard.html": "dashboard.html",
         "arena/reports/suppression_core.png": "suppression_core.png",
-        # Adding clan accountant report if it exists
+        "battle_analytics/personal_stats.html": "personal.html",
         "clan_monitor/clan_accountant_report.html": "clan.html" 
     }
 
@@ -61,6 +61,23 @@ def deploy():
                         ftp.storbinary(f"STOR squads/{fname}", f)
             print(f"Uploaded squads HTML files.")
         
+        # Upload personal analytics (dossiers and battle reports)
+        analytics_dir = "battle_analytics"
+        if os.path.exists(analytics_dir):
+            for nick in os.listdir(analytics_dir):
+                nick_dir = os.path.join(analytics_dir, nick)
+                if os.path.isdir(nick_dir) and not nick.startswith('__'):
+                    # Create remote directory for the player
+                    try: ftp.mkd(nick)
+                    except: pass
+                    
+                    for fname in os.listdir(nick_dir):
+                        if fname.endswith('.html'):
+                            local_path = os.path.join(nick_dir, fname)
+                            with open(local_path, "rb") as f:
+                                ftp.storbinary(f"STOR {nick}/{fname}", f)
+            print(f"Uploaded personal dossier and battle reports.")
+
         ftp.quit()
         print("\nDeployment successful!")
         print(f"Reports available at: http://ovalhalla.ru/my/mech/arena.html")
