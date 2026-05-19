@@ -14,6 +14,32 @@ def parseInternalDate(s):
     except:
         return datetime(1970, 1, 1)
 
+def parse_any_date(s):
+    """Parse various date formats used in the system."""
+    if not s: return datetime(1970, 1, 1)
+    try:
+        if 'T' in s: # YYYY-MM-DDTHH-MM-SS
+            return datetime.strptime(s.split('.')[0], "%Y-%m-%dT%H-%M-%S")
+        else: # DD/MM/YYYY_HH:MM:SS
+            d, t = s.split('_')
+            day, month, year = d.split('/')
+            h, m, sec = t.split(':')
+            return datetime(int(year), int(month), int(day), int(h), int(m), int(sec.split('.')[0]))
+    except:
+        return datetime(1970, 1, 1)
+
+def get_rating_at(uid, target_ts, all_histories):
+    """Find the best known rating for a player at a specific timestamp."""
+    history = all_histories.get(uid, [])
+    target_dt = parse_any_date(target_ts)
+    best_rating = None
+    for entry in history:
+        if parse_any_date(entry["timestamp"]) <= target_dt:
+            best_rating = int(entry.get('power', 0))
+        else:
+            break
+    return best_rating
+
 def generate():
     snaps_dir = "arena/snapshots"
     template_path = "arena/reports/template.html"
@@ -25,7 +51,6 @@ def generate():
 
     # Load all snapshots
     all_snaps = {}
-    # Make sure we use a robust glob and sorting by modification time
     snap_files = sorted(glob.glob(os.path.join(snaps_dir, "arena_*.json")))
     
     if not snap_files:
@@ -38,14 +63,31 @@ def generate():
                 data = json.load(sf)
                 if 'timestamp' in data and 'players' in data:
                     all_snaps[data['timestamp']] = data
-                else:
-                    print(f"Warning: {f} has invalid structure.")
-        except Exception as e:
-            print(f"Error reading {f}: {e}")
+        except: pass
             
     if not all_snaps:
         print("No valid snapshots data found.")
         return
+
+    # Load all player histories once
+    all_histories = {}
+    all_players_ever = {} # userID -> latest info
+    for hf_path in glob.glob('arena/squads/*/history.json'):
+        uid = int(os.path.basename(os.path.dirname(hf_path)))
+        try:
+            with open(hf_path, 'r', encoding='utf-8') as hf:
+                history = json.load(hf)
+                if history:
+                    all_histories[uid] = history
+                    latest = history[-1]
+                    # Partial info is better than nothing
+                    all_players_ever[uid] = {
+                        'userID': uid,
+                        'rating': latest.get('power', 0),
+                        'profileState': {'nickname': os.path.basename(os.path.dirname(hf_path))}, # Placeholder
+                        'clanProfile': {'clanName': '-', 'clanTag': '-'}
+                    }
+        except: pass
 
     # Find players with squads & online history
     players_online_info = {}
@@ -61,100 +103,58 @@ def generate():
 
     # Find players with suppression core
     holders = set()
-    for f in glob.glob('arena/squads/*/history.json'):
-        try:
-            with open(f, 'r', encoding='utf-8') as file:
-                history = json.load(file)
-                if history:
-                    latest = history[-1]
-                    squad = latest.get('squad', {})
-                    general = squad.get('general', {})
-                    equipables = general.get('equipables', {})
-                    if any(eq.get('id') == 'suppression_core' for eq in equipables.values()):
-                        uid = os.path.basename(os.path.dirname(f))
-                        holders.add(int(uid))
-        except: pass
+    for uid, history in all_histories.items():
+        if history:
+            latest = history[-1]
+            equipables = latest.get('squad', {}).get('general', {}).get('equipables', {})
+            if any(eq.get('id') == 'suppression_core' for eq in equipables.values()):
+                holders.add(uid)
 
-    # Mark players in all snapshots
-    for snap in all_snaps.values():
-        for p in snap.get('players', []):
-            uid = int(p['userID'])
-            if uid in holders:
-                p['hasSuppressionCore'] = True
-            if uid in players_online_info:
-                p['lastOnline'] = players_online_info[uid]
+    # Enhance all_players_ever with real data from snapshots
+    sorted_timestamps = sorted(all_snaps.keys(), key=lambda x: parse_any_date(x))
+    for ts in sorted_timestamps:
+        for p in all_snaps[ts].get('players', []):
+            all_players_ever[int(p['userID'])] = p
 
-
-    # Find players with squads
-    users_with_squads = []
-    for f in glob.glob('arena/squads/*/history.json'):
-        uid = os.path.basename(os.path.dirname(f))
-        users_with_squads.append(int(uid))
-
-    # Collect ALL players ever seen across all snapshots
-    all_players_ever = {}  # userID -> latest player data
-    sorted_timestamps = sorted(all_snaps.keys(), key=lambda s: parseInternalDate(s))
+    # Process EVERY snapshot to include dropped players
     for ts in sorted_timestamps:
         snap = all_snaps[ts]
-        for p in snap.get('players', []):
+        current_uids = {int(p['userID']) for p in snap['players']}
+        
+        dropped_for_this_snap = []
+        for uid, pdata in all_players_ever.items():
+            if uid not in current_uids:
+                rating = get_rating_at(uid, ts, all_histories)
+                if rating is not None:
+                    p_copy = dict(pdata)
+                    p_copy['isDropped'] = True
+                    p_copy['rating'] = rating
+                    dropped_for_this_snap.append(p_copy)
+        
+        # Apply global markers
+        for p in snap['players'] + dropped_for_this_snap:
             uid = int(p['userID'])
-            all_players_ever[uid] = p
+            if uid in holders: p['hasSuppressionCore'] = True
+            if uid in players_online_info: p['lastOnline'] = players_online_info[uid]
 
-    # Find players in the LATEST snapshot
-    latest_ts = sorted_timestamps[-1] if sorted_timestamps else None
-    current_ids = set()
-    if latest_ts:
-        for p in all_snaps[latest_ts].get('players', []):
-            current_ids.add(int(p['userID']))
+        # Add dropped players to the end
+        dropped_for_this_snap.sort(key=lambda p: int(p.get('rating', 0)), reverse=True)
+        snap['players'].extend(dropped_for_this_snap)
 
-    # Construct dropped players
-    dropped_players = []
-    for uid, pdata in all_players_ever.items():
-        if uid not in current_ids:
-            p_copy = dict(pdata)
-            p_copy['isDropped'] = True
-            
-            # Try to get the latest rating from history.json
-            history_file = os.path.join('arena', 'squads', str(uid), 'history.json')
-            if os.path.exists(history_file):
-                try:
-                    with open(history_file, 'r', encoding='utf-8') as hf:
-                        history = json.load(hf)
-                        if history:
-                            latest_entry = history[-1]
-                            # In history, "power" was used to store arenaRating
-                            p_copy['rating'] = int(latest_entry.get('power', p_copy.get('rating', 0)))
-                except:
-                    pass
-                    
-            if uid in holders:
-                p_copy['hasSuppressionCore'] = True
-            dropped_players.append(p_copy)
-
-    # Sort dropped by rating descending
-    dropped_players.sort(key=lambda p: int(p.get('rating', 0)), reverse=True)
-
-    # Append dropped players to the LATEST snapshot
-    if latest_ts and dropped_players:
-        all_snaps[latest_ts]['players'].extend(dropped_players)
+    users_with_squads = list(all_histories.keys())
 
     # Read template
     with open(template_path, 'r', encoding='utf-8') as tf:
         html = tf.read()
     
-    # Inject data as a JSON string
-    data_json = json.dumps(all_snaps, ensure_ascii=False)
-    html = html.replace('SNAPSHOTS_DATA', data_json)
-    
-    users_with_squads_json = json.dumps(users_with_squads)
-    html = html.replace('USERS_WITH_SQUADS', users_with_squads_json)
+    # Inject data
+    html = html.replace('SNAPSHOTS_DATA', json.dumps(all_snaps, ensure_ascii=False))
+    html = html.replace('USERS_WITH_SQUADS', json.dumps(users_with_squads))
     
     # Inject last check time (MSK)
     now_msk = datetime.utcnow() + timedelta(hours=3)
-    now_str = now_msk.strftime("%d.%m.%Y %H:%M:%S МСК")
-    html = html.replace('LAST_CHECK_TIME', now_str)
+    html = html.replace('LAST_CHECK_TIME', now_msk.strftime("%d.%m.%Y %H:%M:%S МСК"))
     
-    # Save output
     with open(output_path, 'w', encoding='utf-8') as of:
         of.write(html)
         

@@ -197,11 +197,13 @@ def fetch_squads():
             with open(history_file, 'r', encoding='utf-8') as f:
                 history = json.load(f)
                 
-        # Check if the latest squad hash is different
+        # Check if the latest squad hash OR rating is different
         is_new = True
+        current_rating = int(u.get('arenaRating', 0))
         if history:
             last_entry = history[-1]
-            if last_entry.get('hash') == content_hash:
+            last_rating = int(last_entry.get('power', 0))
+            if last_entry.get('hash') == content_hash and last_rating == current_rating:
                 is_new = False
                 
         if is_new:
@@ -215,7 +217,7 @@ def fetch_squads():
             history.append({
                 "timestamp": now_str,
                 "hash": content_hash,
-                "power": u.get('arenaRating', 0), # Or actual power if available, using arenaRating for now or leave out
+                "power": current_rating, 
                 "squad": squad_data
             })
             

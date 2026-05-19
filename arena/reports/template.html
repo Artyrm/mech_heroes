@@ -131,9 +131,9 @@
         function renderDelta(val, isPower=false) {
             if (val === 0) return "";
             const cls = val > 0 ? "delta-pos" : "delta-neg";
-            const sign = val > 0 ? "+" : "";
+            const sign = val > 0 ? "+" : "-";
             const formatted = isPower ? fmtNum(Math.abs(val)) : formatNumber(Math.abs(val));
-            return ` <span class="${cls}">(${sign}${formatted})</span>`;
+            return ` <span class="${cls}">${sign}${formatted}</span>`;
         }
 
         function getPowerInt(pStr) {
