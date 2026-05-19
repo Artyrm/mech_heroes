@@ -114,14 +114,24 @@ def generate_html_template():
     <div class="table-container"><table><thead><tr>
         <th class="text-center">#</th><th class="text-left">Противник</th><th class="text-left">Клан</th><th class="text-right">Рейтинг</th>
         <th class="text-right">Мощь</th><th class="text-center" colspan="2">Winrate</th>
+        <th class="text-center" colspan="2">ELO (W/L)</th>
         <th class="text-right">Побед</th><th class="col-delta"></th><th class="text-right">Поражений</th><th class="col-delta"></th>
         <th class="text-right">Атак</th><th class="col-delta"></th><th class="text-right">Защит</th><th class="col-delta"></th>
         <th class="text-right">Боёв</th><th class="col-delta"></th><th class="text-right">Последний</th>
     </tr></thead><tbody id="table-body"></tbody></table></div>
     <script>
         const snapshots = SNAPSHOTS_DATA;
+        const ourCurrentRating = OUR_CURRENT_RATING;
         const t1Select = document.getElementById('t1-select'), t2Select = document.getElementById('t2-select');
         const showChanges = document.getElementById('show-changes'), tableBody = document.getElementById('table-body'), summaryBox = document.getElementById('summary-container');
+        
+        function calcElo(ourR, oppR) {
+            const E = 1 / (1 + Math.pow(10, (oppR - ourR) / 400));
+            let w = Math.round(20 * (1 - E));
+            let l = -Math.round(20 * E);
+            if (ourR - oppR < -200) l = -1; 
+            return {w: w > 0 ? '+' + w : w, l: l};
+        }
         function fmtNum(val) {
             if (!val) return "0"; let v = parseFloat(val.toString().replace(',', '.'));
             return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU') + 'k' : Math.floor(v).toLocaleString('ru-RU');
@@ -188,11 +198,11 @@ def generate_html_template():
                 tr.innerHTML = `<td class="text-center">${idx+1}</td><td class="col-nick"><a href="${nick_key || '_EMPTY_'}/summary.html" class="nick-link">${display_nick}</a></td>
                     <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="text-right">${fmtNum(p2.rating)}</td><td class="text-right">${fmtNum(p2.power)}</td>
                     <td class="text-right" style="border-right:none">${wr}</td><td class="col-delta" style="border-left:none">${wr_d}</td>
-                    <td class="text-right">${w}</td><td class="col-delta">${w_d}</td>
-                    <td class="text-right">${l}</td><td class="col-delta">${l_d}</td>
-                    <td class="text-right">${a}</td><td class="col-delta">${a_d}</td>
-                    <td class="text-right">${d}</td><td class="col-delta">${d_d}</td>
-                    <td class="text-right">${cnt}</td><td class="col-delta">${cnt_d}</td>
+                    <td class="text-right" style="border-right:none">${w}</td><td class="col-delta" style="border-left:none">${w_d}</td>
+                    <td class="text-right" style="border-right:none">${l}</td><td class="col-delta" style="border-left:none">${l_d}</td>
+                    <td class="text-right" style="border-right:none">${a}</td><td class="col-delta" style="border-left:none">${a_d}</td>
+                    <td class="text-right" style="border-right:none">${d}</td><td class="col-delta" style="border-left:none">${d_d}</td>
+                    <td class="text-right" style="border-right:none">${cnt}</td><td class="col-delta" style="border-left:none">${cnt_d}</td>
                     <td class="col-last">${last}</td>`;
                 tableBody.appendChild(tr);
             });
@@ -238,5 +248,18 @@ if __name__ == "__main__":
     arena_snaps = sorted(glob.glob(os.path.join(ARENA_SNAPSHOTS, "arena_*.json")))
     if not arena_snaps: sys.exit(1)
     prowess_data = {s["timestamp_utc"]: s for s in [get_state_at(p) for p in arena_snaps]}
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f: f.write(generate_html_template().replace('SNAPSHOTS_DATA', json.dumps(prowess_data, ensure_ascii=False)))
+    # Get latest our rating for ELO prediction
+    our_current_rating = 0
+    if arena_snaps:
+        with open(arena_snaps[-1], 'r', encoding='utf-8') as f:
+            snap_data = json.load(f)
+            for p in snap_data.get('players', []):
+                if p.get('profileState', {}).get('nickname') == "ksotar":
+                    our_current_rating = int(p.get('rating', 0))
+                    break
+
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f: 
+        html = generate_html_template().replace('SNAPSHOTS_DATA', json.dumps(prowess_data, ensure_ascii=False))
+        html = html.replace('OUR_CURRENT_RATING', str(our_current_rating))
+        f.write(html)
     generate_dossiers()
