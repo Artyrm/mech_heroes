@@ -37,10 +37,7 @@ def get_state_at(arena_snap_path):
         players.append({'rank': i, 'nick': nick_raw.strip(), 'clan': clan_info.get('clanName', '-'), 'clan_tag': clan_info.get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
 
     battle_stats, global_sum = {}, {"a_wins": 0, "a_losses": 0, "d_wins": 0, "d_losses": 0}
-    
-    # Identify all player "keys" (directories or root for empty nick)
     player_keys = [d for d in os.listdir(ANALYTICS_DIR) if os.path.isdir(os.path.join(ANALYTICS_DIR, d)) and not d.startswith('__') and d != 'snapshots']
-    # Check if there are root battles for <без имени>
     if glob.glob(os.path.join(ANALYTICS_DIR, "battle_*.json")):
         if "" not in player_keys: player_keys.append("")
 
@@ -102,6 +99,7 @@ def generate_html_template():
         .delta-neg { color: #f85149; }
         .nick-link { color: #58a6ff; text-decoration: none; }
         .nick-link:hover { text-decoration: underline; }
+        .elo-ref { margin-top: 20px; font-size: 0.7rem; color: #8b949e; text-align: center; }
     </style></head><body>
     <header><h1>MY ARENA PROWESS</h1></header>
     <div class="nav-links" style="text-align:center;margin-bottom:10px"><a href="dashboard.html" style="color:#58a6ff;text-decoration:none;font-size:0.7rem">← К дашборду Арены</a></div>
@@ -119,6 +117,7 @@ def generate_html_template():
         <th class="text-right">Атак</th><th class="col-delta"></th><th class="text-right">Защит</th><th class="col-delta"></th>
         <th class="text-right">Боёв</th><th class="col-delta"></th><th class="text-right">Последний</th>
     </tr></thead><tbody id="table-body"></tbody></table></div>
+    <div class="elo-ref">Формула рейтинга: Win = 10 + round(diff/20), Loss = -10 + round(diff/20). База K=20.</div>
     <script>
         const snapshots = SNAPSHOTS_DATA;
         const ourCurrentRating = OUR_CURRENT_RATING;
@@ -126,11 +125,10 @@ def generate_html_template():
         const showChanges = document.getElementById('show-changes'), tableBody = document.getElementById('table-body'), summaryBox = document.getElementById('summary-container');
         
         function calcElo(ourR, oppR) {
-            const E = 1 / (1 + Math.pow(10, (oppR - ourR) / 400));
-            let w = Math.round(20 * (1 - E));
-            let l = -Math.round(20 * E);
-            if (ourR - oppR < -200) l = -1; 
-            return {w: w > 0 ? '+' + w : w, l: l};
+            const diff = oppR - ourR;
+            let w = Math.max(1, 10 + Math.trunc(diff / 20));
+            let l = Math.min(-1, -10 + Math.trunc(diff / 20));
+            return {w: '+' + w, l: l};
         }
         function fmtNum(val) {
             if (!val) return "0"; let v = parseFloat(val.toString().replace(',', '.'));
@@ -194,10 +192,12 @@ def generate_html_template():
                         last = dt.getUTCDate().toString().padStart(2, '0') + '.' + (dt.getUTCMonth()+1).toString().padStart(2, '0') + ' ' + dt.getUTCHours().toString().padStart(2, '0') + ':' + dt.getUTCMinutes().toString().padStart(2, '0');
                     }
                 }
+                const elo = calcElo(ourCurrentRating, parseInt(p2.rating));
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td class="text-center">${idx+1}</td><td class="col-nick"><a href="${nick_key || '_EMPTY_'}/summary.html" class="nick-link">${display_nick}</a></td>
                     <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="text-right">${fmtNum(p2.rating)}</td><td class="text-right">${fmtNum(p2.power)}</td>
                     <td class="text-right" style="border-right:none">${wr}</td><td class="col-delta" style="border-left:none">${wr_d}</td>
+                    <td class="text-right" style="color:#3fb950;border-right:none">${elo.w}</td><td class="col-delta" style="color:#f85149;border-left:none">${elo.l}</td>
                     <td class="text-right" style="border-right:none">${w}</td><td class="col-delta" style="border-left:none">${w_d}</td>
                     <td class="text-right" style="border-right:none">${l}</td><td class="col-delta" style="border-left:none">${l_d}</td>
                     <td class="text-right" style="border-right:none">${a}</td><td class="col-delta" style="border-left:none">${a_d}</td>
