@@ -1,0 +1,547 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8">
+    <title>Личная статистика боёв</title>
+    <link href="../https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 25px; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-family: 'Orbitron'; font-size: 2.5rem; color: #fff; margin: 0; letter-spacing: 4px; }
+        .subtitle { color: var(--gold); letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase; }
+        .summary-box { display: flex; justify-content: center; gap: 30px; margin-bottom: 25px; }
+        .stat-card { background: var(--card); padding: 15px 25px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .stat-val { display: block; font-size: 1.5rem; font-family: 'Roboto Mono'; font-weight: 700; color: #fff; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; color: #8b949e; letter-spacing: 1px; }
+        .table-container { max-width: 1100px; margin: 0 auto; background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #0b0e14; padding: 15px; color: #8b949e; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); }
+        td { padding: 10px 15px; border-bottom: 1px solid var(--border); }
+        tr:hover { background: #1c2128; }
+        .nick-link { color: #fff; font-weight: 700; text-decoration: none; }
+        .nick-link:hover { color: var(--accent); }
+        .nav-links { text-align: center; margin-bottom: 20px; }
+        .nav-links a { color: var(--accent); text-decoration: none; margin: 0 15px; font-size: 0.9rem; }
+        .snap-selector { margin-bottom: 20px; text-align: center; }
+        select { background: #0b0e14; color: #fff; border: 1px solid var(--border); padding: 5px 10px; border-radius: 5px; cursor: pointer; }
+    </style></head><body>
+    <header><h1>MY ARENA PROWESS</h1><div class="subtitle">Личная эффективность против Топ-50</div></header>
+    <div class="nav-links"><a href="../dashboard.html">← Общий дашборд Арены</a></div>
+    
+    <div class="summary-box">
+        <div class="stat-card"><span class="stat-val">250</span><span class="stat-label">Всего боёв</span></div>
+        <div class="stat-card" style="border-bottom: 3px solid var(--gold);"><span class="stat-val" style="color:var(--gold)">152</span><span class="stat-label">Моих атак</span></div>
+        <div class="stat-card" style="border-bottom: 3px solid var(--accent);"><span class="stat-val" style="color:var(--accent)">98</span><span class="stat-label">Защит (в гостях)</span></div>
+        <div class="stat-card"><span class="stat-val" style="color:var(--green)">84</span><span class="stat-label">Побед всего</span></div>
+    </div>
+
+    <div class="snap-selector">
+        <label style="font-size:0.8rem; color:#8b949e">Точка замера (МСК): </label>
+        <select onchange="location.href='snapshots/prowess_'+this.value+'.html'">
+            <option value="current">ТЕКУЩАЯ (LIVE)</option>
+            <option value="2026-05-19T00-07-36" selected>19.05 03:07</option><option value="2026-05-19T00-07-05" >19.05 03:07</option>
+        </select>
+    </div>
+
+    <div class="table-container"><table><thead><tr>
+        <th style="width:40px">Место</th><th>Противник</th><th>Клан</th><th>Рейтинг</th><th>Мощь</th><th>Winrate</th><th>Счет (W/L)</th><th>Боёв</th><th>Последний (МСК)</th>
+    </tr></thead><tbody><tr>
+            <td style="text-align:center; color:#8b949e">1</td>
+            <td><a href="../LordDragon/summary.html" class="nick-link">LordDragon</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Предвестники конд</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 465</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">27 980k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>13</span></td>
+            <td style="text-align:center"><a href='LordDragon/summary.html' style='color:#58a6ff; text-decoration:none'>13</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:32</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">2</td>
+            <td><a href="../х3/summary.html" class="nick-link">х3</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">СВОИ</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 411</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">30 734k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>4</span></td>
+            <td style="text-align:center"><a href='х3/summary.html' style='color:#58a6ff; text-decoration:none'>4</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">06.05 00:29</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">3</td>
+            <td><a href="../Проповедник/summary.html" class="nick-link">Проповедник</a></td>
+            <td style="color:#8b949e; font-size:0.85rem"> ОРДА</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 372</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">33 501k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='Проповедник/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">18.05 15:02</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">4</td>
+            <td><a href="../Хоббит/summary.html" class="nick-link">Хоббит</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Скитальцы</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 307</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">36 138k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>11.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>7</span> / <span style='color:#f85149'>55</span></td>
+            <td style="text-align:center"><a href='Хоббит/summary.html' style='color:#58a6ff; text-decoration:none'>62</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:47</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">5</td>
+            <td><a href="../Уксус/summary.html" class="nick-link">Уксус</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Скитальцы</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 299</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">36 177k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>30.8%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>4</span> / <span style='color:#f85149'>9</span></td>
+            <td style="text-align:center"><a href='Уксус/summary.html' style='color:#58a6ff; text-decoration:none'>13</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:48</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">6</td>
+            <td><a href="../тетка с веслом/summary.html" class="nick-link">тетка с веслом</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">АнасРать</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 265</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 518k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>6</span></td>
+            <td style="text-align:center"><a href='тетка с веслом/summary.html' style='color:#58a6ff; text-decoration:none'>6</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:21</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">7</td>
+            <td><a href="../ди/summary.html" class="nick-link">ди</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">404</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 256</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">19 739k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>37.5%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='ди/summary.html' style='color:#58a6ff; text-decoration:none'>8</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">17.05 21:10</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">8</td>
+            <td><a href="../Князь/summary.html" class="nick-link">Князь</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">АнасРать</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 256</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 058k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>84.6%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>11</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Князь/summary.html' style='color:#58a6ff; text-decoration:none'>13</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:17</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">9</td>
+            <td><a href="../Shark/summary.html" class="nick-link">Shark</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">{ ПаНдОрА }</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 254</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">33 036k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>64.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>9</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='Shark/summary.html' style='color:#58a6ff; text-decoration:none'>14</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:20</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">10</td>
+            <td><a href="../Лиса/summary.html" class="nick-link">Лиса</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">ВОЯКИ</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 252</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">27 086k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>10.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>9</span></td>
+            <td style="text-align:center"><a href='Лиса/summary.html' style='color:#58a6ff; text-decoration:none'>10</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:39</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">11</td>
+            <td><a href="../meshher /summary.html" class="nick-link">meshher </a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Видение</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 245</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 813k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">12</td>
+            <td><a href="../acdc/summary.html" class="nick-link">acdc</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">АнасРать</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 232</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 591k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>33.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>5</span> / <span style='color:#f85149'>10</span></td>
+            <td style="text-align:center"><a href='acdc/summary.html' style='color:#58a6ff; text-decoration:none'>15</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">18.05 13:15</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">13</td>
+            <td><a href="../Quack/summary.html" class="nick-link">Quack</a></td>
+            <td style="color:#8b949e; font-size:0.85rem"> ОРДА</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 229</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">31 714k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>37.5%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>5</span></td>
+            <td style="text-align:center"><a href='Quack/summary.html' style='color:#58a6ff; text-decoration:none'>8</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">17.05 02:52</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">14</td>
+            <td><a href="../ksotar/summary.html" class="nick-link">ksotar</a></td>
+            <td style="color:#8b949e; font-size:0.85rem"> ОРДА</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 220</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">12 074k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">15</td>
+            <td><a href="../Трандуил/summary.html" class="nick-link">Трандуил</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Лихолесье</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 213</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">27 788k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Трандуил/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">14.05 22:27</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">16</td>
+            <td><a href="../Семён 444/summary.html" class="nick-link">Семён 444</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">СВОИ</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 197</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">36 715k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>60.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Семён 444/summary.html' style='color:#58a6ff; text-decoration:none'>5</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:50</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">17</td>
+            <td><a href="../Hunter/summary.html" class="nick-link">Hunter</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 197</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">31 493k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Hunter/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">17.05 02:27</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">18</td>
+            <td><a href="../Mike/summary.html" class="nick-link">Mike</a></td>
+            <td style="color:#8b949e; font-size:0.85rem"> ОРДА</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 195</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">23 160k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">19</td>
+            <td><a href="../CDV/summary.html" class="nick-link">CDV</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Цербер</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 192</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">35 818k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>33.3%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>4</span></td>
+            <td style="text-align:center"><a href='CDV/summary.html' style='color:#58a6ff; text-decoration:none'>6</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">15.05 10:35</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">20</td>
+            <td><a href="../ДИКАРИУС/summary.html" class="nick-link">ДИКАРИУС</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 192</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">34 918k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='ДИКАРИУС/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">07.05 02:24</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">21</td>
+            <td><a href="../любитель пива/summary.html" class="nick-link">любитель пива</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 187</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">32 838k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='любитель пива/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">18.05 13:05</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">22</td>
+            <td><a href="../Mmv/summary.html" class="nick-link">Mmv</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 185</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">32 362k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Mmv/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">17.05 02:29</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">23</td>
+            <td><a href="../       /summary.html" class="nick-link">       </a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 183</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">24 732k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">24</td>
+            <td><a href="../SIS/summary.html" class="nick-link">SIS</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 183</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">27 092k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">25</td>
+            <td><a href="../Фаервол/summary.html" class="nick-link">Фаервол</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">{ ПаНдОрА }</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 182</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">31 661k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Фаервол/summary.html' style='color:#58a6ff; text-decoration:none'>4</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:23</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">26</td>
+            <td><a href="../Flashserker/summary.html" class="nick-link">Flashserker</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 181</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">23 432k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Flashserker/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">19.05 02:36</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">27</td>
+            <td><a href="../unc1e_Sam/summary.html" class="nick-link">unc1e_Sam</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 176</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">35 754k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='unc1e_Sam/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">14.05 16:06</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">28</td>
+            <td><a href="../-=Hefas†agon=-/summary.html" class="nick-link">-=Hefas†agon=-</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Видение</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 175</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">29 053k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>50.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='-=Hefas†agon=-/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">14.05 16:08</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">29</td>
+            <td><a href="../Настойки лучше/summary.html" class="nick-link">Настойки лучше</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 170</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">32 730k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>3</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Настойки лучше/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">14.05 15:58</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">30</td>
+            <td><a href="../Fuzzy/summary.html" class="nick-link">Fuzzy</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Цербер</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 168</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">31 116k</td>
+            <td style="text-align:center"><span style='color:#f85149; font-weight:700'>0.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>0</span> / <span style='color:#f85149'>2</span></td>
+            <td style="text-align:center"><a href='Fuzzy/summary.html' style='color:#58a6ff; text-decoration:none'>2</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">18.05 12:33</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">31</td>
+            <td><a href="../ProStou/summary.html" class="nick-link">ProStou</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Скитальцы</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 156</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">22 032k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">32</td>
+            <td><a href="../Strel/summary.html" class="nick-link">Strel</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Дарк Сайд</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 125</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 407k</td>
+            <td style="text-align:center"><span style='color:#f2cc60; font-weight:700'>31.4%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>11</span> / <span style='color:#f85149'>24</span></td>
+            <td style="text-align:center"><a href='Strel/summary.html' style='color:#58a6ff; text-decoration:none'>35</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">18.05 15:25</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">33</td>
+            <td><a href="../Winner_123167/summary.html" class="nick-link">Winner_123167</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 116</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">25 867k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>66.7%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>2</span> / <span style='color:#f85149'>1</span></td>
+            <td style="text-align:center"><a href='Winner_123167/summary.html' style='color:#58a6ff; text-decoration:none'>3</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">07.05 02:23</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">34</td>
+            <td><a href="../Shagger/summary.html" class="nick-link">Shagger</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">{ ПаНдОрА }</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 099</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">29 952k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">35</td>
+            <td><a href="../Мрак/summary.html" class="nick-link">Мрак</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Хаос</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 078</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">34 076k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">36</td>
+            <td><a href="../RaRik/summary.html" class="nick-link">RaRik</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Джасум</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 075</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">14 487k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='RaRik/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">15.05 10:41</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">37</td>
+            <td><a href="../Multik /summary.html" class="nick-link">Multik </a></td>
+            <td style="color:#8b949e; font-size:0.85rem">СВОИ</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 042</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">34 006k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">38</td>
+            <td><a href="../Andrik24/summary.html" class="nick-link">Andrik24</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">{ ПаНдОрА }</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 041</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">34 700k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">39</td>
+            <td><a href="../Исток/summary.html" class="nick-link">Исток</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 039</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">36 436k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">40</td>
+            <td><a href="../Zmei665/summary.html" class="nick-link">Zmei665</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Zmei</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 034</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">28 095k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">41</td>
+            <td><a href="../MvM/summary.html" class="nick-link">MvM</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 033</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">26 557k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">42</td>
+            <td><a href="../ПК/summary.html" class="nick-link">ПК</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 024</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">34 570k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">43</td>
+            <td><a href="../WoTЛунтик/summary.html" class="nick-link">WoTЛунтик</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">{ ПаНдОрА }</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 006</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">33 293k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='WoTЛунтик/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">05.05 02:53</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">44</td>
+            <td><a href="../DED/summary.html" class="nick-link">DED</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">БЕРСЕРК</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">4 004</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">35 462k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">45</td>
+            <td><a href="../AMIS/summary.html" class="nick-link">AMIS</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 983</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">36 251k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">46</td>
+            <td><a href="../Евгений/summary.html" class="nick-link">Евгений</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">"СТИЛЕТ"</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 974</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">20 901k</td>
+            <td style="text-align:center"><span style='color:#3fb950; font-weight:700'>100.0%</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem"><span style='color:#3fb950'>1</span> / <span style='color:#f85149'>0</span></td>
+            <td style="text-align:center"><a href='Евгений/summary.html' style='color:#58a6ff; text-decoration:none'>1</a></td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e">05.05 18:02</td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">47</td>
+            <td><a href="../Maggod/summary.html" class="nick-link">Maggod</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 973</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">26 679k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">48</td>
+            <td><a href="../Expert/summary.html" class="nick-link">Expert</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 966</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">29 401k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">49</td>
+            <td><a href="../NikNik/summary.html" class="nick-link">NikNik</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">Видение</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 961</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">30 653k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr><tr>
+            <td style="text-align:center; color:#8b949e">50</td>
+            <td><a href="../palevo/summary.html" class="nick-link">palevo</a></td>
+            <td style="color:#8b949e; font-size:0.85rem">-</td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.85rem; color:#58a6ff">3 956</td>
+            <td style="text-align:right; font-family:'Roboto Mono'; font-size:0.85rem; color:#d29922">33 821k</td>
+            <td style="text-align:center"><span style='opacity:0.3'>-</span></td>
+            <td style="text-align:center; font-family:'Roboto Mono'; font-size:0.9rem">-</td>
+            <td style="text-align:center">0</td>
+            <td style="text-align:center; font-size:0.8rem; color:#8b949e"><span style='opacity:0.3'>никогда</span></td>
+        </tr></tbody></table></div>
+    </body></html>

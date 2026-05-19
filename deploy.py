@@ -66,7 +66,7 @@ def deploy():
         if os.path.exists(analytics_dir):
             for nick in os.listdir(analytics_dir):
                 nick_dir = os.path.join(analytics_dir, nick)
-                if os.path.isdir(nick_dir) and not nick.startswith('__'):
+                if os.path.isdir(nick_dir) and not nick.startswith('__') and nick != 'snapshots':
                     # Create remote directory for the player
                     try: ftp.mkd(nick)
                     except: pass
@@ -76,7 +76,19 @@ def deploy():
                             local_path = os.path.join(nick_dir, fname)
                             with open(local_path, "rb") as f:
                                 ftp.storbinary(f"STOR {nick}/{fname}", f)
-            print(f"Uploaded personal dossier and battle reports.")
+            
+            # Upload Prowess Snapshots
+            snap_dir = os.path.join(analytics_dir, "snapshots")
+            if os.path.exists(snap_dir):
+                try: ftp.mkd("snapshots")
+                except: pass
+                for fname in os.listdir(snap_dir):
+                    if fname.endswith('.html'):
+                        local_path = os.path.join(snap_dir, fname)
+                        with open(local_path, "rb") as f:
+                            ftp.storbinary(f"STOR snapshots/{fname}", f)
+
+            print(f"Uploaded personal dossier, battle reports and snapshots.")
 
         ftp.quit()
         print("\nDeployment successful!")

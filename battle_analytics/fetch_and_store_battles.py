@@ -59,20 +59,21 @@ def fetch_history(explicit_dump=None, force_run=False):
             print(f"ERROR: Dump file not found: {explicit_dump}")
             return None
 
-    # 1. Try to reuse a fresh dump from init_dumps
-    dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
-    if os.path.exists(dumps_dir):
-        import glob
-        dumps = sorted(glob.glob(os.path.join(dumps_dir, "init_*.json")))
-        if dumps:
-            latest_dump = dumps[-1]
-            mtime = os.path.getmtime(latest_dump)
-            # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
-            if datetime.datetime.now().timestamp() - mtime < 15 * 60:
-                print(f"INFO: Found fresh init dump: {os.path.basename(latest_dump)}. Reusing it!")
-                r = load_json(latest_dump)
-                history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
-                return history
+    # 1. Try to reuse a fresh dump from init_dumps (only if NOT forcing)
+    if not force_run:
+        dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
+        if os.path.exists(dumps_dir):
+            import glob
+            dumps = sorted(glob.glob(os.path.join(dumps_dir, "init_*.json")))
+            if dumps:
+                latest_dump = dumps[-1]
+                mtime = os.path.getmtime(latest_dump)
+                # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
+                if datetime.datetime.now().timestamp() - mtime < 15 * 60:
+                    print(f"INFO: Found fresh init dump: {os.path.basename(latest_dump)}. Reusing it!")
+                    r = load_json(latest_dump)
+                    history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
+                    return history
 
     if is_user_active() and not force_run:
         print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_and_store_battles.py.")
