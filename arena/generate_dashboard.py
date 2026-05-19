@@ -47,6 +47,18 @@ def generate():
         print("No valid snapshots data found.")
         return
 
+    # Find players with squads & online history
+    players_online_info = {}
+    for uid_dir in os.listdir('arena/squads'):
+        history_file = os.path.join('arena', 'squads', uid_dir, 'online_history.json')
+        if os.path.exists(history_file):
+            try:
+                with open(history_file, 'r', encoding='utf-8') as f:
+                    history = json.load(f)
+                    if history:
+                        players_online_info[int(uid_dir)] = history[-1]
+            except: pass
+
     # Find players with suppression core
     holders = set()
     for f in glob.glob('arena/squads/*/history.json'):
@@ -66,8 +78,12 @@ def generate():
     # Mark players in all snapshots
     for snap in all_snaps.values():
         for p in snap.get('players', []):
-            if int(p['userID']) in holders:
+            uid = int(p['userID'])
+            if uid in holders:
                 p['hasSuppressionCore'] = True
+            if uid in players_online_info:
+                p['lastOnline'] = players_online_info[uid]
+
 
     # Find players with squads
     users_with_squads = []

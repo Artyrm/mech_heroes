@@ -33,15 +33,20 @@ def get_state_at(arena_snap_path):
     players = []
     for i, p in enumerate(arena_data.get('players', []), 1):
         nick_raw = p.get('profileState', {}).get('nickname', '')
-        # Извлекаем данные клана (ищем tag)
         clan_info = p.get('clanProfile', {})
         players.append({'rank': i, 'nick': nick_raw.strip(), 'clan': clan_info.get('clanName', '-'), 'clan_tag': clan_info.get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
 
     battle_stats, global_sum = {}, {"a_wins": 0, "a_losses": 0, "d_wins": 0, "d_losses": 0}
-    for item in os.listdir(ANALYTICS_DIR):
-        player_dir = os.path.join(ANALYTICS_DIR, item)
-        if not os.path.isdir(player_dir) or item.startswith('__') or item == 'snapshots': continue
-        nick_key, wins, losses, a_total, d_total, last_battle = item.strip(), 0, 0, 0, 0, datetime.min
+    
+    # Identify all player "keys" (directories or root for empty nick)
+    player_keys = [d for d in os.listdir(ANALYTICS_DIR) if os.path.isdir(os.path.join(ANALYTICS_DIR, d)) and not d.startswith('__') and d != 'snapshots']
+    # Check if there are root battles for <без имени>
+    if glob.glob(os.path.join(ANALYTICS_DIR, "battle_*.json")):
+        if "" not in player_keys: player_keys.append("")
+
+    for nick_key in player_keys:
+        player_dir = os.path.join(ANALYTICS_DIR, nick_key) if nick_key else ANALYTICS_DIR
+        wins, losses, a_total, d_total, last_battle = 0, 0, 0, 0, datetime.min
         for bf in glob.glob(os.path.join(player_dir, "battle_*.json")):
             b = load_json(bf)
             b_dt = parse_fight_time(b.get('fightTime'))
@@ -72,37 +77,34 @@ def generate_html_template():
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; }
-        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 15px; font-size: 0.82rem; line-height: 1.2; }
-        header { text-align: center; margin-bottom: 15px; }
-        h1 { font-family: 'Orbitron'; font-size: 1.6rem; color: #fff; margin: 0; letter-spacing: 2px; }
-        .summary-box { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
-        .stat-card { background: var(--card); padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border); text-align: center; min-width: 120px; }
-        .stat-val { display: block; font-size: 1.1rem; font-family: 'Roboto Mono'; font-weight: 700; color: #fff; }
-        .stat-label { font-size: 0.55rem; text-transform: uppercase; color: #8b949e; margin-top: 2px; display: block; }
-        .controls { background: var(--card); padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px; display: flex; gap: 20px; align-items: center; justify-content: center; }
-        select { background: #0b0e14; color: #fff; border: 1px solid var(--border); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-        .checkbox-container { display: flex; align-items: center; gap: 6px; color: #8b949e; font-size: 0.75rem; cursor: pointer; }
-        .table-container { width: 100%; max-width: 1340px; margin: 0 auto; background: var(--card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: #0b0e14; padding: 10px 6px; color: #8b949e; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); text-align: right; }
-        th:nth-child(2), th:nth-child(3) { text-align: left; }
-        td { padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Roboto Mono', monospace; }
-        td:nth-child(2) { font-family: 'Inter', sans-serif; font-weight: 700; color: #58a6ff; }
-        td:nth-child(3) { font-family: 'Inter', sans-serif; font-weight: 400; color: #8b949e; }
-        .col-rank { width: 30px; text-align: center; }
-        .col-nick { width: 140px; text-align: left; }
-        .col-clan { width: 60px; text-align: left; }
-        .col-rating { width: 70px; text-align: right; }
-        .col-power { width: 70px; text-align: right; }
-        .col-wr { width: 90px; text-align: right; }
-        .col-num { width: 50px; text-align: right; }
-        .col-last { width: 100px; text-align: right; color: #8b949e; font-size: 0.75rem; }
-        .delta-pos { color: #3fb950; font-size: 0.7rem; font-weight: bold; margin-left: 2px; }
-        .delta-neg { color: #f85149; font-size: 0.7rem; font-weight: bold; margin-left: 2px; }
-        .nick-link { color: inherit; text-decoration: none; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 10px; font-size: 0.8rem; line-height: 1.2; }
+        header { text-align: center; margin-bottom: 10px; }
+        h1 { font-family: 'Orbitron'; font-size: 1.4rem; color: #fff; margin: 0; letter-spacing: 2px; }
+        .summary-box { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .stat-card { background: var(--card); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border); text-align: center; min-width: 100px; }
+        .stat-val { display: block; font-size: 1rem; font-family: 'Roboto Mono'; font-weight: 700; color: #fff; }
+        .stat-label { font-size: 0.5rem; text-transform: uppercase; color: #8b949e; margin-top: 2px; display: block; }
+        .controls { background: var(--card); padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 10px; display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap; }
+        select { background: #0b0e14; color: #fff; border: 1px solid var(--border); padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+        .checkbox-container { display: flex; align-items: center; gap: 4px; color: #8b949e; font-size: 0.7rem; cursor: pointer; }
+        .table-container { width: 100%; max-width: 100%; margin: 0 auto; background: var(--card); border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; }
+        table { width: auto; margin: 0 auto; border-collapse: collapse; table-layout: auto; }
+        th { background: #0b0e14; padding: 6px 8px; color: #8b949e; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+        .text-right { text-align: right !important; }
+        .text-left { text-align: left !important; }
+        .text-center { text-align: center !important; }
+        td { padding: 4px 8px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; font-family: 'Roboto Mono', monospace; }
+        .col-nick { font-family: 'Inter', sans-serif !important; font-weight: 700; color: #58a6ff !important; text-align: left !important; min-width: 100px; }
+        .col-clan { font-family: 'Inter', sans-serif !important; font-weight: 400; color: #8b949e !important; text-align: left !important; }
+        .col-delta { text-align: left !important; padding-left: 2px !important; font-size: 0.65rem; font-weight: bold; width: 35px; }
+        .col-last { text-align: right !important; color: #8b949e; font-size: 0.7rem; }
+        .delta-pos { color: #3fb950; }
+        .delta-neg { color: #f85149; }
+        .nick-link { color: #58a6ff; text-decoration: none; }
+        .nick-link:hover { text-decoration: underline; }
     </style></head><body>
     <header><h1>MY ARENA PROWESS</h1></header>
-    <div class="nav-links" style="text-align:center;margin-bottom:15px"><a href="dashboard.html" style="color:#58a6ff;text-decoration:none;font-size:0.75rem">← К дашборду</a></div>
+    <div class="nav-links" style="text-align:center;margin-bottom:10px"><a href="dashboard.html" style="color:#58a6ff;text-decoration:none;font-size:0.7rem">← К дашборду Арены</a></div>
     <div class="summary-box" id="summary-container"></div>
     <div class="controls">
         <div><label>T1: </label><select id="t1-select" onchange="updateTable()"></select></div>
@@ -110,8 +112,11 @@ def generate_html_template():
         <label class="checkbox-container"><input type="checkbox" id="show-changes" onchange="updateTable()" checked> Изменения</label>
     </div>
     <div class="table-container"><table><thead><tr>
-        <th class="col-rank">#</th><th class="col-nick">Противник</th><th class="col-clan">Клан</th><th class="col-rating">Рейтинг</th>
-        <th class="col-power">Мощь</th><th class="col-wr">Winrate</th><th class="col-num">Побед</th><th class="col-num">Пор.</th><th class="col-num">Атак</th><th class="col-num">Защит</th><th class="col-num">Боёв</th><th class="col-last">Последний</th>
+        <th class="text-center">#</th><th class="text-left">Противник</th><th class="text-left">Клан</th><th class="text-right">Рейтинг</th>
+        <th class="text-right">Мощь</th><th class="text-center" colspan="2">Winrate</th>
+        <th class="text-right">Побед</th><th class="col-delta"></th><th class="text-right">Поражений</th><th class="col-delta"></th>
+        <th class="text-right">Атак</th><th class="col-delta"></th><th class="text-right">Защит</th><th class="col-delta"></th>
+        <th class="text-right">Боёв</th><th class="col-delta"></th><th class="text-right">Последний</th>
     </tr></thead><tbody id="table-body"></tbody></table></div>
     <script>
         const snapshots = SNAPSHOTS_DATA;
@@ -136,19 +141,20 @@ def generate_html_template():
         
         const latestDate = parseTS(dates[dates.length-1]);
         const latestMSK = new Date(latestDate.getTime() + 3 * 3600 * 1000);
-        const startOfDayMSK = new Date(Date.UTC(latestMSK.getUTCFullYear(), latestMSK.getUTCMonth(), latestMSK.getUTCDate())).getTime();
+        const startOfTodayMSK = new Date(Date.UTC(latestMSK.getUTCFullYear(), latestMSK.getUTCMonth(), latestMSK.getUTCDate())).getTime();
         let t1Idx = 0;
         for (let i = 0; i < dates.length; i++) { 
-            const dMSK = new Date(parseTS(dates[i]).getTime() + 3 * 3600 * 1000).getTime();
-            if (dMSK >= startOfDayMSK) { t1Idx = i; break; } 
+            if (parseTS(dates[i]).getTime() + 3*3600*1000 >= startOfTodayMSK) { t1Idx = i; break; } 
         }
         t1Select.selectedIndex = (t1Idx === dates.length-1 && dates.length > 1) ? dates.length-2 : t1Idx;
 
         function renderDelta(val, isInverse=false, isPercent=false) {
-            if (!showChanges.checked || t1Select.value === t2Select.value) return '<span style="display:inline-block;width:30px"></span>';
-            const n = parseFloat(val); if (!n) return '<span style="display:inline-block;width:30px"></span>';
+            if (!showChanges.checked || t1Select.value === t2Select.value) return "";
+            const n = parseFloat(val); if (isNaN(n) || n === 0) return "";
             const cls = (n > 0) ? (isInverse ? "delta-neg" : "delta-pos") : (isInverse ? "delta-pos" : "delta-neg");
-            return `<span class="${cls}" style="display:inline-block;width:30px;text-align:right">${n > 0 ? '+' : ''}${isPercent ? n.toFixed(0) : Math.floor(Math.abs(n))}</span>`;
+            const sign = n > 0 ? "+" : "-";
+            const formatted = isPercent ? Math.abs(n).toFixed(0) + '%' : Math.floor(Math.abs(n));
+            return `<span class="${cls}">${sign}${formatted}</span>`;
         }
 
         function updateTable() {
@@ -160,26 +166,34 @@ def generate_html_template():
                 <div class="stat-card"><span class="stat-val" style="color:#fff">${ds.a_w + ds.d_w}</span><span class="stat-label">Побед всего</span></div>`;
             tableBody.innerHTML = "";
             s2.players.forEach((p2, idx) => {
-                const nick = p2.nick, st1 = s1.battle_stats[nick], st2 = s2.battle_stats[nick];
-                let wr = '-', w = '-', l = '-', a = '-', d = '-', cnt = '-', last = '-';
+                const nick_key = p2.nick;
+                const display_nick = p2.nick || '<без имени>';
+                const st1 = s1.battle_stats[nick_key], st2 = s2.battle_stats[nick_key];
+                let wr = '-', wr_d = '', w = '-', w_d = '', l = '-', l_d = '', a = '-', a_d = '', d = '-', d_d = '', cnt = '-', cnt_d = '', last = '-';
                 if (st2) {
                     const wrColor = st2.winrate>=49.5?'#3fb950':(st2.winrate>=29.5?'#f2cc60':'#f85149');
-                    wr = `<div style="text-align:center"><span style="font-weight:700;color:${wrColor}">${st2.winrate}%</span>${st1?renderDelta(st2.winrate-st1.winrate,false,true):""}</div>`;
-                    w = `${st2.wins}${st1?renderDelta(st2.wins-st1.wins):""}`;
-                    l = `${st2.losses}${st1?renderDelta(st2.losses-st1.losses,true):""}`;
-                    a = `${st2.a_total}${st1?renderDelta(st2.a_total-st1.a_total):""}`;
-                    d = `${st2.d_total}${st1?renderDelta(st2.d_total-st1.d_total):""}`;
-                    cnt = `${st2.wins+st2.losses}${st1?renderDelta(st2.wins+st2.losses-(st1.wins+st1.losses)):""}`;
+                    wr = `<span style="font-weight:700;color:${wrColor}">${st2.winrate}%</span>`;
+                    wr_d = st1 ? renderDelta(st2.winrate - st1.winrate, false, true) : "";
+                    w = st2.wins; w_d = st1 ? renderDelta(st2.wins - st1.wins) : "";
+                    l = st2.losses; l_d = st1 ? renderDelta(st2.losses - st1.losses, true) : "";
+                    a = st2.a_total; a_d = st1 ? renderDelta(st2.a_total - st1.a_total) : "";
+                    d = st2.d_total; d_d = st1 ? renderDelta(st2.d_total - st1.d_total) : "";
+                    cnt = st2.wins + st2.losses; cnt_d = st1 ? renderDelta(st2.wins + st2.losses - (st1.wins + st1.losses)) : "";
                     if (st2.last_battle_utc) {
                         const dt = new Date(new Date(st2.last_battle_utc).getTime() + 3 * 3600 * 1000);
                         last = dt.getUTCDate().toString().padStart(2, '0') + '.' + (dt.getUTCMonth()+1).toString().padStart(2, '0') + ' ' + dt.getUTCHours().toString().padStart(2, '0') + ':' + dt.getUTCMinutes().toString().padStart(2, '0');
                     }
                 }
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="col-rank">${idx+1}</td><td class="col-nick"><a href="${nick}/summary.html" class="nick-link">${nick}</a></td>
-                    <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="col-rating">${fmtNum(p2.rating)}</td><td class="col-power">${fmtNum(p2.power)}</td>
-                    <td class="col-wr">${wr}</td><td class="col-num">${w}</td><td class="col-num">${l}</td>
-                    <td class="col-num">${a}</td><td class="col-num">${d}</td><td class="col-num">${cnt}</td><td class="col-last">${last}</td>`;
+                tr.innerHTML = `<td class="text-center">${idx+1}</td><td class="col-nick"><a href="${nick_key || '_EMPTY_'}/summary.html" class="nick-link">${display_nick}</a></td>
+                    <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="text-right">${fmtNum(p2.rating)}</td><td class="text-right">${fmtNum(p2.power)}</td>
+                    <td class="text-right" style="border-right:none">${wr}</td><td class="col-delta" style="border-left:none">${wr_d}</td>
+                    <td class="text-right">${w}</td><td class="col-delta">${w_d}</td>
+                    <td class="text-right">${l}</td><td class="col-delta">${l_d}</td>
+                    <td class="text-right">${a}</td><td class="col-delta">${a_d}</td>
+                    <td class="text-right">${d}</td><td class="col-delta">${d_d}</td>
+                    <td class="text-right">${cnt}</td><td class="col-delta">${cnt_d}</td>
+                    <td class="col-last">${last}</td>`;
                 tableBody.appendChild(tr);
             });
         }
@@ -189,24 +203,36 @@ def generate_html_template():
 def generate_dossiers():
     for item in os.listdir(ANALYTICS_DIR):
         p_dir = os.path.join(ANALYTICS_DIR, item)
-        if not os.path.isdir(p_dir) or item.startswith('__') or item == 'snapshots': continue
+        is_root = False
+        if not os.path.isdir(p_dir):
+            if item.startswith("battle_") and item.endswith(".json"):
+                is_root = True
+                p_dir = ANALYTICS_DIR
+                item = "_EMPTY_"
+            else: continue
+        
+        if item.startswith('__') or item == 'snapshots': continue
+        if is_root and os.path.exists(os.path.join(ANALYTICS_DIR, "_EMPTY_", "summary.html")): continue
+
         p_battles = []
-        for bf in glob.glob(os.path.join(p_dir, "battle_*.json")):
+        pattern = os.path.join(p_dir, "battle_*.json") if not is_root else os.path.join(ANALYTICS_DIR, "battle_*.json")
+        for bf in glob.glob(pattern):
+            if is_root and os.path.dirname(bf) != ANALYTICS_DIR: continue
             b = load_json(bf); sd = b.get('statistics', {}); p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
             p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
             p_battles.append({'dt_msk': parse_fight_time(b.get('fightTime')) + timedelta(hours=3), 'delta': int(b.get('ourRatingDelta', 0)), 'is_win': int(b.get('ourRatingDelta', 0)) > 0, 'is_attack': p_min < e_min, 'file_html': os.path.basename(bf).replace('.json', '.html')})
+        
         if p_battles:
             p_battles.sort(key=lambda x: x['dt_msk'], reverse=True)
             rows = ""
             for b in p_battles:
-                attack_text = "АТАКА" if b["is_attack"] else "ЗАЩИТА"
-                win_text = "ПОБЕДА" if b["is_win"] else "ПОРАЖЕНИЕ"
-                delta_color = "#3fb950" if b["delta"] > 0 else ("#f85149" if b["delta"] < 0 else "#8b949e")
-                delta_text = ("+" if b["delta"] > 0 else "") + str(b["delta"])
-                rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{b['dt_msk'].strftime('%d.%m %H:%M')}</td><td>{attack_text}</td><td>{win_text}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{delta_color}\">{delta_text}</td></tr>"
+                rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{b['dt_msk'].strftime('%d.%m %H:%M')}</td><td>{'АТАКА' if b['is_attack'] else 'ЗАЩИТА'}</td><td>{'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{'#3fb950' if b['delta']>0 else ('#f85149' if b['delta']<0 else '#8b949e')}\">{'+' if b['delta']>0 else ''}{b['delta']}</td></tr>"
             
-            html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {item}</title><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet"><style>body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}.container{{max-width:800px;margin:0 auto}}h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem}}.back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}}th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#8b949e;letter-spacing:1px}}td{{padding:12px;border-bottom:1px solid #30363d}}tr:hover{{background:#1c2128}}</style></head><body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a><h1>ДОСЬЕ: {item}</h1><table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table></div></body></html>'''
-            with open(os.path.join(ANALYTICS_DIR, item, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
+            target_dir = os.path.join(ANALYTICS_DIR, item)
+            os.makedirs(target_dir, exist_ok=True)
+            display_name = item if item != "_EMPTY_" else "<без имени>"
+            html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {display_name}</title><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet"><style>body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}.container{{max-width:800px;margin:0 auto}}h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem}}.back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}}th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}td{{padding:12px;border-bottom:1px solid #30363d}}tr:hover{{background:#1c2128}}</style></head><body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a><h1>ДОСЬЕ: {display_name}</h1><table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table></div></body></html>'''
+            with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
 
 if __name__ == "__main__":
     arena_snaps = sorted(glob.glob(os.path.join(ARENA_SNAPSHOTS, "arena_*.json")))

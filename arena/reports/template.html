@@ -51,6 +51,7 @@
                     <th>Победы</th>
                     <th>Поражения</th>
                     <th>Winrate</th>
+                    <th>Был онлайн</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -69,7 +70,6 @@
         const tableBody = document.getElementById('table-body');
 
         function parseInternalDate(s) {
-            // Парсим серверную дату как UTC
             try {
                 const [d, t] = s.split('_');
                 const [day, month, year] = d.split('/');
@@ -79,27 +79,31 @@
         }
 
         function formatDateMSK(s) {
-            // Конвертирует серверную дату (UTC) в строку UTC+3 (МСК)
             const utc = parseInternalDate(s);
             const msk = new Date(utc.getTime() + 3 * 3600 * 1000);
             const dd = String(msk.getUTCDate()).padStart(2, '0');
             const mm = String(msk.getUTCMonth() + 1).padStart(2, '0');
-            const yyyy = msk.getUTCFullYear();
+            const yy = String(msk.getUTCFullYear()).slice(-2);
             const hh = String(msk.getUTCHours()).padStart(2, '0');
             const mi = String(msk.getUTCMinutes()).padStart(2, '0');
-            const ss = String(msk.getUTCSeconds()).padStart(2, '0');
-            return `${dd}.${mm}.${yyyy} ${hh}:${mi}:${ss} МСК`;
+            return `${dd}.${mm}.${yy} ${hh}:${mi} МСК`;
+        }
+
+        function fmtNum(val) {
+            if (val === undefined || val === null) return "0";
+            let v = parseFloat(val.toString().replace(',', '.'));
+            return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;') + 'k' : Math.floor(v).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;');
         }
 
         function formatNumber(num) {
             if (num === undefined || num === null) return "0";
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "&nbsp;");
         }
 
         const dates = Object.keys(snapshots).sort((a, b) => parseInternalDate(a) - parseInternalDate(b));
         
         if (dates.length === 0) {
-            tableBody.innerHTML = "<tr><td colspan='8' style='text-align:center'>Нет данных для отображения</td></tr>";
+            tableBody.innerHTML = "<tr><td colspan='9' style='text-align:center'>Нет данных для отображения</td></tr>";
         } else {
             dates.forEach((date, i) => {
                 const label = formatDateMSK(date);
@@ -124,11 +128,12 @@
             t1Select.selectedIndex = t1Idx;
         }
 
-        function renderDelta(val) {
+        function renderDelta(val, isPower=false) {
             if (val === 0) return "";
             const cls = val > 0 ? "delta-pos" : "delta-neg";
             const sign = val > 0 ? "+" : "";
-            return ` <span class="${cls}">(${sign}${formatNumber(val)})</span>`;
+            const formatted = isPower ? fmtNum(Math.abs(val)) : formatNumber(Math.abs(val));
+            return ` <span class="${cls}">(${sign}${formatted})</span>`;
         }
 
         function getPowerInt(pStr) {
@@ -155,10 +160,7 @@
                 const tr = document.createElement('tr');
                 
                 let rankHtml = p2.isDropped ? '—' : rank2;
-                
-                if (p2.isDropped) {
-                    tr.style.opacity = '0.7';
-                } else {
+                if (!p2.isDropped) {
                     if (p1) {
                         const dr = p1.rank - rank2;
                         if (dr > 0) rankHtml += ` <span class="rank-up">↑${dr}</span>`;
@@ -172,34 +174,38 @@
                 const ratingDelta = p1 ? (parseInt(p2.rating) - parseInt(p1.rating)) : 0;
                 const winDelta = p1 ? (p2.profileState.winCount - p1.profileState.winCount) : 0;
                 const loseDelta = p1 ? (p2.profileState.defeatCount - p1.profileState.defeatCount) : 0;
-                
                 const p2Power = getPowerInt(p2.power);
                 const p1Power = p1 ? getPowerInt(p1.power) : p2Power;
                 const powerDelta = p2Power - p1Power;
-
                 const wr = (p2.profileState.winCount / (p2.profileState.winCount + p2.profileState.defeatCount) * 100).toFixed(2);
-
                 const nick = p2.profileState.nickname.trim() || '&lt;без имени&gt;';
                 const hasSquad = usersWithSquads.includes(parseInt(p2.userID));
-                const nameHtml = hasSquad 
-                    ? `<a href="squads/${p2.userID}.html" class="player-link"><b>${nick}</b></a>`
-                    : `<span style="color:#aaa;" title="История отряда недоступна"><b>${nick}</b></span>`;
+                const nameHtml = hasSquad ? `<a href="squads/${p2.userID}.html" class="player-link"><b>${nick}</b></a>` : `<span style="color:#aaa;"><b>${nick}</b></span>`;
+
+                let onlineHtml = '-';
+                if (p2.lastOnline) {
+                    const lastSeen = parseInternalDate(p2.lastOnline);
+                    const diffHours = (new Date() - lastSeen) / (1000 * 60 * 60);
+                    const color = diffHours <= 72 ? '#4caf50' : '#888';
+                    const dateStr = formatDateMSK(p2.lastOnline).replace(' МСК', '').replace(' ', '&nbsp;');
+                    onlineHtml = `<span style="color:${color}; font-weight:bold; white-space:nowrap" title="${dateStr}">${dateStr}</span>`;
+                }
 
                 tr.innerHTML = `
                     <td>${rankHtml}</td>
                     <td>${p2.hasSuppressionCore ? '<img src="suppression_core.png" style="width:16px;height:16px;vertical-align:middle;margin-right:5px;" title="Ядро подавления">' : ''}${nameHtml}</td>
                     <td>${p2.clanProfile.clanName || '-'} <span class="clan-tag">[${p2.clanProfile.clanTag || ''}]</span></td>
-                    <td>${formatNumber(p2.rating)}${renderDelta(ratingDelta)}</td>
-                    <td class="power">${formatNumber(p2Power)}${renderDelta(powerDelta)}</td>
-                    <td>${formatNumber(p2.profileState.winCount)}${renderDelta(winDelta)}</td>
-                    <td>${formatNumber(p2.profileState.defeatCount)}${renderDelta(loseDelta)}</td>
-                    <td>${wr}%</td>
+                    <td style="white-space:nowrap">${formatNumber(p2.rating)}${renderDelta(ratingDelta)}</td>
+                    <td class="power" style="white-space:nowrap">${fmtNum(p2Power)}${renderDelta(powerDelta, true)}</td>
+                    <td style="white-space:nowrap">${formatNumber(p2.profileState.winCount)}${renderDelta(winDelta)}</td>
+                    <td style="white-space:nowrap">${formatNumber(p2.profileState.defeatCount)}${renderDelta(loseDelta)}</td>
+                    <td style="white-space:nowrap">${wr}%</td>
+                    <td>${onlineHtml}</td>
                 `;
                 tableBody.appendChild(tr);
             });
         }
-
-        if (dates.length > 0) updateTable();
+        updateTable();
     </script>
 </body>
 </html>
