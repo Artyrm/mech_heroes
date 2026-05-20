@@ -17837,3 +17837,103 @@ To https://github.com/Artyrm/mech_heroes.git
    3475682..6c1eb89  main -> main
 [20.05.2026 10:56:08,34] SUCCESS: Data pushed to Git. 
 [20.05.2026 10:56:08,35] PROCESS FINISHED 
+------------------------------------------ 
+[20.05.2026 11:55:01,94] STARTING PROCESS 
+[20.05.2026 11:55:01,98] Running Python script... 
+[*] ИСПОЛЬЗУЕМ СВЕЖИЙ АВТО-ДАМП: init_2026-05-20_11-41-00.json
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[20.05.2026 11:55:03,23] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Found fresh init dump: init_dumps\init_2026-05-20_11-41-00.json. Reusing it!
+Data unchanged (matches arena_2026-05-20T07-55-08.json), skipping save.
+Top-1: LordDragon (4471)
+Requesting latest Arena Top-50 via /directcommand...
+Command RefreshArenaLeaderboards sent successfully via /directcommand.
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 95 potential init dumps.
+Existing snapshots: 36 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 92
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-20_11-41-00.json. Reusing it!
+INFO: Detected 13 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Flashserker: Found 1 battles, 0 new saved and reported.
+��������: Found 1 battles, 0 new saved and reported.
+       : Found 1 battles, 0 new saved and reported.
+����� � ������: Found 1 battles, 0 new saved and reported.
+acdc: Found 4 battles, 0 new saved and reported.
+����: Found 1 battles, 0 new saved and reported.
+Quack: Found 3 battles, 0 new saved and reported.
+Strel: Found 2 battles, 0 new saved and reported.
+CDV: Found 1 battles, 0 new saved and reported.
+Mike: Found 1 battles, 0 new saved and reported.
+RaRik: Found 1 battles, 0 new saved and reported.
+meshher : Found 1 battles, 0 new saved and reported.
+���� 444: Found 2 battles, 0 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+--- [SUCCESS] GENERATING PERSONAL STATS completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 60 tracked players...
+Reusing session ID from arena\session.json
+Updated squad for Уксус (123998)
+Updated squad for Quack (43756)
+Updated squad for тетка с веслом (44228)
+Updated squad for Лиса (48328)
+Updated squad for SIS (37318)
+Updated squad for Хоббит (113012)
+Updated squad for Flashserker (14822)
+Squad synchronization complete. 7 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 60 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 36 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Uploading battle_analytics/personal_stats.html as personal.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+Uploaded personal dossier, battle reports and snapshots.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[20.05.2026 11:55:42,13] Syncing with Git... 

@@ -197,7 +197,7 @@ def generate_html_template():
                 tr.innerHTML = `<td class="text-center">${idx+1}</td><td class="col-nick"><a href="${nick_key || '_EMPTY_'}/summary.html" class="nick-link">${display_nick}</a></td>
                     <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="text-right">${fmtNum(p2.rating)}</td><td class="text-right">${fmtNum(p2.power)}</td>
                     <td class="text-right" style="border-right:none">${wr}</td><td class="col-delta" style="border-left:none">${wr_d}</td>
-                    <td class="text-right" style="color:#3fb950;border-right:none">${elo.w}</td><td class="col-delta" style="color:#f85149;border-left:none">${elo.l}</td>
+                    <td class="text-right" style="border-right:none">${elo.w}</td><td class="col-delta" style="border-left:none">${elo.l}</td>
                     <td class="text-right" style="border-right:none">${w}</td><td class="col-delta" style="border-left:none">${w_d}</td>
                     <td class="text-right" style="border-right:none">${l}</td><td class="col-delta" style="border-left:none">${l_d}</td>
                     <td class="text-right" style="border-right:none">${a}</td><td class="col-delta" style="border-left:none">${a_d}</td>
