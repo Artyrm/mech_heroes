@@ -80,11 +80,10 @@ def generate():
                 if history:
                     all_histories[uid] = history
                     latest = history[-1]
-                    # Partial info is better than nothing
                     all_players_ever[uid] = {
                         'userID': uid,
                         'rating': latest.get('power', 0),
-                        'profileState': {'nickname': os.path.basename(os.path.dirname(hf_path))}, # Placeholder
+                        'profileState': {'nickname': os.path.basename(os.path.dirname(hf_path))},
                         'clanProfile': {'clanName': '-', 'clanTag': '-'}
                     }
         except: pass
@@ -110,7 +109,7 @@ def generate():
             if any(eq.get('id') == 'suppression_core' for eq in equipables.values()):
                 holders.add(uid)
 
-    # Enhance all_players_ever with real data from snapshots
+    # Collect ALL players ever seen
     sorted_timestamps = sorted(all_snaps.keys(), key=lambda x: parse_any_date(x))
     for ts in sorted_timestamps:
         for p in all_snaps[ts].get('players', []):
@@ -129,6 +128,14 @@ def generate():
                     p_copy = dict(pdata)
                     p_copy['isDropped'] = True
                     p_copy['rating'] = rating
+                    
+                    if uid in all_histories and all_histories[uid]:
+                        latest_hist = all_histories[uid][-1]
+                        squad_info = latest_hist.get('squad', {})
+                        p_copy['power'] = squad_info.get('general', {}).get('power', p_copy.get('power', 0))
+                        if 'profileState' in latest_hist:
+                             p_copy['profileState'] = latest_hist['profileState']
+                    
                     dropped_for_this_snap.append(p_copy)
         
         # Apply global markers
