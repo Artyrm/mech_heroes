@@ -18816,3 +18816,55 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
 ==================================================
 [20.05.2026 22:59:18,21] Syncing with Git... 
+warning: in the working copy of 'scratch/inspect_eva.py', LF will be replaced by CRLF the next time Git touches it
+[main 87bd7e2] Auto-update 20.05.2026 22:59:19,05
+ 8 files changed, 149 insertions(+), 9 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-20_19-55.json
+ create mode 100644 scratch/inspect_eva.py
+[20.05.2026 22:59:19,98] Pushing to repository... 
+Enumerating objects: 34, done.
+Counting objects:   2% (1/34)Counting objects:   5% (2/34)Counting objects:   8% (3/34)Counting objects:  11% (4/34)Counting objects:  14% (5/34)Counting objects:  17% (6/34)Counting objects:  20% (7/34)Counting objects:  23% (8/34)Counting objects:  26% (9/34)Counting objects:  29% (10/34)Counting objects:  32% (11/34)Counting objects:  35% (12/34)Counting objects:  38% (13/34)Counting objects:  41% (14/34)Counting objects:  44% (15/34)Counting objects:  47% (16/34)Counting objects:  50% (17/34)Counting objects:  52% (18/34)Counting objects:  55% (19/34)Counting objects:  58% (20/34)Counting objects:  61% (21/34)Counting objects:  64% (22/34)Counting objects:  67% (23/34)Counting objects:  70% (24/34)Counting objects:  73% (25/34)Counting objects:  76% (26/34)Counting objects:  79% (27/34)Counting objects:  82% (28/34)Counting objects:  85% (29/34)Counting objects:  88% (30/34)Counting objects:  91% (31/34)Counting objects:  94% (32/34)Counting objects:  97% (33/34)Counting objects: 100% (34/34)Counting objects: 100% (34/34), done.
+Delta compression using up to 4 threads
+Compressing objects:   6% (1/16)Compressing objects:  12% (2/16)Compressing objects:  18% (3/16)Compressing objects:  25% (4/16)Compressing objects:  31% (5/16)Compressing objects:  37% (6/16)Compressing objects:  43% (7/16)Compressing objects:  50% (8/16)Compressing objects:  56% (9/16)Compressing objects:  62% (10/16)Compressing objects:  68% (11/16)Compressing objects:  75% (12/16)Compressing objects:  81% (13/16)Compressing objects:  87% (14/16)Compressing objects:  93% (15/16)Compressing objects: 100% (16/16)Compressing objects: 100% (16/16), done.
+Writing objects:   5% (1/18)Writing objects:  11% (2/18)Writing objects:  16% (3/18)Writing objects:  22% (4/18)Writing objects:  27% (5/18)Writing objects:  33% (6/18)Writing objects:  38% (7/18)Writing objects:  44% (8/18)Writing objects:  50% (9/18)Writing objects:  55% (10/18)Writing objects:  61% (11/18)Writing objects:  66% (12/18)Writing objects:  72% (13/18)Writing objects:  77% (14/18)Writing objects:  83% (15/18)Writing objects:  88% (16/18)Writing objects:  94% (17/18)Writing objects: 100% (18/18)Writing objects: 100% (18/18), 7.24 KiB | 164.00 KiB/s, done.
+Total 18 (delta 12), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/12)        remote: Resolving deltas:   8% (1/12)        remote: Resolving deltas:  16% (2/12)        remote: Resolving deltas:  25% (3/12)        remote: Resolving deltas:  33% (4/12)        remote: Resolving deltas:  41% (5/12)        remote: Resolving deltas:  50% (6/12)        remote: Resolving deltas:  58% (7/12)        remote: Resolving deltas:  66% (8/12)        remote: Resolving deltas:  75% (9/12)        remote: Resolving deltas:  83% (10/12)        remote: Resolving deltas:  91% (11/12)        remote: Resolving deltas: 100% (12/12)        remote: Resolving deltas: 100% (12/12), completed with 12 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   2648865..87bd7e2  main -> main
+[20.05.2026 22:59:24,92] SUCCESS: Data pushed to Git. 
+[20.05.2026 22:59:24,93] PROCESS FINISHED 
+------------------------------------------ 
+[20.05.2026 23:50:03,34] STARTING PROCESS 
+[20.05.2026 23:50:03,40] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
+[20.05.2026 23:50:04,72] ERROR: Python script failed with code 1 
+[20.05.2026 23:50:04,74] PROCESS FINISHED 
+------------------------------------------ 
+[20.05.2026 23:55:03,24] STARTING PROCESS 
+[20.05.2026 23:55:03,27] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
+[20.05.2026 23:55:05,24] ERROR: Python script failed with code 1 
+[20.05.2026 23:55:05,26] PROCESS FINISHED 
+------------------------------------------ 
+[21.05.2026  0:55:02,15] STARTING PROCESS 
+[21.05.2026  0:55:02,26] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
+[21.05.2026  0:55:05,89] ERROR: Python script failed with code 1 
+[21.05.2026  0:55:05,94] PROCESS FINISHED 
+------------------------------------------ 
+[21.05.2026  1:55:01,97] STARTING PROCESS 
+[21.05.2026  1:55:02,00] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
+[21.05.2026  1:55:03,18] ERROR: Python script failed with code 1 
+[21.05.2026  1:55:03,21] PROCESS FINISHED 
+------------------------------------------ 
+[21.05.2026  2:55:01,69] STARTING PROCESS 
+[21.05.2026  2:55:01,71] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
+[21.05.2026  2:55:03,25] ERROR: Python script failed with code 1 
+[21.05.2026  2:55:03,26] PROCESS FINISHED 
