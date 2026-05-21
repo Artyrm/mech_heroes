@@ -32,7 +32,7 @@
   "194664": {
     "nick": "песец",
     "role": "Lieutenant",
-    "traits": "Ирокез рыжий, Усы блонд"
+    "traits": "Antannae, Шрам, Тонкие усы рыжий"
   },
   "212340": {
     "nick": "SaraConor",
@@ -317,5 +317,10 @@
     "nick": "Player",
     "role": "Soldier",
     "traits": ""
+  },
+  "189398": {
+    "nick": "Сергей",
+    "role": "Soldier",
+    "traits": "Headphones, Очки, Бородка рыжий"
   }
 }
