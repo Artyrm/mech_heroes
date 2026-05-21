@@ -18868,3 +18868,97 @@ To https://github.com/Artyrm/mech_heroes.git
 [!] ПРОПУСК ЗАПРОСОВ К API (активная игра).
 [21.05.2026  2:55:03,25] ERROR: Python script failed with code 1 
 [21.05.2026  2:55:03,26] PROCESS FINISHED 
+------------------------------------------ 
+[21.05.2026  3:48:50,33] STARTING PROCESS 
+[21.05.2026  3:48:50,34] Running Python script... 
+[*] ИСПОЛЬЗУЕМ СВЕЖИЙ АВТО-ДАМП: init_2026-05-21_03-47-45.json
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.
+[21.05.2026  3:48:51,50] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Found fresh init dump: init_dumps\init_2026-05-21_03-47-45.json. Reusing it!
+Data unchanged (matches arena_2026-05-21T00-35-58.json), skipping save.
+Top-1: х3 (4463)
+Requesting latest Arena Top-50 via /directcommand...
+Command RefreshArenaLeaderboards sent successfully via /directcommand.
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 103 potential init dumps.
+Existing snapshots: 41 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 100
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-21_03-47-45.json. Reusing it!
+INFO: Detected 14 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Мрак: Found 1 battles, 0 new saved and reported.
+Семён 444: Found 2 battles, 0 new saved and reported.
+-=Hefas†agon=-: Found 1 battles, 0 new saved and reported.
+Flashserker: Found 3 battles, 0 new saved and reported.
+meshher : Found 1 battles, 0 new saved and reported.
+Shagger: Found 1 battles, 0 new saved and reported.
+Настойки лучше: Found 3 battles, 0 new saved and reported.
+Hunter: Found 1 battles, 0 new saved and reported.
+unc1e_Sam: Found 1 battles, 0 new saved and reported.
+RaRik: Found 1 battles, 0 new saved and reported.
+Winner_123167: Found 2 battles, 0 new saved and reported.
+Фаервол: Found 1 battles, 0 new saved and reported.
+SIS: Found 1 battles, 0 new saved and reported.
+Mmv: Found 1 battles, 0 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+--- [SUCCESS] GENERATING PERSONAL STATS completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 61 tracked players...
+Reusing session ID from arena\session.json
+Squad synchronization complete. 0 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 61 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 41 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Uploading battle_analytics/personal_stats.html as personal.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+Uploaded personal dossier, battle reports and snapshots.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[21.05.2026  3:49:29,03] Syncing with Git... 
