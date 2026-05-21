@@ -307,5 +307,10 @@
     "nick": "ANTHRAX",
     "role": "Soldier",
     "traits": "Длинные волнистые волосы блонд, Очки, Красная помада"
+  },
+  "442675": {
+    "nick": "Expert",
+    "role": "Soldier",
+    "traits": ""
   }
 }
