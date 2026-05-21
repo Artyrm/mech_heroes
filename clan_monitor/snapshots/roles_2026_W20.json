@@ -312,5 +312,10 @@
     "nick": "Expert",
     "role": "Soldier",
     "traits": ""
+  },
+  "452961": {
+    "nick": "Player",
+    "role": "Soldier",
+    "traits": ""
   }
 }
