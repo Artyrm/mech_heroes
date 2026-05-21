@@ -34,7 +34,7 @@ echo [%date% %time%] Running Arena Update (arena_update.py)...
 echo [%date% %time%] Running Arena Update... >> "%LOG_FILE%"
 
 cd /d "%BASE_DIR%"
-C:\tools\Anaconda3\python.exe -u arena_update.py >> "%LOG_FILE%" 2>&1
+C:\tools\Anaconda3\python.exe -u arena_update.py %* >> "%LOG_FILE%" 2>&1
 set ARENA_ERROR=%errorlevel%
 
 if NOT "%ARENA_ERROR%"=="0" (

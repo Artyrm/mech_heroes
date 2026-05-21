@@ -56,8 +56,12 @@ def main():
     ]
 
     for name, cmd in steps:
-        if not run_step(name, cmd):
-            print("\n!!! Global update aborted due to errors.")
+        actual_cmd = cmd
+        if force_run and "--force" not in actual_cmd:
+            actual_cmd += " --force"
+            
+        if not run_step(name, actual_cmd):
+            print(f"\n!!! Global update aborted due to errors in step: {name}")
             sys.exit(1)
 
     print("\n" + "="*50)
