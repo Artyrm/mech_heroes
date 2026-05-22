@@ -23510,3 +23510,138 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
 ==================================================
 [22.05.2026 20:56:12,73] Syncing with Git... 
+[main 37bc0f5] Auto-update 22.05.2026 20:56:13,96
+ 14 files changed, 144 insertions(+), 17 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-22_17-55.json
+[22.05.2026 20:56:14,81] Pushing to repository... 
+Enumerating objects: 50, done.
+Counting objects:   2% (1/50)Counting objects:   4% (2/50)Counting objects:   6% (3/50)Counting objects:   8% (4/50)Counting objects:  10% (5/50)Counting objects:  12% (6/50)Counting objects:  14% (7/50)Counting objects:  16% (8/50)Counting objects:  18% (9/50)Counting objects:  20% (10/50)Counting objects:  22% (11/50)Counting objects:  24% (12/50)Counting objects:  26% (13/50)Counting objects:  28% (14/50)Counting objects:  30% (15/50)Counting objects:  32% (16/50)Counting objects:  34% (17/50)Counting objects:  36% (18/50)Counting objects:  38% (19/50)Counting objects:  40% (20/50)Counting objects:  42% (21/50)Counting objects:  44% (22/50)Counting objects:  46% (23/50)Counting objects:  48% (24/50)Counting objects:  50% (25/50)Counting objects:  52% (26/50)Counting objects:  54% (27/50)Counting objects:  56% (28/50)Counting objects:  58% (29/50)Counting objects:  60% (30/50)Counting objects:  62% (31/50)Counting objects:  64% (32/50)Counting objects:  66% (33/50)Counting objects:  68% (34/50)Counting objects:  70% (35/50)Counting objects:  72% (36/50)Counting objects:  74% (37/50)Counting objects:  76% (38/50)Counting objects:  78% (39/50)Counting objects:  80% (40/50)Counting objects:  82% (41/50)Counting objects:  84% (42/50)Counting objects:  86% (43/50)Counting objects:  88% (44/50)Counting objects:  90% (45/50)Counting objects:  92% (46/50)Counting objects:  94% (47/50)Counting objects:  96% (48/50)Counting objects:  98% (49/50)Counting objects: 100% (50/50)Counting objects: 100% (50/50), done.
+Delta compression using up to 4 threads
+Compressing objects:   4% (1/24)Compressing objects:   8% (2/24)Compressing objects:  12% (3/24)Compressing objects:  16% (4/24)Compressing objects:  20% (5/24)Compressing objects:  25% (6/24)Compressing objects:  29% (7/24)Compressing objects:  33% (8/24)Compressing objects:  37% (9/24)Compressing objects:  41% (10/24)Compressing objects:  45% (11/24)Compressing objects:  50% (12/24)Compressing objects:  54% (13/24)Compressing objects:  58% (14/24)Compressing objects:  62% (15/24)Compressing objects:  66% (16/24)Compressing objects:  70% (17/24)Compressing objects:  75% (18/24)Compressing objects:  79% (19/24)Compressing objects:  83% (20/24)Compressing objects:  87% (21/24)Compressing objects:  91% (22/24)Compressing objects:  95% (23/24)Compressing objects: 100% (24/24)Compressing objects: 100% (24/24), done.
+Writing objects:   3% (1/26)Writing objects:   7% (2/26)Writing objects:  11% (3/26)Writing objects:  15% (4/26)Writing objects:  19% (5/26)Writing objects:  23% (6/26)Writing objects:  26% (7/26)Writing objects:  30% (8/26)Writing objects:  34% (9/26)Writing objects:  38% (10/26)Writing objects:  42% (11/26)Writing objects:  46% (12/26)Writing objects:  50% (13/26)Writing objects:  53% (14/26)Writing objects:  57% (15/26)Writing objects:  61% (16/26)Writing objects:  65% (17/26)Writing objects:  69% (18/26)Writing objects:  73% (19/26)Writing objects:  76% (20/26)Writing objects:  80% (21/26)Writing objects:  84% (22/26)Writing objects:  88% (23/26)Writing objects:  92% (24/26)Writing objects:  96% (25/26)Writing objects: 100% (26/26)Writing objects: 100% (26/26), 10.01 KiB | 427.00 KiB/s, done.
+Total 26 (delta 20), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/20)        remote: Resolving deltas:   5% (1/20)        remote: Resolving deltas:  10% (2/20)        remote: Resolving deltas:  15% (3/20)        remote: Resolving deltas:  20% (4/20)        remote: Resolving deltas:  25% (5/20)        remote: Resolving deltas:  30% (6/20)        remote: Resolving deltas:  35% (7/20)        remote: Resolving deltas:  40% (8/20)        remote: Resolving deltas:  45% (9/20)        remote: Resolving deltas:  50% (10/20)        remote: Resolving deltas:  55% (11/20)        remote: Resolving deltas:  60% (12/20)        remote: Resolving deltas:  65% (13/20)        remote: Resolving deltas:  70% (14/20)        remote: Resolving deltas:  75% (15/20)        remote: Resolving deltas:  80% (16/20)        remote: Resolving deltas:  85% (17/20)        remote: Resolving deltas:  90% (18/20)        remote: Resolving deltas:  95% (19/20)        remote: Resolving deltas: 100% (20/20)        remote: Resolving deltas: 100% (20/20), completed with 20 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   a4bd069..37bc0f5  main -> main
+[22.05.2026 20:56:18,13] SUCCESS: Data pushed to Git. 
+[22.05.2026 20:56:18,14] PROCESS FINISHED 
+------------------------------------------ 
+[22.05.2026 21:55:08,03] STARTING PROCESS 
+[22.05.2026 21:55:08,08] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ с сервером игры.
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено (работаем с кэшем).
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 382, in <module>
+    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force, debug_mode=args.debug)
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 90, in fetch_data
+    with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
+PermissionError: [Errno 13] Permission denied: 'G:\\Video\\!Медведи\\Mech Heroes\\Клан Орки\\accountant_bot\\logs\\accountant.log'
+[22.05.2026 21:55:13,67] ERROR: Python script failed with code 1 
+[22.05.2026 21:55:13,70] PROCESS FINISHED 
+------------------------------------------ 
+[22.05.2026 22:55:01,98] STARTING PROCESS 
+[22.05.2026 22:55:02,03] Running Python script... 
+[DEBUG] INIT 1: Session=227408_CBCB09191E040626A819CDB5AD7CEE3D, LastCmd=263136
+[DEBUG] REFRESH: ERROR: ServerSynchronization
+[DEBUG] Waiting 5 seconds for server sync...
+[DEBUG] INIT 2: LastBattle=21/05/2026_15:45:27.6160, ArenaTime=22/05/2026_19:13:56.2080
+[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН (API Sync).
+[22.05.2026 22:55:17,99] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+[*] ИСПОЛЬЗУЕМ СВЕЖИЙ ДАМП: init_2026-05-22_22-55-14.json
+Saved snapshot from /init: arena_2026-05-22T19-55-19.json
+Top-1: х3 (4460)
+Requesting latest Arena Top-50 via UseServiceCommand...
+Refresh requested. Response status: 200
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 146 potential init dumps.
+Existing snapshots: 51 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 143
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-22_22-55-14.json. Reusing it!
+INFO: Detected 11 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+LordDragon: Found 2 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+Quack: Found 1 battles, 0 new saved and reported.
+������: Found 6 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+CDV: Found 1 battles, 0 new saved and reported.
+����� � ������: Found 1 battles, 0 new saved and reported.
+acdc: Found 1 battles, 0 new saved and reported.
+Fuzzy: Found 3 battles, 0 new saved and reported.
+Shark: Found 1 battles, 0 new saved and reported.
+����: Found 2 battles, 0 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+--- [SUCCESS] GENERATING PERSONAL STATS completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 61 tracked players...
+Reusing session ID from arena\session.json
+Updated squad for Семён 444 (42956)
+Updated squad for Настойки лучше (18956)
+Updated squad for Quack (43756)
+Updated squad for тетка с веслом (44228)
+Updated squad for acdc (10902)
+Updated squad for х3 (47976)
+Updated squad for любитель пива (8976)
+Updated squad for Хоббит (113012)
+Updated squad for         (21179)
+Updated squad for Трандуил (44366)
+Updated squad for Fuzzy (2991)
+Updated squad for CDV (31490)
+Updated squad for Мрак (46444)
+Squad synchronization complete. 13 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 61 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 51 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Uploading battle_analytics/personal_stats.html as personal.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+Uploaded personal dossier, battle reports and snapshots.
+
+Deployment successful!
+Reports available at: http://ovalhalla.ru/my/mech/arena.html
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[22.05.2026 22:57:08,76] Syncing with Git... 
