@@ -361,8 +361,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force)
-    if h: 
-        generate_web_report(h, u, r, last_update_time=datetime.now())
-        print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")
+    if h is not None:
+        if h:
+            generate_web_report(h, u, r, last_update_time=datetime.now())
+            print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")
+            sys.exit(0)
+        else:
+            print("[*] ДАННЫЕ НЕ ИЗМЕНИЛИСЬ, ОБНОВЛЕНИЕ НЕ ТРЕБУЕТСЯ.")
+            sys.exit(2) # Специальный код для "нет изменений"
     else:
         sys.exit(1)

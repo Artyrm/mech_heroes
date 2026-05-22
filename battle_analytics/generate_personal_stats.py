@@ -47,23 +47,26 @@ def get_state_at(arena_snap_path):
         for bf in glob.glob(os.path.join(player_dir, "battle_*.json")):
             b = load_json(bf)
             b_dt = parse_fight_time(b.get('fightTime'))
-            delta = int(b.get('ourRatingDelta', 0))
-            is_win = delta > 0
-            sd = b.get('statistics', {})
-            p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
-            p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
-            is_attack = p_min < e_min
-            if is_win: wins += 1
-            else: losses += 1
-            if is_attack:
-                a_total += 1
-                if is_win: global_sum["a_wins"] += 1
-                else: global_sum["a_losses"] += 1
-            else:
-                d_total += 1
-                if is_win: global_sum["d_wins"] += 1
-                else: global_sum["d_losses"] += 1
-            if b_dt > last_battle: last_battle = b_dt
+            
+            # Для построения таблицы с дельтами нам нужны бои строго до даты снимка
+            if b_dt <= snap_dt:
+                delta = int(b.get('ourRatingDelta', 0))
+                is_win = delta > 0
+                sd = b.get('statistics', {})
+                p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
+                p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
+                is_attack = p_min < e_min
+                if is_win: wins += 1
+                else: losses += 1
+                if is_attack:
+                    a_total += 1
+                    if is_win: global_sum["a_wins"] += 1
+                    else: global_sum["a_losses"] += 1
+                else:
+                    d_total += 1
+                    if is_win: global_sum["d_wins"] += 1
+                    else: global_sum["d_losses"] += 1
+                if b_dt > last_battle: last_battle = b_dt
         if wins + losses > 0:
             battle_stats[nick_key] = {'wins': wins, 'losses': losses, 'a_total': a_total, 'd_total': d_total, 'winrate': round(wins/(wins+losses)*100, 1), 'last_battle_utc': last_battle.isoformat() if last_battle != datetime.min else None}
     return {"timestamp_utc": ts_str, "players": players, "battle_stats": battle_stats, "summary": global_sum}
