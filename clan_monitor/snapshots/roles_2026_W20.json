@@ -332,5 +332,10 @@
     "nick": "Expert",
     "role": "Soldier",
     "traits": "Площадка рыжий, Бородка рыжий"
+  },
+  "417185": {
+    "nick": ".",
+    "role": "Soldier",
+    "traits": "Лысый"
   }
 }

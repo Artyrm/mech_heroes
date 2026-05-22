@@ -5,6 +5,8 @@ import sys
 import socket
 import subprocess
 import re
+import random
+import time
 from datetime import datetime, timedelta, timezone
 import numpy as np
 
@@ -78,47 +80,26 @@ def translate_traits_batch(traits_list):
 
 HEADERS = {"Content-Type": "application/json", "Origin": "https://app-476209.games.s3.yandex.net", "Referer": "https://app-476209.games.s3.yandex.net/", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
 
-def fetch_data(explicit_dump=None, force_run=False):
+def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
     global VERSION, BASE_URL
     
-    # 0. Если указан конкретный дамп через аргумент --dump
-    if explicit_dump:
-        if os.path.exists(explicit_dump):
-            print(f"[*] ОБРАБОТКА ЯВНО УКАЗАННОГО ДАМПА: {explicit_dump}")
-            r = load_json(explicit_dump)
-            if "data" in r:
-                d = r.get("data", {})
-                sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
-                rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
-                users = r.get("users_raw_infos", [])
-                return hier, users, rating
-        else:
-            print(f"ERROR: Dump file not found: {explicit_dump}")
-            return None, None, None
-
-    # 1. Попытка переиспользовать свежий автоматический дамп
-    if os.path.exists(INIT_DUMPS_DIR):
-        import glob
-        dumps = sorted(glob.glob(os.path.join(INIT_DUMPS_DIR, "init_*.json")))
-        if dumps:
-            latest_dump = dumps[-1]
-            mtime = os.path.getmtime(latest_dump)
-            if (datetime.now().timestamp() - mtime) < 30 * 60:
-                print(f"[*] ИСПОЛЬЗУЕМ СВЕЖИЙ АВТО-ДАМП: {os.path.basename(latest_dump)}")
-                r = load_json(latest_dump)
-                if "data" in r:
-                    d = r.get("data", {})
-                    sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
-                    rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
-                    users = r.get("users_raw_infos", [])
-                    return hier, users, rating
-
     # ПРОВЕРКА СЕССИИ перед любым запросом к API
     if is_user_active() and not force_run:
         msg = "[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено (работаем с кэшем)."
         print(msg)
         with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
             f.write(f"[{datetime.now().strftime('%d.%m.%Y %H:%M:%S,%f')[:-4]}] {msg}\n")
+        
+        # Если игра запущена, берем самый свежий дамп, если он есть
+        dumps = sorted(glob.glob(os.path.join(INIT_DUMPS_DIR, "init_*.json")))
+        if dumps:
+            r = load_json(dumps[-1])
+            if "data" in r:
+                d = r.get("data", {})
+                sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
+                rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+                users = r.get("users_raw_infos", [])
+                return hier, users, rating
         return None, None, None
 
     try:
@@ -128,45 +109,76 @@ def fetch_data(explicit_dump=None, force_run=False):
             cmd_body = {
                 "data": {
                     "userId": USER_ID, "sessionID": sid,
-                    "commands": [{"commandNumber": last_cmd_id + 1, "hash": 0, "id": "UseServiceCommand", 
+                    "commands": [{"commandNumber": last_cmd_id + 1, "hash": random.randint(-2147483648, 2147483647), "id": "UseServiceCommand", 
                                  "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}), 
                                  "time": now}],
                     "clanVersion": clan_version
                 },
-                "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 100, "version": VERSION
+                "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 3, "version": VERSION
             }
-            requests.post(f"{BASE_URL}/commands?userid={USER_ID}", json=cmd_body, headers={"Content-Type": "application/octet-stream"}, timeout=10)
+            return requests.post(f"{BASE_URL}/commands?userid={USER_ID}", json=cmd_body, headers={"Content-Type": "application/octet-stream"}, timeout=10).json()
             
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
+        # 1. Запрос
+        r1 = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        print(f"[DEBUG] INIT 1: Session={r1.get('data', {}).get('sessionID')}, LastCmd={r1.get('data', {}).get('userState', {}).get('lastCommandId')}")
+        
+        # 2. Пин
+        try:
+            refresh_resp = perform_refresh(r1['data']['sessionID'], r1['data']['clanData']['clanState']['version'], r1['data']['userState']['lastCommandId'])
+            err = refresh_resp.get('data', {}).get('data', [{}])[0].get('error')
+            print(f"[DEBUG] REFRESH: {'SUCCESS' if not err else 'ERROR: ' + str(err.get('code'))}")
+        except Exception as e:
+            print(f"[DEBUG] Refresh failed: {e}")
+        
+        # Задержка для того, чтобы сервер успел обработать Refresh
+        print("[DEBUG] Waiting 5 seconds for server sync...")
+        time.sleep(5)
+        
+        # 3. Финал: выполняем init и работаем с его результатом
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        arena = r.get('data', {}).get('userState', {}).get('arena', {})
+        history = arena.get('battlesHistory', [])
+        latest_battle = history[0].get('fightTime') if history else 'None'
+        print(f"[DEBUG] INIT 2: LastBattle={latest_battle}, ArenaTime={arena.get('leaderboards', {}).get('lastUpdateTime')}")
         
-        # Делаем "пинок"
-        perform_refresh(r['data']['sessionID'], r['data']['clanData']['clanState']['version'], r['data']['userState']['lastCommandId'])
+        # Извлекаем данные из r (который теперь содержит актуальный результат)
+        d = r.get("data", {})
+        sid = d.get("sessionID")
+        clan_data = d.get("clanData", {})
+        clan_state = clan_data.get("clanState", {})
+        hier = clan_state.get("hierarchy")
+        rating = int(clan_state.get("rating", 0))
         
-        # Финальный init для получения актуальных данных
-        r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
-        
-        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        dump_path = os.path.join(INIT_DUMPS_DIR, f'init_{timestamp}.json')
-        with open(dump_path, 'w', encoding='utf-8') as f: json.dump(r, f, ensure_ascii=False, indent=4)
-        if "error" in r:
-            err = r['error']
-            if isinstance(err, dict) and err.get('code') == 61058:
-                m = re.search(r"later version (\d+\.\d+\.\d+)", err.get('message', ''))
-                if m:
-                    new_v = m.group(1); CONF['VERSION'] = new_v
-                    with open(CONFIG_FILE, 'w', encoding='utf-8') as f: json.dump(CONF, f, indent=4)
-                    VERSION = new_v; BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
-                    return fetch_data()
+        if not hier:
+            print("[!] ОШИБКА: Иерархия не найдена в ответе.")
             return None, None, None
-        d = r.get("data", {}); sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
-        rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
-        if not hier: return None, None, None
+            
+        # Получение актуальных данных о пользователях
         ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots'] if s.get('member', {}).get('userId', -1) != -1}
         p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
         r2 = requests.post(f"{BASE_URL}/directcommand?userid={USER_ID}", json=p2, headers=HEADERS).json()
-        if "error" in r2: return None, None, None
-        return hier, json.loads(r2["data"]["response"]).get("Users", []), rating
+        
+        users = json.loads(r2.get("data", {}).get("response", "{}")).get("Users", [])
+        
+        # Сохранение дампа
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        dump_path = os.path.join(INIT_DUMPS_DIR, f'init_{timestamp}.json')
+        with open(dump_path, 'w', encoding='utf-8') as f: json.dump(r, f, ensure_ascii=False, indent=4)
+        
+        # Исправление версии, если сервер требует обновления
+        if "error" in r and isinstance(r.get('error'), dict) and r['error'].get('code') == 61058:
+            m = re.search(r"later version (\d+\.\d+\.\d+)", r['error'].get('message', ''))
+            if m:
+                new_v = m.group(1); CONF['VERSION'] = new_v
+                with open(CONFIG_FILE, 'w', encoding='utf-8') as f: json.dump(CONF, f, indent=4)
+                VERSION = new_v; BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
+                return fetch_data(explicit_dump, force_run, debug_mode)
+
+        return hier, users, rating
+    except Exception as e:
+        print(f"[!] ФАТАЛЬНАЯ ОШИБКА FETCH: {e}")
+        return None, None, None
     except Exception as e:
         return None, None, None
 
@@ -361,16 +373,21 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true", help="Force API fetch even if user is active")
     parser.add_argument("--dump", help="Path to a specific JSON dump to process")
+    parser.add_argument("--debug", action="store_true", help="Enable debug output")
     args = parser.parse_args()
 
-    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force)
+    def dprint(msg):
+        if args.debug: print(f"[DEBUG] {msg}")
+
+    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force, debug_mode=args.debug)
     if h is not None:
         if h:
             generate_web_report(h, u, r, last_update_time=datetime.now())
-            print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")
+            print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН (API Sync).")
             sys.exit(0)
         else:
-            print("[*] ДАННЫЕ НЕ ИЗМЕНИЛИСЬ, ОБНОВЛЕНИЕ НЕ ТРЕБУЕТСЯ.")
-            sys.exit(2) # Специальный код для "нет изменений"
+            print("[*] ОБНОВЛЕНИЕ НЕ ТРЕБУЕТСЯ (Использован актуальный кэш).")
+            sys.exit(2) 
     else:
+        print("[!] ОШИБКА ОБНОВЛЕНИЯ: Не удалось получить данные.")
         sys.exit(1)

@@ -7,8 +7,7 @@ AUTH_KEY = "2B8ADCBE7A00EE8AF838139813C3ABBB"
 VERSION = "1.24.1"
 BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
 
-# 1. Получаем свежую сессию
-def get_session():
+def get_session_and_meta():
     url = f"{BASE_URL}/init?userid={USER_ID}"
     payload = {
         "data": {"userID": USER_ID, "authKey": AUTH_KEY},
@@ -16,20 +15,24 @@ def get_session():
     }
     r = requests.post(url, json=payload, timeout=10)
     data = r.json()
-    return data['data']['sessionID'], data['data']['clanData']['clanState']['version']
+    user_state = data['data']['userState']
+    return (
+        data['data']['sessionID'], 
+        data['data']['clanData']['clanState']['version'],
+        user_state['lastCommandId']
+    )
 
-sid, clan_version = get_session()
-print(f"Got fresh session: {sid}")
+sid, clan_version, last_cmd_id = get_session_and_meta()
+print(f"Got fresh session: {sid}, Last Command ID: {last_cmd_id}")
 
-# 2. Выполняем Refresh в рамках этой сессии
 now = datetime.datetime.now().strftime('%d/%m/%Y_%H:%M:%S.%f')[:-2]
 command_body = {
     "data": {
         "userId": USER_ID,
         "sessionID": sid,
         "commands": [{
-            "commandNumber": 262783,
-            "hash": 623645338,
+            "commandNumber": last_cmd_id + 1,
+            "hash": 1234567890,
             "id": "UseServiceCommand",
             "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}),
             "time": now
@@ -45,7 +48,7 @@ command_body = {
 url = f"{BASE_URL}/commands?userid={USER_ID}"
 headers = {"Content-Type": "application/octet-stream"}
 
-print("Sending Refresh request...")
+print(f"Sending Refresh request with Command ID: {last_cmd_id + 1}...")
 r = requests.post(url, json=command_body, headers=headers, timeout=10)
 print(f"Status: {r.status_code}")
 print(f"Response: {r.text}")
