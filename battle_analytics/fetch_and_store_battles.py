@@ -68,8 +68,8 @@ def fetch_history(explicit_dump=None, force_run=False):
             if dumps:
                 latest_dump = dumps[-1]
                 mtime = os.path.getmtime(latest_dump)
-                # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
-                if datetime.datetime.now().timestamp() - mtime < 15 * 60:
+                # Если файлу меньше 30 минут, читаем его вместо запроса к серверу
+                if datetime.datetime.now().timestamp() - mtime < 30 * 60:
                     print(f"INFO: Found fresh init dump: {os.path.basename(latest_dump)}. Reusing it!")
                     r = load_json(latest_dump)
                     history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])

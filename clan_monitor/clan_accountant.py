@@ -119,8 +119,30 @@ def fetch_data(explicit_dump=None, force_run=False):
         return None, None, None
 
     try:
+        # Принудительная синхронизация
+        def perform_refresh(sid, clan_version, last_cmd_id):
+            now = datetime.now().strftime('%d/%m/%Y_%H:%M:%S.%f')[:-2]
+            cmd_body = {
+                "data": {
+                    "userId": USER_ID, "sessionID": sid,
+                    "commands": [{"commandNumber": last_cmd_id + 1, "hash": 0, "id": "UseServiceCommand", 
+                                 "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}), 
+                                 "time": now}],
+                    "clanVersion": clan_version
+                },
+                "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 100, "version": VERSION
+            }
+            requests.post(f"{BASE_URL}/commands?userid={USER_ID}", json=cmd_body, headers={"Content-Type": "application/octet-stream"}, timeout=10)
+            
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        
+        # Делаем "пинок"
+        perform_refresh(r['data']['sessionID'], r['data']['clanData']['clanState']['version'], r['data']['userState']['lastCommandId'])
+        
+        # Финальный init для получения актуальных данных
+        r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         dump_path = os.path.join(INIT_DUMPS_DIR, f'init_{timestamp}.json')
         with open(dump_path, 'w', encoding='utf-8') as f: json.dump(r, f, ensure_ascii=False, indent=4)
@@ -338,7 +360,7 @@ if __name__ == "__main__":
     parser.add_argument("--dump", help="Path to a specific JSON dump to process")
     args = parser.parse_args()
 
-    h, u, r = fetch_data(explicit_dump=args.dump)
+    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force)
     if h: 
         generate_web_report(h, u, r, last_update_time=datetime.now())
         print("[*] ОТЧЕТ УСПЕШНО ОБНОВЛЕН.")

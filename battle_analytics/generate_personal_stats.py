@@ -47,7 +47,6 @@ def get_state_at(arena_snap_path):
         for bf in glob.glob(os.path.join(player_dir, "battle_*.json")):
             b = load_json(bf)
             b_dt = parse_fight_time(b.get('fightTime'))
-            if b_dt > snap_dt: continue
             delta = int(b.get('ourRatingDelta', 0))
             is_win = delta > 0
             sd = b.get('statistics', {})

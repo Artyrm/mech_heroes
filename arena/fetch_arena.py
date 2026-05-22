@@ -87,14 +87,13 @@ def fetch_arena():
     # 0. Попытка переиспользовать свежий дамп из init_dumps
     init_data = None
     dumps_dir = "init_dumps"
-    if os.path.exists(dumps_dir):
+    if not force_run and os.path.exists(dumps_dir):
         dumps = sorted(glob.glob(os.path.join(dumps_dir, "init_*.json")))
         if dumps:
             latest_dump = dumps[-1]
             mtime = os.path.getmtime(latest_dump)
-            # Если файлу меньше 15 минут, читаем его вместо запроса к серверу
-            if datetime.now().timestamp() - mtime < 15 * 60:
-                print(f"Found fresh init dump: {latest_dump}. Reusing it!")
+            if (datetime.now().timestamp() - mtime) < 30 * 60:
+                print(f"[*] ИСПОЛЬЗУЕМ СВЕЖИЙ ДАМП: {os.path.basename(latest_dump)}")
                 try:
                     with open(latest_dump, 'r', encoding='utf-8') as f:
                         init_data = json.load(f)
@@ -173,41 +172,32 @@ def fetch_arena():
         print("No sessionID found, skipping /command step.")
         return
 
-    # 2. Call RefreshArenaLeaderboards
-    # CRITICAL FIX: Skip /command if we reused a fresh dump OR if user is active
-    if init_data and "source" not in init_data: # If init_data exists and it was loaded from dump (not just fetched)
-         # Actually, even if just fetched, we only need /command if we want extra fresh Top-50.
-         # But the most important is: if we are in game, DON'T hit /command.
-         pass
-
-    if is_user_active() and not force_run:
-        print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск /command в fetch_arena.py.")
-        return
-
-    command_url = f"{BASE_URL}/directcommand?userid={USER_ID}"
+    # 2. Call RefreshArenaLeaderboards (Corrected)
+    print("Requesting latest Arena Top-50 via UseServiceCommand...")
+    cmd_url = f"{BASE_URL}/commands?userid={USER_ID}"
+    last_cmd_id = user_state.get('lastCommandId', 0)
+    
     command_payload = {
         "data": {
             "userId": USER_ID,
             "sessionID": session_id,
-            "type": "RefreshArenaLeaderboards",
-            "request": "{}"
+            "commands": [{
+                "commandNumber": last_cmd_id + 1,
+                "hash": 1234567890,
+                "id": "UseServiceCommand",
+                "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}),
+                "time": datetime.now().strftime('%d/%m/%Y_%H:%M:%S.%f')[:-2]
+            }],
+            "clanVersion": resp_data.get('clanData', {}).get('clanState', {}).get('version', 0)
         },
-        "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION
+        "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 3, "version": VERSION
     }
-
-    print("Requesting latest Arena Top-50 via /directcommand...")
+    
     try:
-        r = requests.post(command_url, json=command_payload, headers=HEADERS, timeout=10)
-        if r.status_code == 200:
-            print("Command RefreshArenaLeaderboards sent successfully via /directcommand.")
-            # Since RefreshArenaLeaderboards doesn't return the list directly, 
-            # we might need to call /init again to see the updated cache, 
-            # or just rely on the fact that the server cache is now refreshed.
-            # But usually, the next /init call will have the new data.
-        else:
-            print(f"Warning: /directcommand failed with status {r.status_code}. Using data from /init.")
+        r = requests.post(cmd_url, json=command_payload, headers={"Content-Type": "application/octet-stream"}, timeout=10)
+        print(f"Refresh requested. Response status: {r.status_code}")
     except Exception as e:
-        print(f"Warning: /directcommand failed with error: {e}. Using data from /init.")
+        print(f"Warning: /commands failed with error: {e}.")
 
 if __name__ == "__main__":
     fetch_arena()
