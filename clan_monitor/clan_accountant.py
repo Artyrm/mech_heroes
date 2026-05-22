@@ -115,7 +115,10 @@ def fetch_data(explicit_dump=None, force_run=False):
 
     # ПРОВЕРКА СЕССИИ перед любым запросом к API
     if is_user_active() and not force_run:
-        print("[!] ПРОПУСК ЗАПРОСОВ К API (активная игра).")
+        msg = "[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено (работаем с кэшем)."
+        print(msg)
+        with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
+            f.write(f"[{datetime.now().strftime('%d.%m.%Y %H:%M:%S,%f')[:-4]}] {msg}\n")
         return None, None, None
 
     try:
