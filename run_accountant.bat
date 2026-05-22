@@ -4,6 +4,7 @@ setlocal DisableDelayedExpansion
 
 :: --- SETTINGS ---
 set "BASE_DIR=%~dp0"
+set "PYTHON_EXE=C:\tools\Anaconda3\python.exe"
 set "LOG_DIR=%BASE_DIR%logs"
 set "LOG_FILE=%LOG_DIR%\accountant.log"
 
@@ -19,7 +20,7 @@ echo [%date% %time%] Running Python script... >> "%LOG_FILE%"
 cd /d "%BASE_DIR%clan_monitor"
 
 :: Direct redirection to avoid background hangs in Session 0
-C:\tools\Anaconda3\python.exe -u clan_accountant.py >> "%LOG_FILE%" 2>&1
+"%PYTHON_EXE%" -u clan_accountant.py >> "%LOG_FILE%" 2>&1
 set PY_ERROR=%errorlevel%
 
 if NOT "%PY_ERROR%"=="0" (
@@ -34,7 +35,7 @@ echo [%date% %time%] Running Arena Update (arena_update.py)...
 echo [%date% %time%] Running Arena Update... >> "%LOG_FILE%"
 
 cd /d "%BASE_DIR%"
-C:\tools\Anaconda3\python.exe -u arena_update.py %* >> "%LOG_FILE%" 2>&1
+"%PYTHON_EXE%" -u arena_update.py %* >> "%LOG_FILE%" 2>&1
 set ARENA_ERROR=%errorlevel%
 
 if NOT "%ARENA_ERROR%"=="0" (
