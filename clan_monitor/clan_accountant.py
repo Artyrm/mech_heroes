@@ -257,17 +257,23 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
             
             total_acc, current_base, stream_times, stream_vals = 0, 0, [monday], [0]
             for day in days_data:
-                manual_vals, manual_idx, session_max = day['manual'], 0, current_base
+                manual_vals, manual_idx, session_max = day['manual'], 0, 0
                 for sn in day['snaps']:
                     val = sn['pts'][uid]
                     if val < current_base:
-                        missed = 0
+                        # Reset detected. What was the peak?
+                        peak_val = current_base
                         if manual_idx < len(manual_vals):
-                            mv = manual_vals[manual_idx]; missed = max(0, mv - session_max); manual_idx += 1
-                        total_acc += missed; current_base = val; session_max = val
+                             peak_val = max(peak_val, manual_vals[manual_idx])
+                             manual_idx += 1
+                        
+                        total_acc += peak_val
+                        current_base = val
                     else:
-                        total_acc += (val - current_base); current_base = val; session_max = max(session_max, val)
-                    stream_times.append(sn['time']); stream_vals.append(total_acc)
+                        current_base = val
+                    
+                    stream_times.append(sn['time'])
+                    stream_vals.append(total_acc + val)
                 while manual_idx < len(manual_vals):
                     mv = manual_vals[manual_idx]; total_acc += max(0, mv - session_max); session_max = 0; current_base = 0; manual_idx += 1
                     stream_times.append(stream_times[-1] + timedelta(minutes=1)); stream_vals.append(total_acc)
