@@ -247,51 +247,50 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         
         for uid in players:
             daily_growths, presence = [0] * 7, [False] * 7
-            week_snaps = [s for s in sd if monday <= s['time'] < monday + timedelta(days=7)]
-            days_data = []
-            for i in range(7):
-                d_start = monday + timedelta(days=i); d_str = d_start.strftime("%Y-%m-%d")
-                day_snaps = [s for s in week_snaps if d_start <= s['time'] < d_start + timedelta(days=1) and uid in s['pts']]
-                manual = adj_db.get(d_str, {}).get(uid, []); manual = [manual] if not isinstance(manual, list) else manual
-                days_data.append({'start': d_start, 'snaps': day_snaps, 'manual': [int(v) for v in manual]})
+            # Начало недели - 0 очков
+            stream_times, stream_vals = [monday.timestamp()], [0]
+            banked, prev_val = 0, 0
             
-            total_acc, current_base, stream_times, stream_vals = 0, 0, [monday], [0]
-            for day in days_data:
-                manual_vals, manual_idx, session_max = day['manual'], 0, 0
-                for sn in day['snaps']:
-                    val = sn['pts'][uid]
-                    if val < current_base:
-                        # Reset detected. What was the peak?
-                        peak_val = current_base
-                        if manual_idx < len(manual_vals):
-                             peak_val = max(peak_val, manual_vals[manual_idx])
-                             manual_idx += 1
-                        
-                        total_acc += peak_val
-                        current_base = val
-                    else:
-                        current_base = val
+            sn_list = sorted([s for s in sd if monday <= s['time'] < monday + timedelta(days=7) and uid in s['pts']], key=lambda x: x['time'])
+            
+            for sn in sn_list:
+                ts_val, val = sn['time'], sn['pts'][uid]
+                if val < prev_val:
+                    # Сброс до 0 зафиксирован. Пик перед сбросом добавляется в банк.
+                    peak = prev_val
+                    d_str = ts_val.strftime("%Y-%m-%d")
+                    mv = adj_db.get(d_str, {}).get(uid, 0)
+                    if isinstance(mv, list): mv = max(mv) if mv else 0
+                    peak = max(peak, int(mv))
                     
-                    stream_times.append(sn['time'])
-                    stream_vals.append(total_acc + val)
-                while manual_idx < len(manual_vals):
-                    mv = manual_vals[manual_idx]; total_acc += max(0, mv - session_max); session_max = 0; current_base = 0; manual_idx += 1
-                    stream_times.append(stream_times[-1] + timedelta(minutes=1)); stream_vals.append(total_acc)
+                    banked += peak
+                    stream_times.append(ts_val.timestamp() - 1) 
+                    stream_vals.append(banked)
+                
+                stream_times.append(ts_val.timestamp())
+                stream_vals.append(banked + val)
+                prev_val = val
 
-            ts, vs = np.array([t.timestamp() for t in stream_times]), np.array(stream_vals); boundary_vals = []
+            # Обеспечиваем данные до конца воскресенья
+            week_end_ts = (monday + timedelta(days=7)).timestamp()
+            ts_arr, vs_arr = np.array(stream_times), np.array(stream_vals)
+            if ts_arr[-1] < week_end_ts:
+                ts_arr = np.append(ts_arr, week_end_ts)
+                vs_arr = np.append(vs_arr, vs_arr[-1])
+
+            boundary_vals = []
             for i in range(8):
                 bt = (monday + timedelta(days=i)).timestamp()
-                if bt < ts[0]: v_i = 0
-                elif bt > ts[-1]: v_i = total_acc
-                else: v_i = np.interp(bt, ts, vs)
+                v_i = np.interp(bt, ts_arr, vs_arr)
                 boundary_vals.append(v_i)
             
             for i in range(7):
-                daily_growths[i] = int(boundary_vals[i+1]) - int(boundary_vals[i]); d_start = monday + timedelta(days=i); d_str = d_start.strftime("%Y-%m-%d"); sn = week["days"].get(d_str, [])
+                daily_growths[i] = max(0, int(boundary_vals[i+1]) - int(boundary_vals[i]))
+                d_start = monday + timedelta(days=i); d_str = d_start.strftime("%Y-%m-%d"); sn = week["days"].get(d_str, [])
                 ex = adj_db.get(d_str, {}).get(uid, []); ex = [ex] if not isinstance(ex, list) else ex
                 if is_current_week and i == today_idx: is_present = (uid in cur_ids) or bool(ex)
                 else:
-                    is_present = (uid in sn[-1]['pts']) if sn else False
+                    is_present = any(uid in s['pts'] for s in sn) if sn else False
                     if not is_present and bool(ex): is_present = True
                 presence[i] = is_present
             pl_res[uid] = {"growths": daily_growths, "total": sum(daily_growths), "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
