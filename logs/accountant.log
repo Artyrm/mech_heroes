@@ -29225,3 +29225,304 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
 ==================================================
 [25.05.2026  4:56:41,87] Syncing with Git... 
+[main 3459840] Auto-update 25.05.2026  4:56:44,00
+ 20 files changed, 485 insertions(+), 61 deletions(-)
+ create mode 100644 "battle_analytics/\320\241\320\265\320\274\321\221\320\275 444/battle_2026-05-25_01-32-18_8030.html"
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-25_01-42.json
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-25_01-55.json
+[25.05.2026  4:56:44,98] Pushing to repository... 
+Enumerating objects: 62, done.
+Counting objects:   1% (1/62)Counting objects:   3% (2/62)Counting objects:   4% (3/62)Counting objects:   6% (4/62)Counting objects:   8% (5/62)Counting objects:   9% (6/62)Counting objects:  11% (7/62)Counting objects:  12% (8/62)Counting objects:  14% (9/62)Counting objects:  16% (10/62)Counting objects:  17% (11/62)Counting objects:  19% (12/62)Counting objects:  20% (13/62)Counting objects:  22% (14/62)Counting objects:  24% (15/62)Counting objects:  25% (16/62)Counting objects:  27% (17/62)Counting objects:  29% (18/62)Counting objects:  30% (19/62)Counting objects:  32% (20/62)Counting objects:  33% (21/62)Counting objects:  35% (22/62)Counting objects:  37% (23/62)Counting objects:  38% (24/62)Counting objects:  40% (25/62)Counting objects:  41% (26/62)Counting objects:  43% (27/62)Counting objects:  45% (28/62)Counting objects:  46% (29/62)Counting objects:  48% (30/62)Counting objects:  50% (31/62)Counting objects:  51% (32/62)Counting objects:  53% (33/62)Counting objects:  54% (34/62)Counting objects:  56% (35/62)Counting objects:  58% (36/62)Counting objects:  59% (37/62)Counting objects:  61% (38/62)Counting objects:  62% (39/62)Counting objects:  64% (40/62)Counting objects:  66% (41/62)Counting objects:  67% (42/62)Counting objects:  69% (43/62)Counting objects:  70% (44/62)Counting objects:  72% (45/62)Counting objects:  74% (46/62)Counting objects:  75% (47/62)Counting objects:  77% (48/62)Counting objects:  79% (49/62)Counting objects:  80% (50/62)Counting objects:  82% (51/62)Counting objects:  83% (52/62)Counting objects:  85% (53/62)Counting objects:  87% (54/62)Counting objects:  88% (55/62)Counting objects:  90% (56/62)Counting objects:  91% (57/62)Counting objects:  93% (58/62)Counting objects:  95% (59/62)Counting objects:  96% (60/62)Counting objects:  98% (61/62)Counting objects: 100% (62/62)Counting objects: 100% (62/62), done.
+Delta compression using up to 4 threads
+Compressing objects:   3% (1/31)Compressing objects:   6% (2/31)Compressing objects:   9% (3/31)Compressing objects:  12% (4/31)Compressing objects:  16% (5/31)Compressing objects:  19% (6/31)Compressing objects:  22% (7/31)Compressing objects:  25% (8/31)Compressing objects:  29% (9/31)Compressing objects:  32% (10/31)Compressing objects:  35% (11/31)Compressing objects:  38% (12/31)Compressing objects:  41% (13/31)Compressing objects:  45% (14/31)Compressing objects:  48% (15/31)Compressing objects:  51% (16/31)Compressing objects:  54% (17/31)Compressing objects:  58% (18/31)Compressing objects:  61% (19/31)Compressing objects:  64% (20/31)Compressing objects:  67% (21/31)Compressing objects:  70% (22/31)Compressing objects:  74% (23/31)Compressing objects:  77% (24/31)Compressing objects:  80% (25/31)Compressing objects:  83% (26/31)Compressing objects:  87% (27/31)Compressing objects:  90% (28/31)Compressing objects:  93% (29/31)Compressing objects:  96% (30/31)Compressing objects: 100% (31/31)Compressing objects: 100% (31/31), done.
+Writing objects:   3% (1/33)Writing objects:   6% (2/33)Writing objects:   9% (3/33)Writing objects:  12% (4/33)Writing objects:  15% (5/33)Writing objects:  18% (6/33)Writing objects:  21% (7/33)Writing objects:  24% (8/33)Writing objects:  27% (9/33)Writing objects:  30% (10/33)Writing objects:  33% (11/33)Writing objects:  36% (12/33)Writing objects:  39% (13/33)Writing objects:  42% (14/33)Writing objects:  45% (15/33)Writing objects:  48% (16/33)Writing objects:  51% (17/33)Writing objects:  54% (18/33)Writing objects:  57% (19/33)Writing objects:  60% (20/33)Writing objects:  63% (21/33)Writing objects:  66% (22/33)Writing objects:  69% (23/33)Writing objects:  72% (24/33)Writing objects:  75% (25/33)Writing objects:  78% (26/33)Writing objects:  81% (27/33)Writing objects:  84% (28/33)Writing objects:  87% (29/33)Writing objects:  93% (31/33)Writing objects:  96% (32/33)Writing objects: 100% (33/33)Writing objects: 100% (33/33), 18.57 KiB | 365.00 KiB/s, done.
+Total 33 (delta 26), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/26)        remote: Resolving deltas:   3% (1/26)        remote: Resolving deltas:   7% (2/26)        remote: Resolving deltas:  11% (3/26)        remote: Resolving deltas:  15% (4/26)        remote: Resolving deltas:  19% (5/26)        remote: Resolving deltas:  23% (6/26)        remote: Resolving deltas:  26% (7/26)        remote: Resolving deltas:  30% (8/26)        remote: Resolving deltas:  34% (9/26)        remote: Resolving deltas:  38% (10/26)        remote: Resolving deltas:  42% (11/26)        remote: Resolving deltas:  46% (12/26)        remote: Resolving deltas:  50% (13/26)        remote: Resolving deltas:  53% (14/26)        remote: Resolving deltas:  57% (15/26)        remote: Resolving deltas:  61% (16/26)        remote: Resolving deltas:  65% (17/26)        remote: Resolving deltas:  69% (18/26)        remote: Resolving deltas:  73% (19/26)        remote: Resolving deltas:  76% (20/26)        remote: Resolving deltas:  80% (21/26)        remote: Resolving deltas:  84% (22/26)        remote: Resolving deltas:  88% (23/26)        remote: Resolving deltas:  92% (24/26)        remote: Resolving deltas:  96% (25/26)        remote: Resolving deltas: 100% (26/26)        remote: Resolving deltas: 100% (26/26), completed with 25 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   b6d6ae6..3459840  main -> main
+[25.05.2026  4:56:49,11] SUCCESS: Data pushed to Git. 
+[25.05.2026  4:56:49,19] PROCESS FINISHED 
+[25.05.2026 05:31:47,32] [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено (работаем с кэшем).
+[25.05.2026 05:33:50,89] [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено (работаем с кэшем).
+------------------------------------------ 
+[25.05.2026  5:55:02,02] STARTING PROCESS 
+[25.05.2026  5:55:02,04] Running Python script... 
+Traceback (most recent call last):
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 25, in <module>
+    SNAPSHOTS_DIR = os.path.join(REPO_ROOT, 'snapshots')
+NameError: name 'REPO_ROOT' is not defined
+[25.05.2026  5:55:03,06] ERROR: Python script failed with code 1 
+[25.05.2026  5:55:03,07] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026  6:55:02,56] STARTING PROCESS 
+[25.05.2026  6:55:02,58] Running Python script... 
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 299, in <module>
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach(), 'replace')
+  File "C:\tools\Anaconda3\lib\codecs.py", line 409, in __getattr__
+    return getattr(self.stream, name)
+AttributeError: '_io.FileIO' object has no attribute 'detach'
+[25.05.2026  6:55:04,62] ERROR: Python script failed with code 1 
+[25.05.2026  6:55:04,69] PROCESS FINISHED 
+[25.05.2026 07:00:15,41] [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено.
+------------------------------------------ 
+[25.05.2026  7:55:09,03] STARTING PROCESS 
+[25.05.2026  7:55:09,19] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026  7:55:11,51] ERROR: Python script failed with code 1 
+[25.05.2026  7:55:11,77] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026  8:55:25,35] STARTING PROCESS 
+[25.05.2026  8:55:26,06] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026  8:55:30,30] ERROR: Python script failed with code 1 
+[25.05.2026  8:55:30,38] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026  9:55:02,76] STARTING PROCESS 
+[25.05.2026  9:55:02,96] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026  9:55:03,73] ERROR: Python script failed with code 1 
+[25.05.2026  9:55:03,78] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 10:55:02,23] STARTING PROCESS 
+[25.05.2026 10:55:02,31] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 10:55:02,93] ERROR: Python script failed with code 1 
+[25.05.2026 10:55:02,95] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 11:55:02,23] STARTING PROCESS 
+[25.05.2026 11:55:02,34] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 11:55:03,18] ERROR: Python script failed with code 1 
+[25.05.2026 11:55:03,24] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 12:55:02,16] STARTING PROCESS 
+[25.05.2026 12:55:02,21] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 12:55:02,88] ERROR: Python script failed with code 1 
+[25.05.2026 12:55:02,92] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 13:55:02,70] STARTING PROCESS 
+[25.05.2026 13:55:02,95] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 13:55:04,15] ERROR: Python script failed with code 1 
+[25.05.2026 13:55:04,21] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 14:55:02,22] STARTING PROCESS 
+[25.05.2026 14:55:02,29] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 14:55:02,96] ERROR: Python script failed with code 1 
+[25.05.2026 14:55:03,00] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 15:55:02,49] STARTING PROCESS 
+[25.05.2026 15:55:02,55] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 15:55:03,95] ERROR: Python script failed with code 1 
+[25.05.2026 15:55:03,98] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 16:55:02,26] STARTING PROCESS 
+[25.05.2026 16:55:02,34] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 16:55:03,62] ERROR: Python script failed with code 1 
+[25.05.2026 16:55:03,65] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 17:55:02,33] STARTING PROCESS 
+[25.05.2026 17:55:02,41] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 17:55:03,29] ERROR: Python script failed with code 1 
+[25.05.2026 17:55:03,31] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 18:55:02,25] STARTING PROCESS 
+[25.05.2026 18:55:02,33] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 18:55:02,95] ERROR: Python script failed with code 1 
+[25.05.2026 18:55:02,97] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 19:55:02,53] STARTING PROCESS 
+[25.05.2026 19:55:02,57] Running Python script... 
+  File "G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\clan_monitor\clan_accountant.py", line 225
+    , "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+    ^
+SyntaxError: invalid syntax
+[25.05.2026 19:55:03,82] ERROR: Python script failed with code 1 
+[25.05.2026 19:55:03,84] PROCESS FINISHED 
+[25.05.2026 20:37:37,12] [!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено.
+------------------------------------------ 
+[25.05.2026 20:55:02,29] STARTING PROCESS 
+[25.05.2026 20:55:02,45] Running Python script... 
+[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено.
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 326, in <module>
+    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force, debug_mode=args.debug)
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\clan_accountant.py", line 96, in fetch_data
+    with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
+PermissionError: [Errno 13] Permission denied: 'G:\\Video\\!Медведи\\Mech Heroes\\Клан Орки\\accountant_bot\\logs\\accountant.log'
+[25.05.2026 20:55:06,55] ERROR: Python script failed with code 1 
+[25.05.2026 20:55:06,59] PROCESS FINISHED 
+------------------------------------------ 
+[25.05.2026 21:38:01,13] STARTING PROCESS 
+[25.05.2026 21:38:01,17] Running Python script... 
+[*] УСПЕХ
+[25.05.2026 21:38:30,29] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+[*] ИСПОЛЬЗУЕМ СВЕЖИЙ ДАМП: init_2026-05-25_21-38-13.json
+Saved snapshot from /init: arena_2026-05-25T18-38-35.json
+Top-1: х3 (4482)
+Requesting latest Arena Top-50 via UseServiceCommand...
+Refresh requested. Response status: 200
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 197 potential init dumps.
+Existing snapshots: 65 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 194
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-25_21-38-13.json. Reusing it!
+INFO: Detected 6 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Хоббит: Found 11 battles, 11 new saved and reported.
+Quack: Found 1 battles, 1 new saved and reported.
+Князь: Found 1 battles, 0 new saved and reported.
+CDV: Found 2 battles, 2 new saved and reported.
+Семён 444: Found 4 battles, 1 new saved and reported.
+Shark: Found 1 battles, 1 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+--- [SUCCESS] GENERATING PERSONAL STATS completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 61 tracked players...
+Reusing session ID from arena\session.json
+Updated squad for Уксус (123998)
+Updated squad for ПК (13912)
+Updated squad for meshher  (28187)
+Updated squad for ProStou (45412)
+Updated squad for Семён 444 (42956)
+Updated squad for Аслан (78989)
+Updated squad for Crazy Fox  (31043)
+Updated squad for Настойки лучше (18956)
+Updated squad for Quack (43756)
+Updated squad for Maggod (32581)
+Updated squad for Князь (35750)
+Updated squad for Hunter (32625)
+Updated squad for Mmv (28761)
+Updated squad for Лиса (48328)
+Updated squad for Shagger (297101)
+Updated squad for 777 (19096)
+Updated squad for тетка с веслом (44228)
+Updated squad for Разъебай (78875)
+Updated squad for ди (26854)
+Updated squad for Исток (7018)
+Updated squad for Winner_123167 (123167)
+Updated squad for acdc (10902)
+Updated squad for SIS (37318)
+Updated squad for Andrik24 (42786)
+Updated squad for х3 (47976)
+Updated squad for Евгений (137097)
+Updated squad for любитель пива (8976)
+Updated squad for         (21179)
+Updated squad for Трандуил (44366)
+Updated squad for -=Hefas†agon=- (53218)
+Updated squad for Хоббит (113012)
+Updated squad for 08дек23г (4642)
+Updated squad for ДИКАРИУС (38792)
+Updated squad for Flashserker (14822)
+Updated squad for Проповедник (47368)
+Updated squad for LordDragon (94561)
+Updated squad for Фаервол (29070)
+Updated squad for Mike (138385)
+Updated squad for Zmei665 (50291)
+Updated squad for Strel (55052)
+Updated squad for Линар (233740)
+Updated squad for Fuzzy (2991)
+Updated squad for CDV (31490)
+Updated squad for Мрак (46444)
+Updated squad for ksotar (227408)
+Updated squad for Александр (361914)
+Updated squad for unc1e_Sam (31049)
+Updated squad for Shark (55641)
+Updated squad for RaRik (78799)
+Squad synchronization complete. 49 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 61 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 65 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Uploading battle_analytics/personal_stats.html as personal.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+Deployment error: [WinError 10060] Попытка установить соединение была безуспешной, т.к. от другого компьютера за требуемое время не получен нужный отклик, или было разорвано уже установленное соединение из-за неверного отклика уже подключенного компьютера
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[25.05.2026 21:41:56,57] Syncing with Git... 

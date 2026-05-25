@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 import numpy as np
 
 # ==============================================================================
-# CLAN ACCOUNTANT v0.3.1 (2026-05-25)
+# CLAN ACCOUNTANT v0.3.5 (2026-05-25)
 # ==============================================================================
 
 CONFIG_FILE = 'config.json'
@@ -79,8 +79,17 @@ def translate_traits_batch(traits_list):
 
 HEADERS = {"Content-Type": "application/json", "Origin": "https://app-476209.games.s3.yandex.net", "Referer": "https://app-476209.games.s3.yandex.net/", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
 
-def fetch_data(force_run=False, debug_mode=False):
+def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
     global VERSION, BASE_URL
+    if explicit_dump:
+        if os.path.exists(explicit_dump):
+            r = load_json(explicit_dump)
+            if "data" in r:
+                d = r.get("data", {})
+                sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
+                rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+                users = r.get("users_raw_infos", [])
+                return hier, users, rating
     if is_user_active() and not force_run:
         msg = "[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено."
         print(msg)
@@ -96,16 +105,18 @@ def fetch_data(force_run=False, debug_mode=False):
 
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
         r1 = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
-        if debug_mode: print(f"[DEBUG] INIT 1 complete.")
+        if debug_mode: print(f"[DEBUG] INIT 1 complete. LastCmd={r1.get('data',{}).get('userState',{}).get('lastCommandId')}")
         
         try:
             refresh_resp = perform_refresh(r1['data']['sessionID'], r1['data']['clanData']['clanState']['version'], r1['data']['userState']['lastCommandId'])
-            if debug_mode: print(f"[DEBUG] REFRESH response received.")
+            if debug_mode: print(f"[DEBUG] REFRESH status: {refresh_resp.get('data', {}).get('data', [{}])[0].get('error', 'SUCCESS')}")
         except: pass
 
         time.sleep(5)
         r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
-        if debug_mode: print(f"[DEBUG] INIT 2 complete.")
+        if debug_mode: 
+            arena = r.get('data',{}).get('userState',{}).get('arena',{})
+            print(f"[DEBUG] INIT 2 complete. ArenaTime={arena.get('leaderboards',{}).get('lastUpdateTime')}")
         
         d = r.get("data", {})
         sid = d.get("sessionID")
@@ -183,78 +194,113 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         for uid in players:
             daily_growths = [0] * 7
             presence = [False] * 7
-            prev_day_end = 0
             
+            # База на начало недели. Для каждой недели начинаем с 0,
+            # но для корректного переноса между днями используем prev_day_end.
+            prev_day_end = 0 
+            
+            # Для первой недели в истории или если нет данных за прошлую, база 0.
+            # Если есть снимки до начала этой недели, берем последний из них.
+            pre_week_sn = [e for e in sd if e['time'] < monday]
+            if pre_week_sn:
+                prev_day_end = pre_week_sn[-1]['pts'].get(str(uid), 0)
+
             for i in range(7):
                 d_start = monday + timedelta(days=i)
                 d_end = d_start + timedelta(days=1)
-                day_snaps = sorted([s for s in sd if d_start <= s['time'] < d_end and uid in s['pts']], key=lambda x: x['time'])
+                day_snaps = sorted([s for s in sd if d_start <= s['time'] < d_end and str(uid) in s['pts']], key=lambda x: x['time'])
                 
-                if not day_snaps:
-                    daily_growths[i] = 0
-                else:
-                    vals = [s['pts'][uid] for s in day_snaps]
+                if day_snaps:
+                    vals = [s['pts'][str(uid)] for s in day_snaps]
                     peak = max(vals)
-                    if vals[-1] < peak * 0.5:
-                        growth = (peak - prev_day_end) + vals[-1]
+                    end_val = vals[-1]
+                    
+                    # Проверяем, есть ли игрок в manual_adjustments (наш особый алгоритм сброса)
+                    use_reset_logic = False
+                    for d_adj in adj_db:
+                        if str(uid) in adj_db[d_adj]:
+                            use_reset_logic = True
+                            break
+
+                    if use_reset_logic and end_val < peak:
+                        growth = (peak - prev_day_end) + end_val
                     else:
-                        growth = vals[-1] - prev_day_end
+                        growth = end_val - prev_day_end
                     
                     daily_growths[i] = max(0, int(growth))
-                    prev_day_end = vals[-1]
+                    prev_day_end = end_val
+                else:
+                    daily_growths[i] = 0
                 
-                d_str = d_start.strftime('%Y-%m-%d')
-                sn_day = week['days'].get(d_str, [])
-                ex = adj_db.get(d_str, {}).get(uid, [])
-                if not isinstance(ex, list): ex = [ex]
-                presence[i] = (any(uid in s['pts'] for s in sn_day) if sn_day else False) or bool(ex)
-            
-            pl_res[uid] = {'growths': daily_growths, 'total': sum(daily_growths), 'presence': presence, 'first_p': next((idx for idx, p in enumerate(presence) if p), 999), 'last_p': next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
-, "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
+                d_str = d_start.strftime("%Y-%m-%d")
+                ex = adj_db.get(d_str, {}).get(str(uid), [])
+                presence[i] = (any(str(uid) in s['pts'] for s in week["days"].get(d_str, [])) if d_str in week["days"] else False) or bool(ex)
+
+            pl_res[uid] = {"growths": daily_growths, "total": sum(daily_growths), "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
 
         clan_growths = [sum(p["growths"][i] for p in pl_res.values()) for i in range(7)]
-        sorted_ids = sorted(players, key=lambda x: pl_res[x]['total'], reverse=True)
-        nav = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_ws])
+        clan_rats = [None] * 7
+        for i in range(7):
+            ds = [s for s in sd if (monday+timedelta(days=i)) <= s['time'] < (monday+timedelta(days=i+1)) and s.get('rating') is not None]    
+            if ds: clan_rats[i] = ds[-1]['rating']
         
-        # HTML - Твой оригинальный богатый шаблон
+        pre_week_sn = [e for e in sd if e['time'] < monday]
+        prev_r = pre_week_sn[-1]['rating'] if pre_week_sn else 11199931
+        clan_stats = []        
+        for i in range(7):
+            curr_r = clan_rats[i]; d_str = (monday + timedelta(days=i)).strftime("%Y-%m-%d"); mb = adj_db.get(d_str, {}).get("burned_override")
+            if curr_r is not None and prev_r is not None:
+                fch = int(curr_r) - int(prev_r); brn = int(mb) if mb is not None else max(0, clan_growths[i] - fch)
+                clan_stats.append({"rating": curr_r, "fact": fch, "burned": brn}); prev_r = curr_r
+            else:
+                brn = int(mb) if mb is not None else 0
+                clan_stats.append({"rating": curr_r or 0, "fact": 0, "burned": brn}); prev_r = curr_r or prev_r
+
+        sorted_ids = sorted(players, key=lambda x: pl_res[x]['total'], reverse=True)
+        dupes = {names_map.get(u, {}).get('nick'): u for u in players if [names_map.get(x, {}).get('nick') for x in players].count(names_map.get(u, {}).get('nick')) > 1}
+        nav = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_ws])
+        tr = current_rating if w_key == all_ws[-1] else (next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0))
+        today_idx = datetime.now(timezone.utc).weekday()
+        c_cells = [f'<td style="text-align:center"><div class="fact-grow">{"+"+fmt(s["fact"]) if s["fact"]>=0 else "-"+fmt(-s["fact"])}</div><div class="burned">🔥 -{fmt(s["burned"])}</div></td>' if s["rating"] else f'<td style="text-align:center; color:#30363d">{"-" if i<=today_idx else ""}</td>' for i, s in enumerate(clan_stats)]
+        s_cells = [f'<td style="text-align:center"><span class="day-growth">+{fmt(cg)}</span></td>' for cg in clan_growths]
+
         html = f"""<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>ОРДА | {week['label']}</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@600&display=swap" rel="stylesheet">
 <style>
     :root {{ --bg: #0d1117; --card: #161b22; --accent: #58a6ff; --gold: #f2cc60; --green: #3fb950; --error: #f85149; --border: #30363d; --text: #c9d1d9; }}
-    body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 40px; font-size: 16px; overflow-y: scroll; }}
-    .container {{ max-width: 1500px; margin: 0 auto; }}
-    header {{ text-align: center; margin-bottom: 50px; }}
-    h1 {{ font-family: 'Orbitron'; font-size: 4rem; color: #fff; margin: 0; letter-spacing: 12px; }}
-    .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 1.1rem; text-transform: uppercase; font-weight: 500; }}
-    nav {{ display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }}
-    nav a {{ text-decoration: none; color: #8b949e; padding: 12px 24px; border-radius: 10px; background: var(--card); border: 2px solid var(--border); transition: 0.3s; font-size: 0.9rem; }}
+    body {{ background: #0d1117; color: var(--text); font-family: 'Inter', sans-serif; margin: 25px; font-size: 16px; overflow-x: hidden; }}
+    header {{ text-align: center; margin-bottom: 30px; }}
+    h1 {{ font-family: 'Orbitron'; font-size: 3rem; color: #fff; margin: 0; letter-spacing: 12px; }}
+    .subtitle {{ color: var(--gold); letter-spacing: 6px; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; }}
+    .update-time {{ font-size: 1rem; color: #fff; text-align: center; padding: 12px; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--accent); font-family: 'Roboto Mono'; letter-spacing: 2px; font-weight: 700; }}
+    nav {{ display: flex; gap: 10px; justify-content: center; margin-bottom: 25px; flex-wrap: wrap; }}
+    nav a {{ text-decoration: none; color: #8b949e; padding: 8px 16px; border-radius: 6px; background: var(--card); border: 1px solid var(--border); font-size: 0.9rem; transition: 0.3s; }}
     nav a.active {{ background: var(--accent); color: #fff; border-color: var(--accent); }}
-    .table-container {{ background: var(--card); border-radius: 24px; border: 1px solid var(--border); margin-bottom: 50px; overflow: hidden; }}
+    .table-container {{ background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }}
     table {{ width: 100%; border-collapse: separate; border-spacing: 0; }}
     .summary-row {{ background: rgba(88, 166, 255, 0.1); }}
-    .summary-row td {{ padding: 30px 20px; color: var(--accent); font-weight: 700; border-bottom: 3px solid var(--accent); }}
-    .clan-score {{ font-size: 1.6rem; font-family: 'Roboto Mono'; display: block; }}
-    th {{ background: #0b0e14; padding: 20px; color: #8b949e; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; border-bottom: 1px solid var(--border); }}
-    td {{ padding: 18px 20px; border-bottom: 1px solid var(--border); }}
-    .num-col {{ color: #484f58; font-family: 'Roboto Mono'; width: 40px; font-size: 0.9rem; }}
-    .nick {{ color: #fff; font-weight: 700; font-size: 1.1rem; }}
-    .role {{ font-size: 0.72rem; color: #8b949e; border: 1px solid var(--border); padding: 3px 8px; border-radius: 4px; }}
-    .main-score {{ font-family: 'Roboto Mono'; font-size: 1.3rem; color: var(--gold); font-weight: 700; }}
-    .day-growth {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--green); font-weight: 700; text-align: center; display: block; }}
-    .no-growth {{ color: #484f58; opacity: 0.4; font-family: 'Roboto Mono'; text-align: center; }}
-    .update-time {{ font-size: 1rem; color: #fff; text-align: center; padding: 12px; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--accent); font-family: 'Roboto Mono'; letter-spacing: 2px; font-weight: 700; }}
+    .summary-row td {{ padding: 25px 20px; color: var(--accent); font-weight: 700; border-bottom: 3px solid var(--accent); }}
+    .clan-score {{ font-size: 1.4rem; font-family: 'Roboto Mono'; display: block; }}
+    th {{ background: #0b0e14; padding: 12px; color: #8b949e; font-size: 0.65rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }}
+    td {{ padding: 10px 12px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.3); }}
+    .nick {{ color: #fff; font-weight: 700; font-size: 0.9rem; }}
+    .role {{ font-size: 0.58rem; color: #8b949e; border: 1px solid var(--border); padding: 1px 3px; border-radius: 3px; }}
+    .main-score {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--gold); font-weight: 700; }}
+    .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.9rem; color: var(--green); font-weight: 700; }}
     .absent {{ color: var(--error); font-weight: 900; font-size: 1.1rem; font-family: 'Orbitron'; text-align: center; display: block; }}
+    .no-growth {{ color: #484f58; opacity: 0.4; font-family: 'Roboto Mono'; text-align: center; }}
 </style></head><body><div class="container"><header><h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE</div></header>
 <nav>{nav}</nav><div class="table-container"><div class="update-time">ДАННЫЕ ОТ: {last_data_ts} (MSK)</div><table>
-<thead><tr><th class="num-col">№</th><th style="text-align:left">Участник</th><th style="text-align:left">Звание</th><th style="text-align:center">Всего</th>{" ".join([f'<th>{(monday+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
+<thead><tr><th style="width:30px">№</th><th style="text-align:left">Участник</th><th style="text-align:left">Звание</th><th style="text-align:center">Всего</th>{" ".join([f'<th>{(monday+timedelta(days=i)):%a %d.%m}</th>' for i in range(7)])}</tr></thead>
 <tbody>
-<tr class="summary-row"><td class="num-col">--</td><td colspan="2" style="text-align:left"><span style="text-transform:uppercase; letter-spacing:3px;">Итоги недели</span></td><td style="text-align:center"><span class="clan-score">{sum(clan_growths):,}</span></td>{" ".join([f'<td style="text-align:center"><span class="day-growth">+{fmt(cg)}</span></td>' for cg in clan_growths])}</tr>"""
+<tr class="summary-row"><td>--</td><td colspan="2" style="text-align:left"><span style="text-transform:uppercase; letter-spacing:3px;">Итоги недели</span></td><td style="text-align:center"><span class="clan-score">{fmt(sum(clan_growths))}</span></td>{" ".join([f'<td style="text-align:center"><span class="day-growth">+{fmt(cg)}</span></td>' for cg in clan_growths])}</tr>
+<tr class="summary-row" style="background:#0d1117"><td>--</td><td colspan="2" style="text-align:left">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td><td style="text-align:center"><span class="clan-score" style="color:#fff">{fmt(tr)}</span></td>{" ".join(c_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"}); p_res = pl_res[uid]
-            html += f"<tr><td class='num-col'>{count}</td><td style='text-align:left'><span class='nick'>{p['nick']}</span></td><td style='text-align:left'><span class='role'>{p['role']}</span></td><td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
+            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"}); p_res = pl_res[uid]; nick_sec = f"<span class='nick'>{p['nick']}</span>"
+            html += f"<tr><td>{count}</td><td style='text-align:left'>{nick_sec}</td><td style='text-align:left'><span class='role'>{p['role']}</span></td><td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
             for i, g in enumerate(p_res['growths']):
-                if is_current_week and i > datetime.now(timezone.utc).weekday(): html += "<td style='text-align:center; color:#30363d'>-</td>"
-                elif g > 0: html += f"<td style='text-align:center'><span class='day-growth'>+{fmt(g)}</span></td>"
+                if is_current_week and i > today_idx: html += "<td style='text-align:center; color:#30363d'>-</td>"
+                elif g > 0: html += f"<td><span class='day-growth'>+{fmt(g)}</span></td>"
                 elif i < p_res['first_p']: html += "<td style='text-align:center; color:#8b949e'>-</td>"
                 elif i > p_res['last_p']: html += "<td style='text-align:center'><span class='absent'>X</span></td>"
                 else: html += "<td class='no-growth'>0</td>"
@@ -267,10 +313,16 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{latest_wk}.html"></head></html>')
 
 if __name__ == "__main__":
+    if sys.platform == "win32":
+        import codecs
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach(), 'replace')
+        sys.stderr = codecs.getwriter("utf-8")(sys.stderr.detach(), 'replace')
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--dump", help="Path to a specific JSON dump to process")
     parser.add_argument("--debug", action="store_true")
     args = parser.parse_args()
-    h, u, r = fetch_data(force_run=args.force, debug_mode=args.debug)
+    h, u, r = fetch_data(explicit_dump=args.dump, force_run=args.force, debug_mode=args.debug)
     if h: generate_web_report(h, u, r); print("[*] УСПЕХ")
     else: sys.exit(1)
