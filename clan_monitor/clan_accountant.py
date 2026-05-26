@@ -1,13 +1,4 @@
-import requests
-import json
-import os
-import sys
-import socket
-import subprocess
-import re
-import random
-import time
-import argparse
+import requests, json, os, sys, socket, subprocess, re, random, time, argparse, traceback
 from datetime import datetime, timedelta, timezone
 import numpy as np
 
@@ -104,11 +95,28 @@ def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
             return requests.post(f"{BASE_URL}/commands?userid={USER_ID}", json=cmd_body, headers={"Content-Type": "application/octet-stream"}, timeout=10).json()
 
         p1 = {"data": {"userID": USER_ID, "authKey": AUTH_KEY}, "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION}
-        r1 = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        r1_resp = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS)
+        r1 = r1_resp.json()
+        
+        # Auto-healing logic
+        if r1.get("error", {}).get("code") == 61058:
+            new_version = r1["error"]["message"].split("version ")[1].split(". Can")[0].strip()
+            print(f"[*] Auto-updating config.json with new game version: {new_version}")
+            CONF['VERSION'] = new_version
+            with open(os.path.join(SCRIPT_DIR, CONFIG_FILE), 'w') as f: json.dump(CONF, f, indent=4)
+            VERSION = new_version
+            BASE_URL = f"https://tanks.ya.patternmasters.ru/{VERSION}"
+            p1["version"] = VERSION
+            r1_init = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+            r1 = r1_init
+
         try: perform_refresh(r1['data']['sessionID'], r1['data']['clanData']['clanState']['version'], r1['data']['userState']['lastCommandId'])
-        except: pass
+        except Exception as e: print(f"DEBUG: perform_refresh failed: {e}")
+            
         time.sleep(5)
-        r = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS).json()
+        r_resp = requests.post(f"{BASE_URL}/init?userid={USER_ID}", json=p1, headers=HEADERS)
+        r_resp.raise_for_status()
+        r = r_resp.json()
         
         d = r.get("data", {})
         sid = d.get("sessionID")
@@ -116,12 +124,22 @@ def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
         hier = clan_state.get("hierarchy")
         rating = int(clan_state.get("rating", 0))
         
-        if not hier: return None, None, None
+        if not hier:
+            print(f"[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {str(r)[:500]}")
+            return None, None, None
         
         ids = {hier['leader']['member']['userId']} | {s['member']['userId'] for s in hier['slots'] if s.get('member', {}).get('userId', -1) != -1}
         p2 = {"data": {"userId": USER_ID, "sessionID": sid, "type": "GetUsersRawInfos", "request": json.dumps({"users": list(ids)})}, "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION}
         r2 = requests.post(f"{BASE_URL}/directcommand?userid={USER_ID}", json=p2, headers=HEADERS).json()
-        users = json.loads(r2.get("data", {}).get("response", "{}")).get("Users", [])
+        
+        response_data = r2.get("data", {})
+        if not response_data:
+             print(f"[DEBUG] Пустой data в ответе GetUsersRawInfos. Полный ответ: {r2}")
+             return None, None, None
+             
+        users = json.loads(response_data.get("response", "{}")).get("Users", [])
+        if not users:
+            print(f"[DEBUG] Пользователи не получены. Ответ: {r2}")
         
         with open(os.path.join(INIT_DUMPS_DIR, f"init_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"), 'w', encoding='utf-8') as f: json.dump(r, f, ensure_ascii=False, indent=4)
         return hier, users, rating
