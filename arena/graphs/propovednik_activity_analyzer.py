@@ -4,12 +4,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.patches as patches
 
-# Конфигурация
-USER_ID = "113012"  # Хоббит
-TZ_OFFSET = 3       # UTC -> MSK
+# ==============================================================================
+# PLAYER ACTIVITY ANALYZER (Generic)
+# ==============================================================================
+
+# Конфигурация для Проповедника
+USER_ID = "47368"
+USER_NICK = "Проповедник"
+TZ_OFFSET = 3 # UTC -> MSK
 PATHS = {
     "online_history": os.path.join("arena", "squads", USER_ID, "online_history.json"),
-    "battles_dir": os.path.join("battle_analytics", "Хоббит"),
+    "battles_dir": os.path.join("battle_analytics", USER_NICK),
     "holidays": os.path.join("arena", "graphs", "holidays.json"),
     "graphs_dir": os.path.join("arena", "graphs")
 }
@@ -21,11 +26,12 @@ def load_data():
     # 1. Online history
     if os.path.exists(PATHS["online_history"]):
         with open(PATHS["online_history"], "r", encoding="utf-8") as f:
-            for ts in json.load(f):
+            history = json.load(f)
+            for ts in history:
                 dt = datetime.strptime(ts, "%d/%m/%Y_%H:%M:%S.%f") + timedelta(hours=TZ_OFFSET)
                 online.add((dt.date(), dt.hour))
     
-    # 2. Battles (только ЗАЩИТА)
+    # 2. Battles (фильтрация по "ЗАЩИТА", т.к. лог нападений ksotar на этого игрока)
     if os.path.exists(PATHS["battles_dir"]):
         for f_name in os.listdir(PATHS["battles_dir"]):
             if f_name.startswith("battle_") and f_name.endswith(".html"):
@@ -44,38 +50,32 @@ def load_holidays():
 
 def generate_graph():
     online, battles = load_data()
-    # Сбор всех дат из обоих источников
     all_known_dates = sorted(list(set([pt[0] for pt in online] + [pt[0] for pt in battles])))
-    if not all_known_dates: return
+    if not all_known_dates:
+        print(f"Нет данных активности для {USER_NICK}")
+        return
     
-    # Формируем ПОЛНЫЙ диапазон дат, включая пустые дни
     min_d, max_d = all_known_dates[0], all_known_dates[-1]
     all_dates = [min_d + timedelta(days=i) for i in range((max_d - min_d).days + 1)]
     
     num_days = len(all_dates)
     date_map = {d: i for i, d in enumerate(all_dates)}
     
-    # Матрицы
-    grid_online = np.zeros((24, num_days))
-    grid_battles = np.zeros((24, num_days))
-    
+    grid_all = np.zeros((24, num_days))
     for d, h in online:
-        if d in date_map: grid_online[h, date_map[d]] = 1
+        if d in date_map: grid_all[h, date_map[d]] = 1
     for d, h in battles:
-        if d in date_map: grid_battles[h, date_map[d]] = 1
-    
-    # Объединяем всю активность в одну матрицу
-    grid_all = np.logical_or(grid_online, grid_battles)
+        if d in date_map: grid_all[h, date_map[d]] = 1
 
     fig, ax = plt.subplots(figsize=(num_days * 0.4 + 4, 10))
     
-    # Выходные/праздники (по полному диапазону)
+    # Праздники
     holidays = load_holidays()
     for i, d in enumerate(all_dates):
         if d.weekday() >= 5 or d.strftime("%Y-%m-%d") in holidays:
             ax.add_patch(patches.Rectangle((i, 0), 1, 24, facecolor='salmon', alpha=0.3, zorder=0))
 
-    # Слой активности (Синий)
+    # Активность
     ax.pcolormesh(np.ma.masked_where(grid_all == 0, grid_all), cmap='Blues', vmin=0, vmax=1, zorder=1)
 
     # Сетка
@@ -85,10 +85,10 @@ def generate_graph():
     ax.set_ylim(0, 24); ax.set_xlim(0, num_days)
     ax.set_yticks(np.arange(24) + 0.5); ax.set_yticklabels([f"{h:02d}:00" for h in range(24)])
     ax.set_xticks(np.arange(num_days) + 0.5); ax.set_xticklabels([d.strftime("%d.%m") for d in all_dates], rotation=45, ha='right', fontsize=9)
-    plt.title(f'Активность Хоббита (Синий - любая активность)', fontsize=14, pad=20)
+    plt.title(f'Активность игрока {USER_NICK} (Синий - любая активность)', fontsize=14, pad=20)
     plt.tight_layout()
 
-    out_path = os.path.join(PATHS["graphs_dir"], f"hobbit_activity_detailed_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.png")
+    out_path = os.path.join(PATHS["graphs_dir"], f"{USER_NICK}_activity_{datetime.now().strftime('%Y-%m-%d_%H-%M')}.png")
     plt.savefig(out_path, dpi=150)
     print(f'График сохранен: {out_path}')
 
