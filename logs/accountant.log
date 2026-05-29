@@ -38654,3 +38654,111 @@ Reports available at: http://ovalhalla.ru/my/mech/arena.html
    Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
 ==================================================
 [29.05.2026 18:02:05,14] Syncing with Git... 
+[main a81ab66] Auto-update 29.05.2026 18:02:07,19
+ 25 files changed, 149 insertions(+), 29 deletions(-)
+ create mode 100644 clan_monitor/snapshots/points_utc_2026-05-29_14-55.json
+[29.05.2026 18:02:08,06] Pushing to repository... 
+Enumerating objects: 70, done.
+Counting objects:   1% (1/70)Counting objects:   2% (2/70)Counting objects:   4% (3/70)Counting objects:   5% (4/70)Counting objects:   7% (5/70)Counting objects:   8% (6/70)Counting objects:  10% (7/70)Counting objects:  11% (8/70)Counting objects:  12% (9/70)Counting objects:  14% (10/70)Counting objects:  15% (11/70)Counting objects:  17% (12/70)Counting objects:  18% (13/70)Counting objects:  20% (14/70)Counting objects:  21% (15/70)Counting objects:  22% (16/70)Counting objects:  24% (17/70)Counting objects:  25% (18/70)Counting objects:  27% (19/70)Counting objects:  28% (20/70)Counting objects:  30% (21/70)Counting objects:  31% (22/70)Counting objects:  32% (23/70)Counting objects:  34% (24/70)Counting objects:  35% (25/70)Counting objects:  37% (26/70)Counting objects:  38% (27/70)Counting objects:  40% (28/70)Counting objects:  41% (29/70)Counting objects:  42% (30/70)Counting objects:  44% (31/70)Counting objects:  45% (32/70)Counting objects:  47% (33/70)Counting objects:  48% (34/70)Counting objects:  50% (35/70)Counting objects:  51% (36/70)Counting objects:  52% (37/70)Counting objects:  54% (38/70)Counting objects:  55% (39/70)Counting objects:  57% (40/70)Counting objects:  58% (41/70)Counting objects:  60% (42/70)Counting objects:  61% (43/70)Counting objects:  62% (44/70)Counting objects:  64% (45/70)Counting objects:  65% (46/70)Counting objects:  67% (47/70)Counting objects:  68% (48/70)Counting objects:  70% (49/70)Counting objects:  71% (50/70)Counting objects:  72% (51/70)Counting objects:  74% (52/70)Counting objects:  75% (53/70)Counting objects:  77% (54/70)Counting objects:  78% (55/70)Counting objects:  80% (56/70)Counting objects:  81% (57/70)Counting objects:  82% (58/70)Counting objects:  84% (59/70)Counting objects:  85% (60/70)Counting objects:  87% (61/70)Counting objects:  88% (62/70)Counting objects:  90% (63/70)Counting objects:  91% (64/70)Counting objects:  92% (65/70)Counting objects:  94% (66/70)Counting objects:  95% (67/70)Counting objects:  97% (68/70)Counting objects:  98% (69/70)Counting objects: 100% (70/70)Counting objects: 100% (70/70), done.
+Delta compression using up to 4 threads
+Compressing objects:   2% (1/34)Compressing objects:   5% (2/34)Compressing objects:   8% (3/34)Compressing objects:  11% (4/34)Compressing objects:  14% (5/34)Compressing objects:  17% (6/34)Compressing objects:  20% (7/34)Compressing objects:  23% (8/34)Compressing objects:  26% (9/34)Compressing objects:  29% (10/34)Compressing objects:  32% (11/34)Compressing objects:  35% (12/34)Compressing objects:  38% (13/34)Compressing objects:  41% (14/34)Compressing objects:  44% (15/34)Compressing objects:  47% (16/34)Compressing objects:  50% (17/34)Compressing objects:  52% (18/34)Compressing objects:  55% (19/34)Compressing objects:  58% (20/34)Compressing objects:  61% (21/34)Compressing objects:  64% (22/34)Compressing objects:  67% (23/34)Compressing objects:  70% (24/34)Compressing objects:  73% (25/34)Compressing objects:  76% (26/34)Compressing objects:  79% (27/34)Compressing objects:  82% (28/34)Compressing objects:  85% (29/34)Compressing objects:  88% (30/34)Compressing objects:  91% (31/34)Compressing objects:  94% (32/34)Compressing objects:  97% (33/34)Compressing objects: 100% (34/34)Compressing objects: 100% (34/34), done.
+Writing objects:   2% (1/36)Writing objects:   5% (2/36)Writing objects:   8% (3/36)Writing objects:  11% (4/36)Writing objects:  13% (5/36)Writing objects:  16% (6/36)Writing objects:  19% (7/36)Writing objects:  22% (8/36)Writing objects:  25% (9/36)Writing objects:  27% (10/36)Writing objects:  30% (11/36)Writing objects:  33% (12/36)Writing objects:  36% (13/36)Writing objects:  38% (14/36)Writing objects:  41% (15/36)Writing objects:  44% (16/36)Writing objects:  47% (17/36)Writing objects:  50% (18/36)Writing objects:  52% (19/36)Writing objects:  55% (20/36)Writing objects:  58% (21/36)Writing objects:  61% (22/36)Writing objects:  63% (23/36)Writing objects:  66% (24/36)Writing objects:  69% (25/36)Writing objects:  72% (26/36)Writing objects:  75% (27/36)Writing objects:  77% (28/36)Writing objects:  80% (29/36)Writing objects:  83% (30/36)Writing objects:  86% (31/36)Writing objects:  88% (32/36)Writing objects:  91% (33/36)Writing objects:  94% (34/36)Writing objects:  97% (35/36)Writing objects: 100% (36/36)Writing objects: 100% (36/36), 21.60 KiB | 388.00 KiB/s, done.
+Total 36 (delta 30), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   3% (1/30)        remote: Resolving deltas:   6% (2/30)        remote: Resolving deltas:  10% (3/30)        remote: Resolving deltas:  13% (4/30)        remote: Resolving deltas:  16% (5/30)        remote: Resolving deltas:  20% (6/30)        remote: Resolving deltas:  23% (7/30)        remote: Resolving deltas:  26% (8/30)        remote: Resolving deltas:  30% (9/30)        remote: Resolving deltas:  33% (10/30)        remote: Resolving deltas:  36% (11/30)        remote: Resolving deltas:  40% (12/30)        remote: Resolving deltas:  43% (13/30)        remote: Resolving deltas:  46% (14/30)        remote: Resolving deltas:  50% (15/30)        remote: Resolving deltas:  53% (16/30)        remote: Resolving deltas:  56% (17/30)        remote: Resolving deltas:  60% (18/30)        remote: Resolving deltas:  63% (19/30)        remote: Resolving deltas:  66% (20/30)        remote: Resolving deltas:  70% (21/30)        remote: Resolving deltas:  73% (22/30)        remote: Resolving deltas:  76% (23/30)        remote: Resolving deltas:  80% (24/30)        remote: Resolving deltas:  83% (25/30)        remote: Resolving deltas:  86% (26/30)        remote: Resolving deltas:  90% (27/30)        remote: Resolving deltas:  93% (28/30)        remote: Resolving deltas:  96% (29/30)        remote: Resolving deltas: 100% (30/30)        remote: Resolving deltas: 100% (30/30), completed with 30 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   0dd8308..a81ab66  main -> main
+[29.05.2026 18:02:12,02] SUCCESS: Data pushed to Git. 
+[29.05.2026 18:02:12,04] PROCESS FINISHED 
+------------------------------------------ 
+[29.05.2026 18:55:02,33] STARTING PROCESS 
+[29.05.2026 18:55:02,35] Running Python script... 
+[*] РћРўР§Р•Рў РЈРЎРџР•РЁРќРћ РћР‘РќРћР’Р›Р•Рќ (API Sync).
+[29.05.2026 18:55:15,74] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+>>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+[*] РРЎРџРћР›Р¬Р—РЈР•Рњ РЎР’Р•Р–РР™ Р”РђРњРџ: init_2026-05-29_18-55-14.json
+Data unchanged (matches arena_2026-05-29T13-55-19.json), skipping save.
+Top-1: С…3 (4480)
+Requesting latest Arena Top-50 via UseServiceCommand...
+Refresh requested. Response status: 200
+--- [SUCCESS] FETCHING LATEST DATA completed.
+
+>>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Found 280 potential init dumps.
+Existing snapshots: 103 (unique by content)
+
+Total new snapshots synced: 0
+Skipped (identical content): 277
+--- [SUCCESS] SYNCING FROM INIT DUMPS completed.
+
+>>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Found fresh init dump: init_2026-05-29_18-55-14.json. Reusing it!
+INFO: Detected 7 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Хоббит: Found 3 battles, 0 new saved and reported.
+Hunter: Found 1 battles, 0 new saved and reported.
+acdc: Found 3 battles, 0 new saved and reported.
+Фаервол: Found 5 battles, 0 new saved and reported.
+Strel: Found 2 battles, 0 new saved and reported.
+Настойки лучше: Found 4 battles, 0 new saved and reported.
+meshher : Found 2 battles, 0 new saved and reported.
+---------------------------------
+--- [SUCCESS] DISTRIBUTING BATTLES completed.
+
+>>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+--- [SUCCESS] GENERATING PERSONAL STATS completed.
+
+>>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 61 tracked players...
+Reusing session ID from arena\session.json
+Updated squad for РџРљ (13912)
+Updated squad for ProStou (45412)
+Updated squad for РђСЃР»Р°РЅ (78989)
+Updated squad for Crazy Fox  (31043)
+Updated squad for Р Р°Р·СЉРµР±Р°Р№ (78875)
+Updated squad for DrSens (256509)
+Updated squad for РСЃС‚РѕРє (7018)
+Updated squad for Fuzzy (2991)
+Updated squad for Р›РёРЅР°СЂ (233740)
+Updated squad for РњСЂР°Рє (46444)
+Squad synchronization complete. 10 new squad states recorded.
+--- [SUCCESS] FETCHING SQUADS completed.
+
+>>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 61 dynamic squad comparison reports.
+--- [SUCCESS] GENERATING SQUAD REPORTS completed.
+
+>>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Dashboard generated: arena/reports/dashboard.html with 103 snapshots.
+--- [SUCCESS] GENERATING HTML DASHBOARD completed.
+
+>>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Created directory: public_html/
+Created directory: public_html/my/
+Created directory: public_html/my/mech/
+Uploading arena/reports/dashboard.html as dashboard.html...
+Uploading arena/reports/suppression_core.png as suppression_core.png...
+Uploading battle_analytics/personal_stats.html as personal.html...
+Warning: clan_monitor/clan_accountant_report.html not found, skipping.
+Uploaded squads HTML files.
+Deployment error: [WinError 10060] Попытка установить соединение была безуспешной, т.к. от другого компьютера за требуемое время не получен нужный отклик, или было разорвано уже установленное соединение из-за неверного отклика уже подключенного компьютера
+--- [SUCCESS] DEPLOYING TO SERVER completed.
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/dashboard.html
+==================================================
+[29.05.2026 18:57:11,78] Syncing with Git... 
