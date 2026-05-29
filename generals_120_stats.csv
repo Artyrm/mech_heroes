@@ -1,0 +1,16 @@
+General,Damage,Health,Ability
+antagonist,40134,547309,acidCorrosion
+brain,32069,326410,brainstorm
+cat,40134,547309,molotovCoctail
+chong,49850,587729,fuselOilVapor
+eva,39372,543911,excitationEnergy
+frosty,35244,500411,frostStrike
+gans,50485,486440,rocketAttack
+infectedCat,40134,547309,molotovCoctail
+kali,33339,652821,bioplasm
+levsha,38102,666792,cumulativeProjectile
+mantiss,32069,587729,swarm
+olaf,34927,696321,bloom
+sky,38102,666792,skyPulse
+suriya,39054,500411,sniperShot
+toxic,36197,536291,acidCorrosion
