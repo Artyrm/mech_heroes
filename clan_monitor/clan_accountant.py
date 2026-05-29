@@ -205,14 +205,17 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
         
+        # Глобальный список игроков со сбросами
+        reset_players = set()
+        for d_str in adj_db:
+            reset_players.update(adj_db[d_str].keys())
+
         pl_res = {}
         for uid in players:
             daily_growths = [0] * 7
             presence = [False] * 7
             prev_day_end = 0
-
-            # Проверка, находится ли игрок в корректировках (для триггера сброса)
-            use_reset_logic = any(str(uid) in adj_db.get(d_str, {}) for d_str in adj_db)
+            use_reset_logic = str(uid) in reset_players
 
             for i in range(7):
                 d_start = monday + timedelta(days=i)
@@ -220,25 +223,38 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
                 day_snaps = sorted([s for s in sd if d_start <= s['time'] < d_end and str(uid) in s['pts']], key=lambda x: x['time'])
                 
                 # Понедельник всегда база 0
-                if i == 0:
-                    prev_day_end = 0
+                if i == 0: prev_day_end = 0
 
                 if day_snaps:
                     vals = [s['pts'][str(uid)] for s in day_snaps]
-                    # Ищем момент сброса: следующее меньше предыдущего
-                    drop_idx = -1
-                    for j in range(len(vals)-1):
-                        if vals[j+1] < vals[j]:
-                            drop_idx = j
-                            break
                     
-                    if use_reset_logic and drop_idx != -1:
-                        # (Значение_перед_сбросом - База) + Значение_на_конец_дня
-                        growth = (vals[drop_idx] - prev_day_end) + vals[-1]
+                    if use_reset_logic:
+                        # Продвинутая логика накопления (Truth Logic)
+                        day_growth = 0
+                        last_v = prev_day_end
+                        
+                        # Учет ручной правки как потенциального пика
+                        d_key = d_start.strftime("%Y-%m-%d")
+                        manual_vals = adj_db.get(d_key, {}).get(str(uid), [])
+                        if not isinstance(manual_vals, list): manual_vals = [manual_vals]
+                        
+                        for v in vals:
+                            # Если есть ручная правка, и она больше текущего зафиксированного пика перед сбросом
+                            effective_v = v
+                            if v < last_v and manual_vals:
+                                last_v = max(last_v, max(manual_vals))
+                            
+                            if effective_v >= last_v:
+                                day_growth += (effective_v - last_v)
+                            else:
+                                # Сброс обнаружен
+                                day_growth += effective_v
+                            last_v = effective_v
+                        daily_growths[i] = int(day_growth)
                     else:
-                        growth = vals[-1] - prev_day_end
+                        # Обычная логика для стабильных игроков
+                        daily_growths[i] = max(0, vals[-1] - prev_day_end)
                     
-                    daily_growths[i] = max(0, int(growth))
                     prev_day_end = vals[-1]
                 else:
                     daily_growths[i] = 0
