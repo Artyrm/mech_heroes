@@ -1,10 +1,9 @@
 import math
 import random
+import sys
+import time
 
-# Базовые данные оппонентов
-# is_npc: True для игроков без клана (фарм без ограничений)
-# unlimited: True для тех, на кого нет ограничений по договоренности / механике
-# winrate: реальные вероятности победы (включая 50% против x3 и 60% против Проповедника)
+# Исходная база данных игроков на Арене
 opponents_base = {
     'x3': {'rating': 4503, 'winrate': 0.50, 'is_npc': False, 'unlimited': True},
     'LordDragon': {'rating': 4456, 'winrate': 0.0, 'is_npc': False, 'unlimited': False},
@@ -46,20 +45,34 @@ def calc_elo_changes(player_rating, opp_rating):
     loss_points = min(-1, -10 + step)
     return win_points, loss_points
 
-def run_simulation(total_battles=100, num_simulations=5000):
+def run_simulation(total_battles=80, num_sims=5000):
     final_player_ratings = []
     final_x3_ratings = []
     overtake_count = 0
     
-    # Сбор статистики по боям
+    # Статистика боев
     total_fought = {}
     total_won = {}
     
-    for _ in range(num_simulations):
+    # Лог первого (демонстрационного) штурма
+    demo_log = []
+    
+    print(f"\n[1/2] Запуск детальной демонстрации одиночного штурма ({total_battles} боёв)...")
+    
+    # Запускаем цикл симуляций
+    for sim in range(num_sims):
+        # Рисуем индикатор выполнения (ProgressBar) каждые 50 симуляций
+        if sim % 50 == 0 or sim == num_sims - 1:
+            progress = int((sim / (num_sims - 1)) * 100)
+            bar_length = 20
+            filled = int(bar_length * progress / 100)
+            bar = "█" * filled + "░" * (bar_length - filled)
+            sys.stdout.write(f"\r[2/2] Симуляция сценариев: [{bar}] {progress}% ({sim + 1}/{num_sims})")
+            sys.stdout.flush()
+            
         p_rating = 4222
         
-        # Копируем состояние оппонентов для каждой симуляции отдельно
-        # У лимитных игроков счетчик побед равен 4, у безлимитных — заглушка 999
+        # Глубокое копирование базы для этой конкретной симуляции
         opps = {}
         for name, d in opponents_base.items():
             opps[name] = {
@@ -70,38 +83,45 @@ def run_simulation(total_battles=100, num_simulations=5000):
                 'wins_left': 999 if d['unlimited'] else 4
             }
             
+        last_battle_was_risky_loss = False
+        
         for step_idx in range(total_battles):
-            progress = step_idx / total_battles
-            
-            # Фильтруем доступных оппонентов согласно фазе
             allowed_targets = []
-            for name, d in opps.items():
-                if d['wins_left'] <= 0:
-                    continue  # победы на этого игрока исчерпаны
-                
-                # ЭТАП 1: Фарм NPC и 100% целей на старте (первые 35% сессии)
-                if progress < 0.35:
-                    if d['is_npc'] or (not d['unlimited'] and d['winrate'] >= 0.75):
-                        allowed_targets.append(name)
-                
-                # ЭТАП 2: Подключение средних лимитов и крепких безлимитов (до 70% сессии)
-                elif progress < 0.70:
-                    if d['is_npc'] or d['unlimited'] or d['winrate'] >= 0.50:
-                        if name not in ['x3', 'Проповедник']:  # Рано для главных боссов
-                            allowed_targets.append(name)
-                
-                # ЭТАП 3: Открываем все цели для решающего рывка
-                else:
-                    allowed_targets.append(name)
+            is_phase_1 = (step_idx < 15)
             
-            # Страховочный фолбек: если на фазе целей не осталось, берем любого доступного
+            # 1. Определение режима боя (До боя)
+            if is_phase_1:
+                mode_used = "Разгон"
+            elif last_battle_was_risky_loss:
+                mode_used = "СЕЙВ"  # Включаем Recovery Mode
+            else:
+                mode_used = "Штурм"
+                
+            # 2. Фильтрация пула целей по режиму
+            if mode_used == "Разгон":
+                # Только NPC и игроки с винрейтом >= 75%
+                for name, d in opps.items():
+                    if d['wins_left'] > 0 and (d['is_npc'] or (not d['unlimited'] and d['winrate'] >= 0.75)):
+                        allowed_targets.append(name)
+            elif mode_used == "СЕЙВ":
+                # Только надежные цели (винрейт >= 66%), без x3 и Проповедника
+                for name, d in opps.items():
+                    if d['wins_left'] > 0 and (d['is_npc'] or d['unlimited'] or d['winrate'] >= 0.66):
+                        if name not in ['x3', 'Проповедник']:
+                            allowed_targets.append(name)
+            else:
+                # Штурм: доступны абсолютно все, у кого остались лимиты побед
+                for name, d in opps.items():
+                    if d['wins_left'] > 0:
+                        allowed_targets.append(name)
+                        
+            # Если пулы пусты (страховка), разрешаем любого доступного
             if not allowed_targets:
                 allowed_targets = [name for name, d in opps.items() if d['wins_left'] > 0]
-            
-            # Поиск цели с максимальным математическим ожиданием (EV)
+                
+            # 3. Выбор цели с наилучшим EV из разрешенных
             best_opp = None
             best_ev = -9999
-            
             for name in allowed_targets:
                 d = opps[name]
                 win_pts, loss_pts = calc_elo_changes(p_rating, d['rating'])
@@ -110,55 +130,92 @@ def run_simulation(total_battles=100, num_simulations=5000):
                     best_ev = ev
                     best_opp = name
             
-            if not best_opp:
-                break  # Целей нет вообще (теоретически невозможно)
-                
             opp = opps[best_opp]
             win_pts, loss_pts = calc_elo_changes(p_rating, opp['rating'])
             
-            total_fought[best_opp] = total_fought.get(best_opp, 0) + 1
+            # 4. Проведение боя
+            is_win = random.random() < opp['winrate']
+            change = win_pts if is_win else loss_pts
             
-            # Симулируем исход боя
-            if random.random() < opp['winrate']:
+            # Записываем шаг для Демо-Лога (только из первой симуляции)
+            if sim == 0:
+                demo_log.append({
+                    'Battle': step_idx + 1,
+                    'Mode': mode_used,
+                    'Opponent': best_opp,
+                    'Outcome': "WIN" if is_win else "LOSS",
+                    'Change': change,
+                    'Player ELO': p_rating + change,
+                    'Opp ELO': opp['rating'] - change
+                })
+                
+            # Обновление показателей
+            if is_win:
                 p_rating += win_pts
                 opp['rating'] -= win_pts
                 if not opp['unlimited']:
-                    opp['wins_left'] -= 1  # Лимит тратится только при победе!
+                    opp['wins_left'] -= 1
+                last_battle_was_risky_loss = False
                 total_won[best_opp] = total_won.get(best_opp, 0) + 1
             else:
                 p_rating += loss_pts
                 opp['rating'] -= loss_pts
-                
+                # Если проиграли сложному оппоненту (винрейт < 65%), активируем сейв-режим
+                if opp['winrate'] < 0.65:
+                    last_battle_was_risky_loss = True
+                else:
+                    last_battle_was_risky_loss = False
+                    
+            total_fought[best_opp] = total_fought.get(best_opp, 0) + 1
+            
         final_player_ratings.append(p_rating)
         final_x3_ratings.append(opps['x3']['rating'])
         if p_rating > opps['x3']['rating']:
             overtake_count += 1
             
-    # Вывод результатов
-    avg_player = sum(final_player_ratings) / num_simulations
-    avg_x3 = sum(final_x3_ratings) / num_simulations
-    pct_overtake = (overtake_count / num_simulations) * 100
+    # --- ВЫВОД РЕЗУЛЬТАТОВ ---
     
-    print("=" * 60)
-    print(f"СТАТИСТИКА ШТУРМА НА {total_battles} БОЕВ ({num_simulations} СИМУЛЯЦИЙ)")
-    print("=" * 60)
+    # 1. Печатаем демо-лог одного штурма
+    print("\n" + "="*95)
+    print(" ДЕМОНСТРАЦИОННЫЙ ХОД ОДНОГО ШТУРМА (СЦЕНАРИЙ: КИНЖАЛЬНЫЙ УДАР / РАКЕТА)")
+    print("="*95)
+    print(f"{'Бой':<4} | {'Режим':<10} | {'Противник':<18} | {'Исход':<6} | {'Изменение':<10} | {'Ваш ELO':<8} | {'ELO Врага':<8}")
+    print("-"*95)
+    
+    # Показываем первые 20 боев (разгон + начало штурма) и последние 10 боев
+    for row in demo_log[:20]:
+        sign = "+" if row['Change'] >= 0 else ""
+        print(f"{row['Battle']:<4} | {row['Mode']:<10} | {row['Opponent']:<18} | {row['Outcome']:<6} | {sign}{row['Change']:<8} | {row['Player ELO']:<8} | {row['Opp ELO']:<8}")
+    print("...")
+    for row in demo_log[-10:]:
+        sign = "+" if row['Change'] >= 0 else ""
+        print(f"{row['Battle']:<4} | {row['Mode']:<10} | {row['Opponent']:<18} | {row['Outcome']:<6} | {sign}{row['Change']:<8} | {row['Player ELO']:<8} | {row['Opp ELO']:<8}")
+    print("="*95)
+    
+    # 2. Вывод итоговой статистики
+    avg_player = sum(final_player_ratings) / num_sims
+    avg_x3 = sum(final_x3_ratings) / num_sims
+    pct_overtake = (overtake_count / num_sims) * 100
+    
+    print("\n" + "="*65)
+    print(f" ИТОГОВАЯ СТАТИСТИКА {num_sims} ШТУРМОВ (ДЛИНА СЕССИИ: {total_battles} БОЁВ)")
+    print("="*65)
     print(f"Ваш средний итоговый рейтинг:    {avg_player:.1f}")
-    print(f"Худший исход (мин):              {min(final_player_ratings)}")
-    print(f"Лучший исход (макс):             {max(final_player_ratings)}")
+    print(f"Худший исход (минимум):          {min(final_player_ratings)}")
+    print(f"Лучший исход (максимум):         {max(final_player_ratings)}")
     print(f"Средний итоговый рейтинг x3:     {avg_x3:.1f}")
     print(f"Шанс занять ТОП-1:               {pct_overtake:.2f}%")
-    print("-" * 60)
+    print("-" * 65)
     print(f"{'Соперник':<18} | {'Ср. число боев':<16} | {'Ср. побед':<10}")
-    print("-" * 60)
+    print("-" * 65)
     
-    # Сортируем по убыванию сыгранных боев
     sorted_opps = sorted(total_fought.items(), key=lambda x: x[1], reverse=True)
     for name, fought_sum in sorted_opps:
-        avg_f = fought_sum / num_simulations
-        avg_w = total_won.get(name, 0) / num_simulations
-        if avg_f > 0.1:  # Выводим только тех, с кем провели хоть сколько-то боев
+        avg_f = fought_sum / num_sims
+        avg_w = total_won.get(name, 0) / num_sims
+        if avg_f > 0.05:  # Показываем только тех, на кого ушло значимое число атак
             print(f"{name:<18} | {avg_f:<16.1f} | {avg_w:<10.1f}")
-    print("=" * 60)
+    print("=" * 65)
 
-# Пример запуска симуляции на 100 боев
-run_simulation(total_battles=100)
+# Можете поменять число боев на 100 или 120 для проверки роста вероятностей
+run_simulation(total_battles=80, num_sims=5000)
