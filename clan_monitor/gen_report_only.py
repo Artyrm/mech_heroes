@@ -113,16 +113,25 @@ def generate_local_report():
                         manual_vals = adj_db.get(d_key, {}).get(str(uid), [])
                         if not isinstance(manual_vals, list): manual_vals = [manual_vals]
                         
+                        if uid == "227408" and w_key == "2026_W22":
+                            print(f"\nDEBUG 01.06: UID={uid}, Vals={vals}, Manual={manual_vals}, Start_v={last_v}")
+
                         for v in vals:
-                            effective_v = v
-                            if v < last_v and manual_vals:
-                                last_v = max(last_v, max(manual_vals))
-                            
-                            if effective_v >= last_v:
-                                day_growth += (effective_v - last_v)
+                            # Если обнаружен сброс
+                            if v < last_v:
+                                peak = max(last_v, max(manual_vals)) if manual_vals else last_v
+                                if uid == "227408" and w_key == "2026_W22":
+                                    print(f"  RESET DETECTED: last_v={last_v}, peak={peak}, current_v={v}")
+                                day_growth += (peak - last_v)
+                                day_growth += v
+                                if uid == "227408" and w_key == "2026_W22":
+                                    print(f"  Added: +{peak-last_v} (peak) and +{v} (new). Day_growth={day_growth}")
+                                last_v = v
                             else:
-                                day_growth += effective_v
-                            last_v = effective_v
+                                day_growth += (v - last_v)
+                                if uid == "227408" and w_key == "2026_W22":
+                                    print(f"  GROWTH: v={v}, last_v={last_v}, added={v-last_v}, day_growth={day_growth}")
+                                last_v = v
                         daily_growths[i] = int(day_growth)
                     else:
                         daily_growths[i] = max(0, vals[-1] - prev_day_end)
