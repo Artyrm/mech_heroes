@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 
 # Adjusted paths as the script is now in arena/graphs/
 SNAPSHOTS_DIR = r"G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\snapshots"
-OUTPUT_PATH = "ksotar_weekly.png"
+OUTPUT_FILENAME = "ksotar_weekly.png"
 UID = "227408"  # ksotar
-START_DATE = "2026-05-25" # Start of this week
-END_DATE = "2026-05-30"
+START_DATE = "2026-06-01" # Start of this week
+END_DATE = "2026-06-07"
+OUTPUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FILENAME)
 
 def get_data():
     files = sorted([f for f in os.listdir(SNAPSHOTS_DIR) if f.startswith("points_utc_")])
@@ -30,6 +31,9 @@ def get_data():
             if pts is not None:
                 data.append({"time": dt, "pts": int(pts), "file": fn, "type": "snap"})
         except: pass
+            
+    # Inject missing reset
+    data.append({"time": datetime(2026, 6, 1, 22, 0, tzinfo=timezone.utc), "pts": 0, "file": "MANUAL", "type": "manual"})
             
     data.sort(key=lambda x: x["time"])
     return data

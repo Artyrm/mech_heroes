@@ -61,16 +61,19 @@ def generate_graph():
     )
 
     fig, ax = plt.subplots(figsize=(num_days * 0.4 + 4, 10))
+    # Выходные/праздники (по полному диапазону)
     holidays = load_holidays()
     for i, d in enumerate(all_dates):
         if d.weekday() >= 5 or d.strftime("%Y-%m-%d") in holidays:
-            ax.add_patch(patches.Rectangle((i, 0), 1, 24, facecolor='salmon', alpha=0.3, zorder=0))
+            # Using zorder=0 for patches, and explicitly setting alpha to ensure visibility
+            ax.add_patch(patches.Rectangle((i, 0), 1, 24, facecolor='salmon', alpha=0.5, zorder=0))
 
+    # Слой активности (Синий) - zorder=1
     ax.pcolormesh(grid_all, cmap='Blues', vmin=0, vmax=1, zorder=1)
 
-    for i in range(num_days + 1): ax.axvline(i, color='#808080', linewidth=0.5, zorder=3)
-    for i in range(25): ax.axhline(i, color='#808080', linewidth=0.5, zorder=3)
-
+    # Сетка - zorder=2
+    for i in range(num_days + 1): ax.axvline(i, color='#808080', linewidth=0.5, zorder=2)
+    for i in range(25): ax.axhline(i, color='#808080', linewidth=0.5, zorder=2)
     ax.set_ylim(0, 24); ax.set_xlim(0, num_days)
     ax.set_yticks(np.arange(24) + 0.5); ax.set_yticklabels([f"{h:02d}:00" for h in range(24)])
     ax.set_xticks(np.arange(num_days) + 0.5); ax.set_xticklabels([d.strftime("%d.%m") for d in all_dates], rotation=45, ha='right', fontsize=9)

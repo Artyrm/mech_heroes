@@ -7,7 +7,7 @@ files = sorted([f for f in os.listdir(path) if f.startswith('points_utc_') and f
 
 times = []
 ratings = []
-monday = datetime(2026, 5, 25)
+monday = datetime(2026, 6, 1)
 
 print(f'Сбор данных кланового рейтинга с {monday.strftime("%d.%m")}...')
 
