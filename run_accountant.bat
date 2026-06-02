@@ -19,7 +19,7 @@ echo [%date% %time%] Running Python script... >> "%LOG_FILE%"
 cd /d "%BASE_DIR%clan_monitor"
 
 :: Direct redirection to avoid background hangs in Session 0
-C:\tools\Anaconda3\python.exe -u clan_accountant.py >> "%LOG_FILE%" 2>&1
+C:\tools\Anaconda3\python.exe -u clan_accountant.py %* >> "%LOG_FILE%" 2>&1
 set PY_ERROR=%errorlevel%
 
 if NOT "%PY_ERROR%"=="0" (

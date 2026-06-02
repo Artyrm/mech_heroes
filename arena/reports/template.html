@@ -137,69 +137,62 @@
         }
 
         function getPowerInt(pStr) {
+            if (!pStr) return 0;
             return Math.floor(parseFloat(pStr.toString().replace(',', '.')));
         }
 
-        async function updateTable() {
+        function getUID(p) {
+            return String(p.userID || p.userId || "");
+        }
+
+        function updateTable() {
             if (dates.length === 0) return;
             
             const t1Date = t1Select.value;
             const t2Date = t2Select.value;
             
-            // Lazy loading logic
-            async function getPlayers(date) {
-                const snap = snapshots[date];
-                if (!snap) return [];
-                if (snap.full_data) return snap.full_data.players;
-                
-                // Fetch from server if not loaded
-                try {
-                    const response = await fetch(`data/${snap.data_file}`);
-                    const data = await response.json();
-                    snap.full_data = data; // Cache it
-                    return data.players;
-                } catch (e) {
-                    console.error("Failed to fetch snapshot:", e);
-                    return [];
-                }
-            }
-
-            tableBody.innerHTML = "<tr><td colspan='9' style='text-align:center'>Загрузка данных...</td></tr>";
-
-            const [players1, players2] = await Promise.all([getPlayers(t1Date), getPlayers(t2Date)]);
+            const players1 = snapshots[t1Date] ? snapshots[t1Date].players : [];
+            const players2 = snapshots[t2Date] ? snapshots[t2Date].players : [];
 
             const map1 = {};
-            players1.forEach((p, idx) => { map1[p.userID] = { ...p, rank: idx + 1 }; });
+            players1.forEach((p, idx) => { 
+                const uid = getUID(p);
+                if (uid) map1[uid] = { ...p, rank: idx + 1 }; 
+            });
 
             tableBody.innerHTML = "";
 
             players2.forEach((p2, idx) => {
                 const rank2 = idx + 1;
-                const p1 = map1[p2.userID];
+                const uid2 = getUID(p2);
+                const p1 = map1[uid2];
                 const tr = document.createElement('tr');
                 
                 let rankHtml = p2.isDropped ? '—' : rank2;
                 if (!p2.isDropped) {
-                    if (p1) {
+                    if (p1 && !p1.isDropped) {
                         const dr = p1.rank - rank2;
                         if (dr > 0) rankHtml += ` <span class="rank-up">↑${dr}</span>`;
                         else if (dr < 0) rankHtml += ` <span class="rank-down">↓${Math.abs(dr)}</span>`;
-                    } else {
+                    } else if (players1.length > 0) {
                         tr.classList.add('new-player');
                         rankHtml += ` <span class="rank-up">NEW</span>`;
                     }
                 }
 
                 const ratingDelta = p1 ? (parseInt(p2.rating) - parseInt(p1.rating)) : 0;
-                const winDelta = p1 ? (p2.profileState.winCount - p1.profileState.winCount) : 0;
-                const loseDelta = p1 ? (p2.profileState.defeatCount - p1.profileState.defeatCount) : 0;
+                const winDelta = (p1 && p1.profileState) ? (p2.profileState.winCount - p1.profileState.winCount) : 0;
+                const loseDelta = (p1 && p1.profileState) ? (p2.profileState.defeatCount - p1.profileState.defeatCount) : 0;
                 const p2Power = getPowerInt(p2.power);
                 const p1Power = p1 ? getPowerInt(p1.power) : p2Power;
                 const powerDelta = p2Power - p1Power;
-                const wr = (p2.profileState.winCount / (p2.profileState.winCount + p2.profileState.defeatCount) * 100).toFixed(2);
-                const nick = p2.profileState.nickname.trim() || '&lt;без имени&gt;';
-                const hasSquad = usersWithSquads.includes(parseInt(p2.userID));
-                const nameHtml = hasSquad ? `<a href="squads/${p2.userID}.html" class="player-link"><b>${nick}</b></a>` : `<span style="color:#aaa;"><b>${nick}</b></span>`;
+                
+                const totalGames = (p2.profileState.winCount || 0) + (p2.profileState.defeatCount || 0);
+                const wr = totalGames > 0 ? (p2.profileState.winCount / totalGames * 100).toFixed(2) : "0.00";
+                
+                const nick = (p2.profileState.nickname || '').trim() || '&lt;без имени&gt;';
+                const hasSquad = usersWithSquads.includes(parseInt(uid2));
+                const nameHtml = hasSquad ? `<a href="squads/${uid2}.html" class="player-link"><b>${nick}</b></a>` : `<span style="color:#aaa;"><b>${nick}</b></span>`;
 
                 let onlineHtml = '-';
                 if (p2.lastOnline) {

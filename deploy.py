@@ -18,8 +18,7 @@ def deploy():
     files_to_upload = {
         "arena/reports/dashboard.html": "dashboard.html",
         "arena/reports/suppression_core.png": "suppression_core.png",
-        "battle_analytics/personal_stats.html": "personal.html",
-        "clan_monitor/clan_accountant_report.html": "clan.html" 
+        "battle_analytics/personal_stats.html": "personal.html"
     }
 
     try:
@@ -34,77 +33,63 @@ def deploy():
             current_dir += d + "/"
             try:
                 ftp.mkd(current_dir)
-                print(f"Created directory: {current_dir}")
-            except:
-                pass # Already exists
+            except: pass
         
         ftp.cwd(base_path)
         
         for local_path, remote_name in files_to_upload.items():
             if os.path.exists(local_path):
-                print(f"Uploading {local_path} as {remote_name}...")
+                print(f"Uploading {local_path}...")
                 with open(local_path, "rb") as f:
                     ftp.storbinary(f"STOR {remote_name}", f)
-            else:
-                print(f"Warning: {local_path} not found, skipping.")
                 
         # Upload squads
         squads_dir = "arena/reports/squads"
         if os.path.exists(squads_dir):
             try: ftp.mkd("squads")
             except: pass
-            
             for fname in os.listdir(squads_dir):
                 if fname.endswith('.html'):
-                    local_path = os.path.join(squads_dir, fname)
-                    with open(local_path, "rb") as f:
+                    with open(os.path.join(squads_dir, fname), "rb") as f:
                         ftp.storbinary(f"STOR squads/{fname}", f)
-            print(f"Uploaded squads HTML files.")
-
-        # Upload Arena Data (Lazy loading JSONs)
+        
+        # Upload Arena Data
         arena_data_dir = "arena/reports/data"
         if os.path.exists(arena_data_dir):
             try: ftp.mkd("data")
             except: pass
+            
+            remote_files = ftp.nlst("data")
             for fname in os.listdir(arena_data_dir):
-                if fname.endswith('.json'):
-                    local_path = os.path.join(arena_data_dir, fname)
-                    with open(local_path, "rb") as f:
+                if fname.endswith('.json') and f"data/{fname}" not in remote_files:
+                    with open(os.path.join(arena_data_dir, fname), "rb") as f:
                         ftp.storbinary(f"STOR data/{fname}", f)
-            print(f"Uploaded Arena snapshot data files.")
-        
-        # Upload personal analytics (dossiers and battle reports)
+
+        # Upload personal analytics
         analytics_dir = "battle_analytics"
         if os.path.exists(analytics_dir):
             for nick in os.listdir(analytics_dir):
                 nick_dir = os.path.join(analytics_dir, nick)
                 if os.path.isdir(nick_dir) and not nick.startswith('__') and nick != 'snapshots':
-                    # Create remote directory for the player
                     try: ftp.mkd(nick)
                     except: pass
-                    
                     for fname in os.listdir(nick_dir):
                         if fname.endswith('.html'):
-                            local_path = os.path.join(nick_dir, fname)
-                            with open(local_path, "rb") as f:
+                            with open(os.path.join(nick_dir, fname), "rb") as f:
                                 ftp.storbinary(f"STOR {nick}/{fname}", f)
             
-            # Upload Prowess Snapshots
             snap_dir = os.path.join(analytics_dir, "snapshots")
             if os.path.exists(snap_dir):
                 try: ftp.mkd("snapshots")
                 except: pass
                 for fname in os.listdir(snap_dir):
                     if fname.endswith('.html'):
-                        local_path = os.path.join(snap_dir, fname)
-                        with open(local_path, "rb") as f:
+                        with open(os.path.join(snap_dir, fname), "rb") as f:
                             ftp.storbinary(f"STOR snapshots/{fname}", f)
 
-            print(f"Uploaded personal dossier, battle reports and snapshots.")
-
         ftp.quit()
+        ftp.close()
         print("\nDeployment successful!")
-        print(f"Reports available at: http://ovalhalla.ru/my/mech/arena.html")
         
     except Exception as e:
         print(f"Deployment error: {e}")

@@ -1,18 +1,25 @@
 import subprocess
 import sys
 import os
+from datetime import datetime
 
 def run_step(name, command):
-    print(f"\n>>> [STEP] {name}")
+    start_time = datetime.now()
+    print(f"\n[{start_time.strftime('%H:%M:%S')}] >>> [STEP] {name}")
     print(f"Executing: {command}")
     try:
         # Using sys.executable to ensure we use the same python interpreter
         result = subprocess.run([sys.executable] + command.split(), capture_output=False, text=True)
+        end_time = datetime.now()
+        duration = end_time - start_time
+        # Round duration to tenths of a second
+        seconds = duration.total_seconds()
+        
         if result.returncode == 0:
-            print(f"--- [SUCCESS] {name} completed.")
+            print(f"[{end_time.strftime('%H:%M:%S')}] --- [SUCCESS] {name} completed in {seconds:.1f}s")
             return True
         else:
-            print(f"--- [ERROR] {name} failed with exit code {result.returncode}.")
+            print(f"[{end_time.strftime('%H:%M:%S')}] --- [ERROR] {name} failed with exit code {result.returncode} after {seconds:.1f}s.")
             return False
     except Exception as e:
         print(f"--- [EXCEPTION] {name}: {e}")
@@ -37,6 +44,7 @@ def main():
 
     force_run = "--force" in sys.argv
     update_history = "--update_history" in sys.argv
+    local_mode = "--local" in sys.argv
     is_active = is_user_active()
     
     if is_active and not force_run:
@@ -55,6 +63,10 @@ def main():
     ]
 
     for name, cmd in steps:
+        if name == "DEPLOYING TO SERVER" and local_mode:
+            print(f"\n>>> [STEP] {name} SKIPPED (local mode)")
+            continue
+
         actual_cmd = cmd
         if force_run and "--force" not in actual_cmd:
             actual_cmd += " --force"

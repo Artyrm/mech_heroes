@@ -81,11 +81,33 @@ def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
                 rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
                 users = r.get("users_raw_infos", [])
                 return hier, users, rating
+def safe_log(msg):
+    import time
+    for _ in range(3): # Попробуем записать 3 раза
+        try:
+            with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
+                f.write(f"[{datetime.now().strftime('%d.%m.%Y %H:%M:%S,%f')[:-4]}] {msg}\n")
+            return
+        except PermissionError:
+            time.sleep(0.1) # Ждем 100мс перед следующей попыткой
+    print(f"FAILED TO LOG: {msg}")
+
+def fetch_data(explicit_dump=None, force_run=False, debug_mode=False):
+    global VERSION, BASE_URL
+    if explicit_dump:
+        if os.path.exists(explicit_dump):
+            r = load_json(explicit_dump)
+            if "data" in r:
+                d = r.get("data", {})
+                sid, hier = d.get("sessionID"), d.get("clanData", {}).get("clanState", {}).get("hierarchy")
+                rating = int(d.get("clanData", {}).get("clanState", {}).get("rating", 0))
+                users = r.get("users_raw_infos", [])
+                return hier, users, rating
+    
     if is_user_active() and not force_run:
         msg = "[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Обновление пропущено."
         print(msg)
-        with open(os.path.join(REPO_ROOT, 'logs', 'accountant.log'), 'a', encoding='utf-8') as f:
-            f.write(f"[{datetime.now().strftime('%d.%m.%Y %H:%M:%S,%f')[:-4]}] {msg}\n")
+        safe_log(msg)
         return None, None, None
 
     try:

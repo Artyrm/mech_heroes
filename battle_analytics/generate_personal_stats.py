@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import os
 import glob
@@ -10,66 +11,78 @@ ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 ANALYTICS_DIR = os.path.join(ROOT_DIR, 'battle_analytics')
 ARENA_SNAPSHOTS = os.path.join(ROOT_DIR, 'arena', 'snapshots')
 OUTPUT_FILE = os.path.join(ANALYTICS_DIR, 'personal_stats.html')
+CACHE_FILE = os.path.join(ROOT_DIR, 'arena', 'stats_cache.json')
 
 def load_json(path):
     if not os.path.exists(path): return {}
-    with open(path, 'r', encoding='utf-8') as f: return json.load(f)
-
-def fmt_num(val):
     try:
-        v = float(str(val).replace(',', '.'))
-        return f"{int(v // 1000):,}k".replace(',', ' ') if v >= 1000000 else f"{int(v):,}".replace(',', ' ')
-    except: return str(val)
+        with open(path, 'r', encoding='utf-8') as f: return json.load(f)
+    except: return {}
 
 def parse_fight_time(ft_str):
     try: return datetime.strptime(ft_str.split('.')[0], "%d/%m/%Y_%H:%M:%S")
     except: return datetime.min
 
-def get_state_at(arena_snap_path):
-    ts_str = os.path.basename(arena_snap_path).replace('arena_', '').replace('.json', '')
-    try: snap_dt = datetime.strptime(ts_str, "%Y-%m-%dT%H-%M-%S")
-    except: snap_dt = datetime.now()
+def get_snapshot_dt(fname):
+    ts_str = os.path.basename(fname).replace('arena_', '').replace('.json', '')
+    try: return datetime.strptime(ts_str, "%Y-%m-%dT%H-%M-%S")
+    except: return datetime.now()
+
+def get_player_battles_timeline():
+    timeline = {}
+    player_keys = [d for d in os.listdir(ANALYTICS_DIR) if os.path.isdir(os.path.join(ANALYTICS_DIR, d)) and not d.startswith('__') and d != 'snapshots']
+    for nick in player_keys:
+        player_dir = os.path.join(ANALYTICS_DIR, nick)
+        battles = []
+        for bf in glob.glob(os.path.join(player_dir, "battle_*.json")):
+            b = load_json(bf)
+            dt = parse_fight_time(b.get('fightTime'))
+            delta = int(b.get('ourRatingDelta', 0))
+            sd = b.get('statistics', {})
+            p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
+            p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
+            battles.append({'dt': dt, 'is_win': delta > 0, 'is_attack': p_min < e_min, 'delta': delta, 'file_html': os.path.basename(bf).replace('.json', '.html')})
+        battles.sort(key=lambda x: x['dt'])
+        timeline[nick] = battles
+    return timeline
+
+def get_state_at_optimized(arena_snap_path, player_timelines):
+    snap_dt = get_snapshot_dt(arena_snap_path)
     arena_data = load_json(arena_snap_path)
     players = []
     for i, p in enumerate(arena_data.get('players', []), 1):
-        nick_raw = p.get('profileState', {}).get('nickname', '')
-        clan_info = p.get('clanProfile', {})
-        players.append({'rank': i, 'nick': nick_raw.strip(), 'clan': clan_info.get('clanName', '-'), 'clan_tag': clan_info.get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
+        players.append({'rank': i, 'nick': p.get('profileState', {}).get('nickname', '').strip(), 'clan': p.get('clanProfile', {}).get('clanName', '-'), 'clan_tag': p.get('clanProfile', {}).get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
 
     battle_stats, global_sum = {}, {"a_wins": 0, "a_losses": 0, "d_wins": 0, "d_losses": 0}
-    player_keys = [d for d in os.listdir(ANALYTICS_DIR) if os.path.isdir(os.path.join(ANALYTICS_DIR, d)) and not d.startswith('__') and d != 'snapshots']
-    if glob.glob(os.path.join(ANALYTICS_DIR, "battle_*.json")):
-        if "" not in player_keys: player_keys.append("")
-
-    for nick_key in player_keys:
-        player_dir = os.path.join(ANALYTICS_DIR, nick_key) if nick_key else ANALYTICS_DIR
+    for nick, battles in player_timelines.items():
         wins, losses, a_total, d_total, last_battle = 0, 0, 0, 0, datetime.min
-        for bf in glob.glob(os.path.join(player_dir, "battle_*.json")):
-            b = load_json(bf)
-            b_dt = parse_fight_time(b.get('fightTime'))
-            
-            # Для построения таблицы с дельтами нам нужны бои строго до даты снимка
-            if b_dt <= snap_dt:
-                delta = int(b.get('ourRatingDelta', 0))
-                is_win = delta > 0
-                sd = b.get('statistics', {})
-                p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
-                p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
-                is_attack = p_min < e_min
-                if is_win: wins += 1
-                else: losses += 1
-                if is_attack:
-                    a_total += 1
-                    if is_win: global_sum["a_wins"] += 1
-                    else: global_sum["a_losses"] += 1
-                else:
-                    d_total += 1
-                    if is_win: global_sum["d_wins"] += 1
-                    else: global_sum["d_losses"] += 1
-                if b_dt > last_battle: last_battle = b_dt
+        for b in battles:
+            if b['dt'] > snap_dt: break
+            if b['is_win']: wins += 1
+            else: losses += 1
+            if b['is_attack']:
+                a_total += 1
+                if b['is_win']: global_sum["a_wins"] += 1
+                else: global_sum["a_losses"] += 1
+            else:
+                d_total += 1
+                if b['is_win']: global_sum["d_wins"] += 1
+                else: global_sum["d_losses"] += 1
+            last_battle = b['dt']
         if wins + losses > 0:
-            battle_stats[nick_key] = {'wins': wins, 'losses': losses, 'a_total': a_total, 'd_total': d_total, 'winrate': round(wins/(wins+losses)*100, 1), 'last_battle_utc': last_battle.isoformat() if last_battle != datetime.min else None}
-    return {"timestamp_utc": ts_str, "players": players, "battle_stats": battle_stats, "summary": global_sum}
+            battle_stats[nick] = {'wins': wins, 'losses': losses, 'a_total': a_total, 'd_total': d_total, 'winrate': round(wins/(wins+losses)*100, 1), 'last_battle_utc': last_battle.isoformat() if last_battle != datetime.min else None}
+    return {"timestamp_utc": snap_dt.strftime("%Y-%m-%dT%H-%M-%S"), "players": players, "battle_stats": battle_stats, "summary": global_sum}
+
+def generate_dossiers(player_timelines):
+    for nick, battles in player_timelines.items():
+        if not battles: continue
+        rows = ""
+        for b in reversed(battles):
+            rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{(b['dt']+timedelta(hours=3)).strftime('%d.%m %H:%M')}</td><td>{'АТАКА' if b['is_attack'] else 'ЗАЩИТА'}</td><td>{'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{'#3fb950' if b['delta']>0 else ('#f85149' if b['delta']<0 else '#8b949e')}\">{'+' if b['delta']>0 else ''}{b['delta']}</td></tr>"
+        target_dir = os.path.join(ANALYTICS_DIR, nick)
+        os.makedirs(target_dir, exist_ok=True)
+        html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {nick}</title><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet"><style>body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}.container{{max-width:800px;margin:0 auto}}h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem}}.back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}}th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}td{{padding:12px;border-bottom:1px solid #30363d}}tr:hover{{background:#1c2128}}</style></head><body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a><h1>ДОСЬЕ: {nick}</h1><table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table></div></body></html>'''
+        with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
 
 def generate_html_template():
     return """<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>My Arena Prowess</title>
@@ -115,6 +128,7 @@ def generate_html_template():
         <th class="text-center">#</th><th class="text-left">Противник</th><th class="text-left">Клан</th><th class="text-right">Рейтинг</th>
         <th class="text-right">Мощь</th><th class="text-center" colspan="2">Winrate</th>
         <th class="text-center" colspan="2">ELO (W/L)</th>
+        <th class="text-center">ED</th>
         <th class="text-right">Побед</th><th class="col-delta"></th><th class="text-right">Поражений</th><th class="col-delta"></th>
         <th class="text-right">Атак</th><th class="col-delta"></th><th class="text-right">Защит</th><th class="col-delta"></th>
         <th class="text-right">Боёв</th><th class="col-delta"></th><th class="text-right">Последний</th>
@@ -134,7 +148,7 @@ def generate_html_template():
         }
         function fmtNum(val) {
             if (!val) return "0"; let v = parseFloat(val.toString().replace(',', '.'));
-            return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU') + 'k' : Math.floor(v).toLocaleString('ru-RU');
+            return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;') + 'k' : Math.floor(v).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;');
         }
         function parseTS(ts) { 
             const p = ts.split(/[-T]/); 
@@ -169,6 +183,7 @@ def generate_html_template():
 
         function updateTable() {
             const d1 = t1Select.value, d2 = t2Select.value, s1 = snapshots[d1], s2 = snapshots[d2], isSame = (d1 === d2);
+            if (!s1 || !s2) return;
             const sum2 = s2.summary, sum1 = s1.summary;
             const ds = { a_w: sum2.a_wins - (isSame?0:sum1.a_wins), a_l: sum2.a_losses - (isSame?0:sum1.a_losses), d_w: sum2.d_wins - (isSame?0:sum1.d_wins), d_l: sum2.d_losses - (isSame?0:sum1.d_losses) };
             summaryBox.innerHTML = `<div class="stat-card" style="border-bottom:3px solid #f2cc60"><span class="stat-val" style="color:#f2cc60">${ds.a_w} / ${ds.a_l}</span><span class="stat-label">Атаки</span></div>
@@ -195,11 +210,18 @@ def generate_html_template():
                     }
                 }
                 const elo = calcElo(ourCurrentRating, parseInt(p2.rating));
+                const winGain = parseInt(elo.w);
+                const lossLoss = parseInt(elo.l);
+                const winProb = st2 ? st2.winrate / 100 : 0.5;
+                const ed = (winGain * winProb) + (lossLoss * (1 - winProb));
+                const edClass = ed >= 0 ? "delta-pos" : "delta-neg";
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td class="text-center">${idx+1}</td><td class="col-nick"><a href="${nick_key || '_EMPTY_'}/summary.html" class="nick-link">${display_nick}</a></td>
                     <td class="col-clan">${p2.clan_tag || p2.clan}</td><td class="text-right">${fmtNum(p2.rating)}</td><td class="text-right">${fmtNum(p2.power)}</td>
                     <td class="text-right" style="border-right:none">${wr}</td><td class="col-delta" style="border-left:none">${wr_d}</td>
-                    <td class="text-right" style="border-right:none">${elo.w}</td><td class="col-delta" style="border-left:none">${elo.l}</td>
+                    <td class="text-right" style="border-right:none">${elo.w}</td><td class="text-right" style="border-right:none">${elo.l}</td>
+                    <td class="text-right ${edClass}">${ed.toFixed(1)}</td>
                     <td class="text-right" style="border-right:none">${w}</td><td class="col-delta" style="border-left:none">${w_d}</td>
                     <td class="text-right" style="border-right:none">${l}</td><td class="col-delta" style="border-left:none">${l_d}</td>
                     <td class="text-right" style="border-right:none">${a}</td><td class="col-delta" style="border-left:none">${a_d}</td>
@@ -212,56 +234,33 @@ def generate_html_template():
         updateTable();
     </script></body></html>"""
 
-def generate_dossiers():
-    for item in os.listdir(ANALYTICS_DIR):
-        p_dir = os.path.join(ANALYTICS_DIR, item)
-        is_root = False
-        if not os.path.isdir(p_dir):
-            if item.startswith("battle_") and item.endswith(".json"):
-                is_root = True
-                p_dir = ANALYTICS_DIR
-                item = "_EMPTY_"
-            else: continue
-        
-        if item.startswith('__') or item == 'snapshots': continue
-        if is_root and os.path.exists(os.path.join(ANALYTICS_DIR, "_EMPTY_", "summary.html")): continue
-
-        p_battles = []
-        pattern = os.path.join(p_dir, "battle_*.json") if not is_root else os.path.join(ANALYTICS_DIR, "battle_*.json")
-        for bf in glob.glob(pattern):
-            if is_root and os.path.dirname(bf) != ANALYTICS_DIR: continue
-            b = load_json(bf); sd = b.get('statistics', {}); p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
-            p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
-            p_battles.append({'dt_msk': parse_fight_time(b.get('fightTime')) + timedelta(hours=3), 'delta': int(b.get('ourRatingDelta', 0)), 'is_win': int(b.get('ourRatingDelta', 0)) > 0, 'is_attack': p_min < e_min, 'file_html': os.path.basename(bf).replace('.json', '.html')})
-        
-        if p_battles:
-            p_battles.sort(key=lambda x: x['dt_msk'], reverse=True)
-            rows = ""
-            for b in p_battles:
-                rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{b['dt_msk'].strftime('%d.%m %H:%M')}</td><td>{'АТАКА' if b['is_attack'] else 'ЗАЩИТА'}</td><td>{'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{'#3fb950' if b['delta']>0 else ('#f85149' if b['delta']<0 else '#8b949e')}\">{'+' if b['delta']>0 else ''}{b['delta']}</td></tr>"
-            
-            target_dir = os.path.join(ANALYTICS_DIR, item)
-            os.makedirs(target_dir, exist_ok=True)
-            display_name = item if item != "_EMPTY_" else "<без имени>"
-            html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {display_name}</title><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet"><style>body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}.container{{max-width:800px;margin:0 auto}}h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem}}.back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}}th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}td{{padding:12px;border-bottom:1px solid #30363d}}tr:hover{{background:#1c2128}}</style></head><body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a><h1>ДОСЬЕ: {display_name}</h1><table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table></div></body></html>'''
-            with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
-
 if __name__ == "__main__":
+    update_history = "--update_history" in sys.argv
+    cache = {} if update_history else load_json(CACHE_FILE)
     arena_snaps = sorted(glob.glob(os.path.join(ARENA_SNAPSHOTS, "arena_*.json")))
-    if not arena_snaps: sys.exit(1)
-    prowess_data = {s["timestamp_utc"]: s for s in [get_state_at(p) for p in arena_snaps]}
-    # Get latest our rating for ELO prediction
+    if not arena_snaps: sys.exit(0)
+    if not update_history and len(arena_snaps) > 50: arena_snaps = arena_snaps[-50:]
+    print(f"Processing {len(arena_snaps)} snapshots for personal stats...")
+    timelines = get_player_battles_timeline()
+    prowess_data, cache_updated = {}, False
+    for snap_path in arena_snaps:
+        fname = os.path.basename(snap_path)
+        if fname in cache: prowess_data[cache[fname]["timestamp_utc"]] = cache[fname]
+        else:
+            print(f"  Calculating stats for {fname}...")
+            state = get_state_at_optimized(snap_path, timelines); cache[fname] = state
+            prowess_data[state["timestamp_utc"]] = state; cache_updated = True
+    if cache_updated:
+        with open(CACHE_FILE, 'w', encoding='utf-8') as f: json.dump(cache, f, ensure_ascii=False)
     our_current_rating = 0
-    if arena_snaps:
-        with open(arena_snaps[-1], 'r', encoding='utf-8') as f:
-            snap_data = json.load(f)
-            for p in snap_data.get('players', []):
-                if p.get('profileState', {}).get('nickname') == "ksotar":
-                    our_current_rating = int(p.get('rating', 0))
-                    break
-
+    with open(arena_snaps[-1], 'r', encoding='utf-8') as f:
+        snap_data = json.load(f)
+        for p in snap_data.get('players', []):
+            if p.get('profileState', {}).get('nickname') == "ksotar":
+                our_current_rating = int(p.get('rating', 0)); break
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f: 
         html = generate_html_template().replace('SNAPSHOTS_DATA', json.dumps(prowess_data, ensure_ascii=False))
         html = html.replace('OUR_CURRENT_RATING', str(our_current_rating))
         f.write(html)
-    generate_dossiers()
+    generate_dossiers(timelines)
+    print(f"Personal stats generated: {OUTPUT_FILE}")

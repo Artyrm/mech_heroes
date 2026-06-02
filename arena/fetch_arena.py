@@ -156,6 +156,10 @@ def fetch_arena():
             with open(target_path, 'w', encoding='utf-8') as f:
                 json.dump(snapshot, f, indent=2, ensure_ascii=False)
             
+            # Save as last_init_dump for subsequent steps in the same pipeline run
+            with open(os.path.join("arena", "last_init_dump.json"), "w", encoding="utf-8") as f:
+                json.dump(init_data, f, indent=2, ensure_ascii=False)
+            
             # Инкрементально обновляем реестр
             rm.update_registry_with_snapshot(fname, content_hash, players)
             

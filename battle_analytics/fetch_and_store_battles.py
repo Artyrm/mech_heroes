@@ -61,6 +61,14 @@ def fetch_history(explicit_dump=None, force_run=False):
 
     # 1. Try to reuse a fresh dump from init_dumps (only if NOT forcing)
     if not force_run:
+        # Check specific last_init_dump from arena step first
+        last_arena_dump = os.path.join(ROOT_DIR, 'arena', 'last_init_dump.json')
+        if os.path.exists(last_arena_dump):
+            print(f"INFO: Reusing last dump from arena step: {last_arena_dump}")
+            r = load_json(last_arena_dump)
+            history = r.get("data", {}).get("userState", {}).get("arena", {}).get("battlesHistory", [])
+            return history
+
         dumps_dir = os.path.join(ROOT_DIR, 'init_dumps')
         if os.path.exists(dumps_dir):
             import glob
