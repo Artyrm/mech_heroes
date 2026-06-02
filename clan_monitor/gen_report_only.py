@@ -1,8 +1,15 @@
-import json, os, re, sys, traceback
+import json, os, re, sys, traceback, argparse
 from datetime import datetime, timedelta, timezone
 import numpy as np
 
-# --- Helper functions ---
+# ==============================================================================
+# CLAN ACCOUNTANT - LOCAL ONLY GENERATOR (SYNCED WITH v0.3.11)
+# ==============================================================================
+
+ADJUSTMENTS_FILE = 'manual_adjustments.json'
+TRANS_CACHE_FILE = 'translations_cache.json'
+MEMBERS_DB = 'members_name_db.json'
+
 def fmt(n: int) -> str:
     return f"{n:,}".replace(",", "\u202f")
 
@@ -10,11 +17,21 @@ def load_json(path):
     if not os.path.exists(path): return {}
     with open(path, 'r', encoding='utf-8') as f: return json.load(f)
 
-# Translation logic
-def translate_traits_batch(traits_list, trans_cache, script_dir):
+# PATHS
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(SCRIPT_DIR)
+SNAPSHOTS_DIR = os.path.join(SCRIPT_DIR, 'snapshots')
+OUTPUT_ROOT = os.path.join(SCRIPT_DIR, 'clan', 'ORDA')
+REPORTS_DIR = os.path.join(OUTPUT_ROOT, 'reports')
+MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'index.html')
+MEMBERS_DB_PATH = os.path.join(SCRIPT_DIR, MEMBERS_DB)
+
+TRANS_CACHE = load_json(os.path.join(SCRIPT_DIR, TRANS_CACHE_FILE))
+
+def translate_traits_batch(traits_list):
     if not traits_list: return ""
     full_str = ", ".join(traits_list).replace("_", " ")
-    if full_str in trans_cache: return trans_cache[full_str]
+    if full_str in TRANS_CACHE: return TRANS_CACHE[full_str]
     m_dict = {"Short Hair": "Короткие волосы", "Long Wavy": "Длинные волнистые волосы", "Long Straight": "Длинные прямые волосы", "Square": "Площадка", "Tail Male": "Хвост", "Tail Female": "Хвост", "Shaved Temples Male": "Бритые виски", "Afro": "Афро", "Bald": "Лысый", "Mohawk": "Ирокез", "Mohawk Male": "Ирокез", "Goatee 1 ": "Бородка ", "Goatee 2 ": "Бородка ", "Goatee": "Бородка", "Thin Moustache": "Тонкие усы", "Moustache": "Усы", "Bristle": "Щетина", "Beard No Moustache": "Шкиперская бородка", "Scar": "Шрам", "Toxin": "Токсичный шрам", "Glasses 1": "Черные очки", "Glasses Yellow": "Желтые очки", "Cyber Glasses": "Киберочки", "Glasses": "Очки", "Visor": "Монокль", "Vr": "VR-шлем", "Camouflage": "Камуфляж", "Eye Line": "Макияж глаз", "Lipstick Red": "Красная помада", "Cybernatic Mask Male": "Кибермаска", "Aviator Mask Male": "Маска авиатора", "Aviator Mask Female": "Маска авиатора"}
     color_dict = {" Brown": " каштан", " Black": " брюнет", " Blond": " блонд", " Red": " рыжий", "Yellow": "желтый", "Male": "", "Female": ""}
     res = []
@@ -26,22 +43,13 @@ def translate_traits_batch(traits_list, trans_cache, script_dir):
         for eng, rus in sorted_c: t = t.replace(eng, rus)
         res.append(t.strip().capitalize())
     translated = ", ".join(res).replace("  ", " ").replace(" ,", ",")
-    trans_cache[full_str] = translated
-    with open(os.path.join(script_dir, 'translations_cache.json'), 'w', encoding='utf-8') as f: json.dump(trans_cache, f, ensure_ascii=False)
+    TRANS_CACHE[full_str] = translated
+    with open(os.path.join(SCRIPT_DIR, TRANS_CACHE_FILE), 'w', encoding='utf-8') as f: json.dump(TRANS_CACHE, f, ensure_ascii=False)
     return translated
 
-# --- Main Report Generation Logic ---
 def generate_local_report():
-    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-    SNAPSHOTS_DIR = os.path.join(SCRIPT_DIR, 'snapshots')
-    OUTPUT_ROOT = os.path.join(SCRIPT_DIR, 'clan', 'ORDA')
-    REPORTS_DIR = os.path.join(OUTPUT_ROOT, 'reports')
-    MAIN_REPORT = os.path.join(OUTPUT_ROOT, 'index.html')
-    MEMBERS_DB_PATH = os.path.join(SCRIPT_DIR, 'members_name_db.json')
-    ADJUSTMENTS_FILE = 'manual_adjustments.json'
-    TRANS_CACHE_FILE = 'translations_cache.json'
-    
-    if not os.path.exists(REPORTS_DIR): os.makedirs(REPORTS_DIR)
+    names_map = load_json(MEMBERS_DB_PATH)
+    adj_db = load_json(os.path.join(SCRIPT_DIR, ADJUSTMENTS_FILE))
     
     snf = sorted([fs for fs in os.listdir(SNAPSHOTS_DIR) if fs.startswith('points_utc_')])
     sd = []
@@ -54,11 +62,11 @@ def generate_local_report():
                     data = json.load(f); pts_m = data.get("pts", data); rv = data.get("clanRating")
                     sd.append({"time": dt, "pts": {str(k): int(v) for k,v in pts_m.items() if str(k).isdigit()}, "rating": int(rv) if rv is not None else None})
             except: pass
-    
-    names_map = load_json(MEMBERS_DB_PATH)
-    adj_db = load_json(os.path.join(SCRIPT_DIR, ADJUSTMENTS_FILE))
-    trans_cache = load_json(os.path.join(SCRIPT_DIR, TRANS_CACHE_FILE))
-    
+
+    if not sd:
+        print("[!] Нет данных для генерации отчета."); return
+
+    last_data_ts = sd[-1]['time'].astimezone(timezone(timedelta(hours=3))).strftime("%d.%m.%Y %H:%M") if sd else "НЕТ ДАННЫХ"
     weeks = {}
     for e in sd:
         monday = (e['time'] - timedelta(days=e['time'].weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -69,17 +77,17 @@ def generate_local_report():
         weeks[wk]["days"][dk].append(e)
 
     all_ws = sorted(weeks.keys())
-    print("[*] Локальная генерация отчетов...")
-
     for w_key in all_ws:
         week = weeks[w_key]
         monday = week["monday"]
+        is_current_week = (w_key == all_ws[-1])
         players = set()
         for d in week["days"].values():
             for e in d: players.update(e['pts'].keys())
         
         reset_players = set()
-        for d_str in adj_db: reset_players.update(adj_db[d_str].keys())
+        for d_str in adj_db:
+            reset_players.update(adj_db[d_str].keys())
 
         pl_res = {}
         for uid in players:
@@ -87,46 +95,49 @@ def generate_local_report():
             presence = [False] * 7
             prev_day_end = 0
             use_reset_logic = str(uid) in reset_players
+
             for i in range(7):
                 d_start = monday + timedelta(days=i)
                 d_end = d_start + timedelta(days=1)
                 day_snaps = sorted([s for s in sd if d_start <= s['time'] < d_end and str(uid) in s['pts']], key=lambda x: x['time'])
+                
                 if i == 0: prev_day_end = 0
+
                 if day_snaps:
                     vals = [s['pts'][str(uid)] for s in day_snaps]
                     
                     if use_reset_logic:
+                        day_growth = 0
+                        last_v = prev_day_end
                         d_key = d_start.strftime("%Y-%m-%d")
                         manual_vals = adj_db.get(d_key, {}).get(str(uid), [])
                         if not isinstance(manual_vals, list): manual_vals = [manual_vals]
-                        if manual_vals:
-                            m_v = manual_vals[0]
-                            for j in range(len(vals) - 1):
-                                if vals[j+1] < vals[j] and m_v > vals[j]:
-                                    vals[j] = m_v
-
-                    day_growth = 0; last_v = prev_day_end
-                    for j, v in enumerate(vals):
-                        if j < len(vals) - 1 and vals[j+1] < v:
-                            day_growth += (v - last_v)
-                            last_v = 0
-                        elif j == len(vals) - 1 and v >= last_v:
-                            day_growth += (v - last_v)
-                        elif v >= last_v:
-                            day_growth += (v - last_v)
-                            last_v = v
-                        else:
-                            day_growth += v
-                            last_v = v
-                    daily_growths[i] = int(day_growth)
+                        
+                        for v in vals:
+                            effective_v = v
+                            if v < last_v and manual_vals:
+                                last_v = max(last_v, max(manual_vals))
+                            
+                            if effective_v >= last_v:
+                                day_growth += (effective_v - last_v)
+                            else:
+                                day_growth += effective_v
+                            last_v = effective_v
+                        daily_growths[i] = int(day_growth)
+                    else:
+                        daily_growths[i] = max(0, vals[-1] - prev_day_end)
+                    
                     prev_day_end = vals[-1]
-                else: daily_growths[i] = 0
-                d_str = d_start.strftime("%Y-%m-%d"); ex = adj_db.get(d_str, {}).get(str(uid), []); 
+                else:
+                    daily_growths[i] = 0
+                
+                d_str = d_start.strftime("%Y-%m-%d")
+                ex = adj_db.get(d_str, {}).get(str(uid), [])
                 if not isinstance(ex, list): ex = [ex]
                 presence[i] = (any(str(uid) in s['pts'] for s in week["days"].get(d_str, [])) if d_str in week["days"] else False) or bool(ex)
+
             pl_res[uid] = {"growths": daily_growths, "total": sum(daily_growths), "presence": presence, "first_p": next((idx for idx, p in enumerate(presence) if p), 999), "last_p": next((6-idx for idx, p in enumerate(reversed(presence)) if p), -1)}
 
-        # HTML Generation Block
         clan_growths = [sum(p["growths"][i] for p in pl_res.values()) for i in range(7)]
         clan_rats = [None] * 7
         for i in range(7):
@@ -146,10 +157,10 @@ def generate_local_report():
                 clan_stats.append({"rating": curr_r or 0, "fact": 0, "burned": brn}); prev_r = curr_r or prev_r
 
         sorted_ids = sorted(players, key=lambda x: pl_res[x]['total'], reverse=True)
+        dupes = {names_map.get(u, {}).get('nick'): u for u in players if [names_map.get(x, {}).get('nick') for x in players].count(names_map.get(u, {}).get('nick')) > 1}
         nav = " ".join([f'<a href="report_{wk}.html" class="{"active" if wk==w_key else ""}">{weeks[wk]["label"]}</a>' for wk in all_ws])
-        tr = next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0)
+        tr = clan_rats[6] if clan_rats[6] else (next((r['rating'] for r in reversed(clan_stats) if r['rating']), 0))
         today_idx = datetime.now(timezone.utc).weekday()
-        last_data_ts = sd[-1]['time'].astimezone(timezone(timedelta(hours=3))).strftime("%d.%m.%Y %H:%M") if sd else "НЕТ ДАННЫХ"
         
         c_cells = [f'<td style="text-align:center"><div class="fact-grow">{"+"+fmt(s["fact"]) if s["fact"]>=0 else "-"+fmt(-s["fact"])}</div><div class="burned">🔥 -{fmt(s["burned"])}</div></td>' if s["rating"] else f'<td style="text-align:center; color:#30363d">{"-" if i<=today_idx else ""}</td>' for i, s in enumerate(clan_stats)]
         s_cells = [f'<td style="text-align:center"><span class="day-growth">+{fmt(cg)}</span></td>' for cg in clan_growths]
@@ -196,20 +207,23 @@ def generate_local_report():
     <tr class="clan-row" style="background:#0d1117; height: 45px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.8rem;">СУММАРНЫЙ ЗАРАБОТОК</td><td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 0.95rem;">{fmt(sum(clan_growths))}</span></td>{" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
             p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"}); p_res = pl_res[uid]; nick_sec = f"<div class='nick-cell'><span class='nick'>{p['nick']}</span>"
+            if p.get('nick') in dupes: nick_sec += f"<span class='trait'>({p.get('traits','') if p.get('traits','') else 'Без особых примет'})</span>"
             nick_sec += "</div>"
             html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.7rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p['role']}</span></td><td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
             for i, g in enumerate(p_res['growths']):
-                if g > 0: html += f"<td style='text-align:center'><span class='day-growth'>+{fmt(g)}</span></td>"
+                if is_current_week and i > today_idx: html += '<td style="text-align:center; color:#30363d">-</td>'
+                elif g > 0: html += f"<td style='text-align:center'><span class='day-growth'>+{fmt(g)}</span></td>"
                 elif i < p_res['first_p']: html += '<td style="text-align:center; color:#8b949e">-</td>'
                 elif i > p_res['last_p']: html += '<td style="text-align:center"><span class="absent" title="Покинул клан">X</span></td>'
                 else: html += '<td style="text-align:center; color:#484f58; font-size: 0.85rem;">0</td>'
             html += "</tr>"
         html += "</tbody></table></div></div></body></html>"
         with open(os.path.join(REPORTS_DIR, f"report_{w_key}.html"), 'w', encoding='utf-8') as f: f.write(html)
+    
     with open(MAIN_REPORT, 'w', encoding='utf-8') as f:
         latest_wk = sorted(weeks.keys())[-1]
         f.write(f'<html><head><meta http-equiv="refresh" content="0; url=reports/report_{latest_wk}.html"></head></html>')
-    print(f"[*] Отчеты обновлены.")
+    print("[*] ОТЧЕТЫ УСПЕШНО ОБНОВЛЕНЫ (Локально).")
 
 if __name__ == "__main__":
     generate_local_report()
