@@ -137,6 +137,10 @@ def fetch_squads():
         # Online history
         last_visit = u.get('lastVisit')
         if last_visit:
+            # DEBUG
+            if uid == '113012':
+                print(f"[DEBUG] Хоббит (113012) lastVisit from API: {last_visit}")
+
             online_file = os.path.join(user_dir, "online_history.json")
             online_history = []
             if os.path.exists(online_file):
