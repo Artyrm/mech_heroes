@@ -2,9 +2,9 @@ import json, os
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-USER_ID = "227408"  # Хоббит
-snapshots_dir = r'G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\snapshots'
-files = sorted([f for f in os.listdir(snapshots_dir) if f.startswith('points_utc_') and f.endswith('.json')])
+USER_ID = 113012
+snapshots_dir = r'G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\snapshots'
+files = sorted([f for f in os.listdir(snapshots_dir) if f.startswith('arena_') and f.endswith('.json')])
 
 times = []
 ratings = []
@@ -14,17 +14,23 @@ print(f'Сбор данных рейтинга для Хоббита ({USER_ID})
 
 for f_name in files:
     try:
-        ts_part = f_name.replace('points_utc_', '').replace('.json', '')
-        dt = datetime.strptime(ts_part, '%Y-%m-%d_%H-%M')
+        # Expected format: arena_2026-04-29T09-27-19.json
+        ts_part = f_name.replace('arena_', '').replace('.json', '')
+        dt = datetime.strptime(ts_part, '%Y-%m-%dT%H-%M-%S')
         
         if dt >= monday:
-            with open(os.path.join(snapshots_dir, f_name), 'r') as f:
+            with open(os.path.join(snapshots_dir, f_name), 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                pts = data.get('pts', {}).get(USER_ID)
-                if pts is not None:
-                    times.append(dt)
-                    ratings.append(int(pts))
-    except: continue
+                # Arena snapshot structure: {'players': [{'userID': 113012, 'rating': '4195'}, ...]}
+                players = data.get('players', [])
+                for p in players:
+                    if p.get('userID') == USER_ID:
+                        times.append(dt)
+                        ratings.append(int(p.get('rating', 0)))
+                        break
+    except Exception as e:
+        print(f"Error processing {f_name}: {e}")
+        continue
 
 if not times:
     print("Данные не найдены.")
