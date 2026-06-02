@@ -5,6 +5,9 @@ import sys
 import glob
 import hashlib
 from datetime import datetime
+# Fix imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import arena.registry_manager as rm
 
 # Encoding fix for Windows console
 if hasattr(sys.stdout, 'reconfigure'):
@@ -35,12 +38,6 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 }
 
-def get_latest_arena_snapshot():
-    snapshots = sorted(glob.glob(os.path.join("arena", "snapshots", "arena_*.json")))
-    if not snapshots: return None
-    with open(snapshots[-1], 'r', encoding='utf-8') as f:
-        return json.load(f)
-
 def is_user_active() -> bool:
     target_ip = "84.201.164.35"
     try:
@@ -54,44 +51,20 @@ def is_user_active() -> bool:
     return False
 
 def fetch_squads():
-    arena_data = get_latest_arena_snapshot()
-    if not arena_data:
-        print("No arena snapshot found.")
-        return
-
     force_run = "--force" in sys.argv
+    update_history = "--update_history" in sys.argv
 
-    # Collect ALL known user IDs from all snapshots + existing squad dirs
-    all_user_ids = set()
-    
-    # From all arena snapshots
-    for snap_file in glob.glob(os.path.join("arena", "snapshots", "arena_*.json")):
-        try:
-            with open(snap_file, 'r', encoding='utf-8') as f:
-                snap = json.load(f)
-            for p in snap.get('players', []):
-                all_user_ids.add(p['userID'])
-        except:
-            pass
-    
-    # From existing squad directories (in case some were tracked but missing from snapshots)
-    squads_base = os.path.join("arena", "squads")
-    if os.path.exists(squads_base):
-        for uid_dir in os.listdir(squads_base):
-            try:
-                all_user_ids.add(int(uid_dir))
-            except ValueError:
-                pass
-
-    user_ids = list(all_user_ids)
+    # Используем реестр вместо сканирования всех файлов
+    reg = rm.load_registry(force_rebuild=update_history)
+    user_ids = [int(uid) for uid in reg['known_users'].keys()]
     
     if not user_ids:
-        print("No users found in any snapshot.")
+        print("No users found in registry. Run with --update_history to rebuild.")
         return
 
-    print(f"Fetching squads for {len(user_ids)} tracked players...")
+    print(f"Fetching squads for {len(user_ids)} tracked players (via Registry)...")
 
-    # 1. Try to reuse session ID from arena/session.json (saved by fetch_arena.py)
+    # 1. Try to reuse session ID
     session_id = None
     session_file = os.path.join("arena", "session.json")
     if os.path.exists(session_file):
@@ -99,33 +72,29 @@ def fetch_squads():
             with open(session_file, 'r', encoding='utf-8') as f:
                 sd = json.load(f)
                 session_id = sd.get('sessionID')
-                print(f"Reusing session ID from {session_file}")
-        except:
-            pass
+        except: pass
 
     if not session_id:
         if is_user_active() and not force_run:
             print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_squads.py.")
             return
 
-        print("No valid session found in arena/session.json. Calling /init fallback...")
+        print("No valid session found. Calling /init fallback...")
         init_url = f"{BASE_URL}/init?userid={USER_ID}"
         init_payload = {
             "data": {"userID": USER_ID, "authKey": AUTH_KEY},
             "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 1, "version": VERSION
         }
-        
-        r = requests.post(init_url, json=init_payload, headers=HEADERS)
-        if r.status_code != 200:
-            print(f"Error: /init failed with status {r.status_code}")
-            return
-            
-        session_id = r.json().get('data', {}).get('sessionID')
-        if not session_id:
-            print("Error: No sessionID found.")
-            return
+        try:
+            r = requests.post(init_url, json=init_payload, headers=HEADERS, timeout=15)
+            session_id = r.json().get('data', {}).get('sessionID')
+        except: pass
 
-    # 2. Get Users Raw Infos
+    if not session_id:
+        print("Error: No sessionID found.")
+        return
+
+    # 2. Get Users Raw Infos (Direct Command)
     if is_user_active() and not force_run:
         print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск /directcommand в fetch_squads.py.")
         return
@@ -133,30 +102,24 @@ def fetch_squads():
     cmd_url = f"{BASE_URL}/directcommand?userid={USER_ID}"
     cmd_payload = {
         "data": {
-            "userId": USER_ID,
-            "sessionID": session_id,
+            "userId": USER_ID, "sessionID": session_id,
             "type": "GetUsersRawInfos",
             "request": json.dumps({"users": user_ids})
         },
         "locale": "ru", "platform": "YandexGamesDesktop", "requestId": 2, "version": VERSION
     }
 
-    r = requests.post(cmd_url, json=cmd_payload, headers=HEADERS)
-    if r.status_code != 200:
-        print(f"Error: /directcommand failed with status {r.status_code}")
-        return
+    try:
+        r = requests.post(cmd_url, json=cmd_payload, headers=HEADERS, timeout=30)
+        if r.status_code != 200: return
+        raw_resp = r.json()
+    except: return
 
-    raw_resp = r.json()
-    if "data" not in raw_resp or "response" not in raw_resp["data"]:
-        print("Error: No valid response data in directcommand.")
-        return
-
+    if "data" not in raw_resp or "response" not in raw_resp["data"]: return
     inner = json.loads(raw_resp["data"]["response"])
     fetched_users = inner.get("Users", [])
     
     squads_dir = os.path.join("arena", "squads")
-    os.makedirs(squads_dir, exist_ok=True)
-    
     now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
     updates_count = 0
 
@@ -164,17 +127,14 @@ def fetch_squads():
         uid = str(u.get('userId'))
         nick = u.get('nickname', 'Unknown')
         squad_str = u.get('squad')
-        
         if not isinstance(squad_str, str):
             squad_str = json.dumps(squad_str, sort_keys=True)
             
-        # Hash squad content to detect changes
         content_hash = hashlib.md5(squad_str.encode('utf-8')).hexdigest()
-        
         user_dir = os.path.join(squads_dir, uid)
         os.makedirs(user_dir, exist_ok=True)
         
-        # Сохраняем историю онлайна отдельно
+        # Online history
         last_visit = u.get('lastVisit')
         if last_visit:
             online_file = os.path.join(user_dir, "online_history.json")
@@ -183,51 +143,38 @@ def fetch_squads():
                 try:
                     with open(online_file, 'r', encoding='utf-8') as f:
                         online_history = json.load(f)
-                except:
-                    pass
+                except: pass
             
             if not online_history or online_history[-1] != last_visit:
                 online_history.append(last_visit)
                 with open(online_file, 'w', encoding='utf-8') as f:
                     json.dump(online_history, f, ensure_ascii=False, indent=2)
         
+        # Squad history
         history_file = os.path.join(user_dir, "history.json")
         history = []
         if os.path.exists(history_file):
-            with open(history_file, 'r', encoding='utf-8') as f:
-                history = json.load(f)
+            try:
+                with open(history_file, 'r', encoding='utf-8') as f:
+                    history = json.load(f)
+            except: pass
                 
-        # Check if the latest squad hash OR rating is different
-        is_new = True
         current_rating = int(u.get('arenaRating', 0))
+        is_new = True
         if history:
             last_entry = history[-1]
-            last_rating = int(last_entry.get('power', 0))
-            if last_entry.get('hash') == content_hash and last_rating == current_rating:
+            if last_entry.get('hash') == content_hash and int(last_entry.get('power', 0)) == current_rating:
                 is_new = False
                 
         if is_new:
-            # Parse squad from string to json
-            squad_data = {}
-            try:
-                squad_data = json.loads(squad_str)
-            except:
-                squad_data = squad_str
-                
-            history.append({
-                "timestamp": now_str,
-                "hash": content_hash,
-                "power": current_rating, 
-                "squad": squad_data
-            })
-            
+            try: squad_data = json.loads(squad_str)
+            except: squad_data = squad_str
+            history.append({"timestamp": now_str, "hash": content_hash, "power": current_rating, "squad": squad_data})
             with open(history_file, 'w', encoding='utf-8') as f:
                 json.dump(history, f, ensure_ascii=False, indent=2)
-            
             updates_count += 1
-            print(f"Updated squad for {nick} ({uid})")
 
-    print(f"Squad synchronization complete. {updates_count} new squad states recorded.")
+    print(f"Squad synchronization complete. {updates_count} new states recorded.")
 
 if __name__ == "__main__":
     fetch_squads()

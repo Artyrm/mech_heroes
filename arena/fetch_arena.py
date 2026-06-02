@@ -6,6 +6,10 @@ import glob
 import hashlib
 from datetime import datetime
 
+# Fix imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import arena.registry_manager as rm
+
 # Encoding fix for Windows console
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
@@ -21,10 +25,6 @@ def load_config():
         sys.exit(1)
     with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
         return json.load(f)
-
-def save_config(config):
-    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
-        json.dump(config, f, indent=4)
 
 CONF = load_config()
 USER_ID = CONF['USER_ID']
@@ -52,20 +52,6 @@ def compute_players_hash(players):
         )
     return hashlib.md5("|".join(hash_data).encode()).hexdigest()
 
-def load_existing_hashes(snapshots_dir):
-    """Загружает хэши всех существующих снимков."""
-    hashes = {}
-    for fpath in glob.glob(os.path.join(snapshots_dir, "arena_*.json")):
-        try:
-            with open(fpath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            if 'players' in data:
-                h = compute_players_hash(data['players'])
-                hashes[h] = os.path.basename(fpath)
-        except:
-            pass
-    return hashes
-
 def is_user_active() -> bool:
     target_ip = "84.201.164.35"
     try:
@@ -83,8 +69,13 @@ def fetch_arena():
     os.makedirs(snapshots_dir, exist_ok=True)
     
     force_run = "--force" in sys.argv
+    update_history = "--update_history" in sys.argv
 
-    # 0. Попытка переиспользовать свежий дамп из init_dumps
+    # 0. Используем реестр вместо сканирования папки
+    reg = rm.load_registry(force_rebuild=update_history)
+    existing_hashes = reg['snapshots']
+
+    # 0.1 Попытка переиспользовать свежий дамп из init_dumps
     init_data = None
     dumps_dir = "init_dumps"
     if not force_run and os.path.exists(dumps_dir):
@@ -101,12 +92,10 @@ def fetch_arena():
                     pass
 
     if not init_data:
-        # ПРОВЕРКА СЕССИИ перед запросом к API
         if is_user_active() and not force_run:
             print("[!] ОБНАРУЖЕНО АКТИВНОЕ СОЕДИНЕНИЕ. Пропуск API-запроса в fetch_arena.py.")
             return
 
-        # 1. Start with /init to get a valid sessionID
         init_url = f"{BASE_URL}/init?userid={USER_ID}"
         init_payload = {
             "data": {"userID": USER_ID, "authKey": AUTH_KEY},
@@ -114,12 +103,16 @@ def fetch_arena():
         }
         
         print("Connecting to game API...")
-        r = requests.post(init_url, json=init_payload, headers=HEADERS)
-        if r.status_code != 200:
-            print(f"Error: /init failed with status {r.status_code}")
+        try:
+            r = requests.post(init_url, json=init_payload, headers=HEADERS, timeout=15)
+            if r.status_code != 200:
+                print(f"Error: /init failed with status {r.status_code}")
+                return
+            init_data = r.json()
+        except Exception as e:
+            print(f"Error: /init failed: {e}")
             return
-        
-        init_data = r.json()
+
     if "error" in init_data:
         print(f"API Error: {init_data['error']}")
         return
@@ -133,7 +126,6 @@ def fetch_arena():
             json.dump({"sessionID": session_id, "timestamp": datetime.utcnow().isoformat()}, f, indent=2)
             
     user_state = resp_data.get('userState', {})
-    
     if isinstance(user_state, str):
         user_state = json.loads(user_state)
     
@@ -143,17 +135,16 @@ def fetch_arena():
     last_update = leaderboards.get('lastUpdateTime')
 
     if players and last_update:
-        # Дедупликация по содержимому, а не по lastUpdateTime
         content_hash = compute_players_hash(players)
-        existing_hashes = load_existing_hashes(snapshots_dir)
-
-        if content_hash in existing_hashes:
-            print(f"Data unchanged (matches {existing_hashes[content_hash]}), skipping save.")
+        
+        # Проверка по реестру (O(1) вместо сканирования диска)
+        if any(h == content_hash for h in existing_hashes.values()):
+            print(f"Data unchanged (matches registry hash), skipping save.")
             print(f"Top-1: {players[0]['profileState']['nickname']} ({players[0]['rating']})")
         else:
-            # Данные реально новые — используем текущее UTC-время для имени файла
             now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
-            target_path = os.path.join(snapshots_dir, f"arena_{now_str}.json")
+            fname = f"arena_{now_str}.json"
+            target_path = os.path.join(snapshots_dir, fname)
 
             snapshot = {
                 "timestamp": last_update,
@@ -165,26 +156,25 @@ def fetch_arena():
             with open(target_path, 'w', encoding='utf-8') as f:
                 json.dump(snapshot, f, indent=2, ensure_ascii=False)
             
-            print(f"Saved snapshot from /init: arena_{now_str}.json")
+            # Инкрементально обновляем реестр
+            rm.update_registry_with_snapshot(fname, content_hash, players)
+            
+            print(f"Saved snapshot: {fname}")
             print(f"Top-1: {players[0]['profileState']['nickname']} ({players[0]['rating']})")
     
     if not session_id:
-        print("No sessionID found, skipping /command step.")
         return
 
-    # 2. Call RefreshArenaLeaderboards (Corrected)
+    # Call RefreshArenaLeaderboards
     print("Requesting latest Arena Top-50 via UseServiceCommand...")
     cmd_url = f"{BASE_URL}/commands?userid={USER_ID}"
     last_cmd_id = user_state.get('lastCommandId', 0)
     
     command_payload = {
         "data": {
-            "userId": USER_ID,
-            "sessionID": session_id,
+            "userId": USER_ID, "sessionID": session_id,
             "commands": [{
-                "commandNumber": last_cmd_id + 1,
-                "hash": 1234567890,
-                "id": "UseServiceCommand",
+                "commandNumber": last_cmd_id + 1, "hash": 1234567890, "id": "UseServiceCommand",
                 "paramsStr": json.dumps({"serviceData": {"ServiceType": "RefreshArenaLeaderboards", "Data": ""}}),
                 "time": datetime.now().strftime('%d/%m/%Y_%H:%M:%S.%f')[:-2]
             }],
@@ -194,10 +184,8 @@ def fetch_arena():
     }
     
     try:
-        r = requests.post(cmd_url, json=command_payload, headers={"Content-Type": "application/octet-stream"}, timeout=10)
-        print(f"Refresh requested. Response status: {r.status_code}")
-    except Exception as e:
-        print(f"Warning: /commands failed with error: {e}.")
+        requests.post(cmd_url, json=command_payload, headers={"Content-Type": "application/octet-stream"}, timeout=10)
+    except: pass
 
 if __name__ == "__main__":
     fetch_arena()

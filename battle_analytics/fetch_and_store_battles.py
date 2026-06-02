@@ -176,7 +176,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dump", help="Path to a specific JSON dump to process")
     parser.add_argument("--force", action="store_true", help="Force API fetch even if user is active")
-    args = parser.parse_args()
+    args, unknown = parser.parse_known_args()
 
     history = fetch_history(explicit_dump=args.dump, force_run=args.force)
     if history:

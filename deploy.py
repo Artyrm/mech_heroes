@@ -60,6 +60,18 @@ def deploy():
                     with open(local_path, "rb") as f:
                         ftp.storbinary(f"STOR squads/{fname}", f)
             print(f"Uploaded squads HTML files.")
+
+        # Upload Arena Data (Lazy loading JSONs)
+        arena_data_dir = "arena/reports/data"
+        if os.path.exists(arena_data_dir):
+            try: ftp.mkd("data")
+            except: pass
+            for fname in os.listdir(arena_data_dir):
+                if fname.endswith('.json'):
+                    local_path = os.path.join(arena_data_dir, fname)
+                    with open(local_path, "rb") as f:
+                        ftp.storbinary(f"STOR data/{fname}", f)
+            print(f"Uploaded Arena snapshot data files.")
         
         # Upload personal analytics (dossiers and battle reports)
         analytics_dir = "battle_analytics"
