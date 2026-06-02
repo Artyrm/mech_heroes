@@ -14,14 +14,15 @@ OUTPUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FI
 
 def get_data():
     files = sorted([f for f in os.listdir(SNAPSHOTS_DIR) if f.startswith("points_utc_")])
-    data = []
+    snap_data = {}
+    
+    # 1. Load all snapshots into a dict mapping date -> max_pts
     for fn in files:
         m = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fn)
         if not m: continue
         date_str = m.group(1)
         if date_str < START_DATE or date_str > END_DATE: continue
             
-        dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
         path = os.path.join(SNAPSHOTS_DIR, fn)
         try:
             with open(path, encoding='utf-8') as f:
@@ -29,12 +30,27 @@ def get_data():
             pts_map = d.get("pts", d)
             pts = pts_map.get(UID)
             if pts is not None:
-                data.append({"time": dt, "pts": int(pts), "file": fn, "type": "snap"})
+                dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
+                if date_str not in snap_data or dt > snap_data[date_str]['time']:
+                    snap_data[date_str] = {"time": dt, "pts": int(pts), "type": "snap"}
         except: pass
+    
+    # 2. Load manual adjustments
+    manual_adj_path = os.path.join(os.path.dirname(os.path.dirname(SNAPSHOTS_DIR)), "clan_monitor", "manual_adjustments.json")
+    with open(manual_adj_path, 'r', encoding='utf-8') as f:
+        manual_data = json.load(f)
+    
+    # 3. Merge: If manual pts > snap pts, use manual. Set manual to 23:59:59 of that day.
+    for d_str, uids in manual_data.items():
+        if d_str >= START_DATE and d_str <= END_DATE:
+            m_pts = uids.get(UID)
+            if m_pts:
+                m_pts = m_pts[0]
+                dt_manual = datetime.strptime(d_str, "%Y-%m-%d").replace(tzinfo=timezone.utc) + timedelta(hours=23, minutes=59, seconds=59)
+                if d_str not in snap_data or m_pts > snap_data[d_str]['pts']:
+                    snap_data[d_str] = {"time": dt_manual, "pts": m_pts, "type": "manual"}
             
-    # Inject missing reset
-    data.append({"time": datetime(2026, 6, 1, 22, 0, tzinfo=timezone.utc), "pts": 0, "file": "MANUAL", "type": "manual"})
-            
+    data = list(snap_data.values())
     data.sort(key=lambda x: x["time"])
     return data
 
