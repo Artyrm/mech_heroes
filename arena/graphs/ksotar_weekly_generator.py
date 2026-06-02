@@ -4,25 +4,26 @@ import re
 from datetime import datetime, timezone, timedelta
 import matplotlib.pyplot as plt
 
-# Adjusted paths as the script is now in arena/graphs/
+# Paths
 SNAPSHOTS_DIR = r"G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\clan_monitor\snapshots"
 OUTPUT_FILENAME = "ksotar_weekly.png"
 UID = "227408"  # ksotar
-START_DATE = "2026-06-01" # Start of this week
+START_DATE = "2026-06-01" 
 END_DATE = "2026-06-07"
 OUTPUT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FILENAME)
 
 def get_data():
+    # 1. Load all snapshots as raw data
     files = sorted([f for f in os.listdir(SNAPSHOTS_DIR) if f.startswith("points_utc_")])
-    snap_data = {}
+    data = []
     
-    # 1. Load all snapshots into a dict mapping date -> max_pts
     for fn in files:
         m = re.search(r'(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2})', fn)
         if not m: continue
         date_str = m.group(1)
         if date_str < START_DATE or date_str > END_DATE: continue
             
+        dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
         path = os.path.join(SNAPSHOTS_DIR, fn)
         try:
             with open(path, encoding='utf-8') as f:
@@ -30,35 +31,35 @@ def get_data():
             pts_map = d.get("pts", d)
             pts = pts_map.get(UID)
             if pts is not None:
-                dt = datetime.strptime(f"{m.group(1)}_{m.group(2)}", "%Y-%m-%d_%H-%M").replace(tzinfo=timezone.utc)
-                if date_str not in snap_data or dt > snap_data[date_str]['time']:
-                    snap_data[date_str] = {"time": dt, "pts": int(pts), "type": "snap"}
+                data.append({"time": dt, "pts": int(pts), "type": "snap"})
         except: pass
-    
+            
     # 2. Load manual adjustments
     manual_adj_path = os.path.join(os.path.dirname(os.path.dirname(SNAPSHOTS_DIR)), "clan_monitor", "manual_adjustments.json")
     with open(manual_adj_path, 'r', encoding='utf-8') as f:
         manual_data = json.load(f)
     
-    # 3. Merge: If manual pts > snap pts, use manual. Set manual to 23:59:59 of that day.
-    for d_str, uids in manual_data.items():
-        if d_str >= START_DATE and d_str <= END_DATE:
-            m_pts = uids.get(UID)
-            if m_pts:
-                m_pts = m_pts[0]
-                dt_manual = datetime.strptime(d_str, "%Y-%m-%d").replace(tzinfo=timezone.utc) + timedelta(hours=23, minutes=59, seconds=59)
-                if d_str not in snap_data or m_pts > snap_data[d_str]['pts']:
-                    snap_data[d_str] = {"time": dt_manual, "pts": m_pts, "type": "manual"}
-            
-    data = list(snap_data.values())
+    # 3. Apply manual adjustments in-memory
+    # Identify resets and compare snapshots with manual data
     data.sort(key=lambda x: x["time"])
+    
+    for i in range(len(data) - 1):
+        if data[i+1]['pts'] < data[i]['pts']: # Reset found (data[i] is pre-reset)
+            date_str = data[i]['time'].strftime("%Y-%m-%d")
+            if date_str in manual_data:
+                m_pts = manual_data[date_str].get(UID)
+                if m_pts and m_pts[0] > data[i]['pts']:
+                    data[i]['pts'] = m_pts[0] # Just update the value, timestamp stays same
+                    data[i]['type'] = 'manual'
+            
     return data
 
 def plot_data(data):
     if not data: 
-        print("No data found for this week.")
+        print("No data found.")
         return
 
+    # Add start-of-week point if needed (not here to avoid artificial points)
     times = [d["time"] for d in data]
     pts = [d["pts"] for d in data]
 
@@ -69,15 +70,14 @@ def plot_data(data):
     total = 0
     prev_val = 0
     
-    # Store resets for annotation after plotting cumulative
+    # Store resets for annotation
     resets = []
     
     for d in data:
         val = d["pts"]
-        if val < prev_val:
-            total += val
+        if val < prev_val and prev_val != 0:
             resets.append((d['time'], val))
-            print(f"DEBUG: RESET detected at {d['time'].strftime('%H:%M')} with value {val}")
+            print(f"DEBUG: RESET detected at {d['time'].strftime('%H:%M')} | Prev: {prev_val} | Curr: {val}")
         else:
             total += (val - prev_val)
         cumulative_pts.append(total)
@@ -87,19 +87,15 @@ def plot_data(data):
     
     # Add reset markers
     for time_val, pt_val in resets:
-        print(f"DEBUG: Adding marker at {time_val}")
         ax.axvline(x=time_val, color='red', linestyle='--', alpha=0.9, zorder=5)
-        # Using annotate with explicit data coordinates and high zorder for guaranteed visibility
         ax.annotate(f"RESET\n{time_val.strftime('%H:%M')}", 
                     xy=(time_val, max(cumulative_pts) * 0.9), 
                     xytext=(0, 10), 
                     textcoords='offset points',
                     ha='center', color='red', fontweight='bold', fontsize=10,
-                    zorder=100) # High priority zorder
+                    zorder=100)
 
-    # Force Y-limits
     ax.set_ylim(0, max(max(pts), max(cumulative_pts)) * 1.1)
-
     ax.set_title(f"ksotar ({UID}) Personal Weekly Points - {START_DATE} to {END_DATE}")
     ax.set_xlabel("Time (UTC)")
     ax.set_ylabel("Points")
