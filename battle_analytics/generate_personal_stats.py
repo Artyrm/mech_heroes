@@ -39,9 +39,27 @@ def get_player_battles_timeline():
             dt = parse_fight_time(b.get('fightTime'))
             delta = int(b.get('ourRatingDelta', 0))
             sd = b.get('statistics', {})
-            p_u, e_u = sd.get('player', {}).get('units', {}), sd.get('enemy', {}).get('units', {})
-            p_min, e_min = (min([int(s) for s in p_u.keys()]) if p_u else 99), (min([int(s) for s in e_u.keys()]) if e_u else 99)
-            battles.append({'dt': dt, 'is_win': delta > 0, 'is_attack': p_min < e_min, 'delta': delta, 'file_html': os.path.basename(bf).replace('.json', '.html')})
+            p_u_data = sd.get('player', {}).get('units', {})
+            e_u_data = sd.get('enemy', {}).get('units', {})
+            
+            # Извлекаем юнитов игрока
+            player_units = []
+            for slot in p_u_data.values():
+                u_def = slot.get('state', {}).get('defId')
+                if u_def: player_units.append(u_def)
+            player_units.sort()
+            
+            p_min = min([int(s) for s in p_u_data.keys()]) if p_u_data else 99
+            e_min = min([int(s) for s in e_u_data.keys()]) if e_u_data else 99
+            
+            battles.append({
+                'dt': dt, 
+                'is_win': delta > 0, 
+                'is_attack': p_min < e_min, 
+                'delta': delta, 
+                'file_html': os.path.basename(bf).replace('.json', '.html'),
+                'units': tuple(player_units)
+            })
         battles.sort(key=lambda x: x['dt'])
         timeline[nick] = battles
     return timeline
@@ -76,12 +94,62 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
 def generate_dossiers(player_timelines):
     for nick, battles in player_timelines.items():
         if not battles: continue
+        
+        # Считаем тактическую статистику
+        compositions = {}
+        for b in battles:
+            u = b.get('units')
+            if not u: continue
+            if u not in compositions:
+                compositions[u] = {'wins': 0, 'losses': 0}
+            if b['is_win']: compositions[u]['wins'] += 1
+            else: compositions[u]['losses'] += 1
+            
+        sorted_comps = sorted(compositions.items(), key=lambda x: (x[1]['wins'] + x[1]['losses']), reverse=True)
+        
+        tactical_html = '<div class="tactical-summary"><h2>Тактический анализ (по составам)</h2>'
+        for units, res in sorted_comps:
+            total = res['wins'] + res['losses']
+            wr = (res['wins'] / total) * 100
+            color = '#3fb950' if wr >= 60 else ('#f85149' if wr <= 40 else '#f2cc60')
+            tactical_html += f'''
+            <div class="comp-box">
+                <div class="comp-units">{", ".join(units)}</div>
+                <div class="comp-stats">Боёв: <b>{total}</b> | Винрейт: <span style="color:{color};font-weight:bold">{wr:.1f}%</span> ({res['wins']}В / {res['losses']}П)</div>
+            </div>'''
+        tactical_html += '</div>'
+
         rows = ""
         for b in reversed(battles):
             rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{(b['dt']+timedelta(hours=3)).strftime('%d.%m %H:%M')}</td><td>{'АТАКА' if b['is_attack'] else 'ЗАЩИТА'}</td><td>{'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{'#3fb950' if b['delta']>0 else ('#f85149' if b['delta']<0 else '#8b949e')}\">{'+' if b['delta']>0 else ''}{b['delta']}</td></tr>"
+        
         target_dir = os.path.join(ANALYTICS_DIR, nick)
         os.makedirs(target_dir, exist_ok=True)
-        html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {nick}</title><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet"><style>body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}.container{{max-width:800px;margin:0 auto}}h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem}}.back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden}}th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}td{{padding:12px;border-bottom:1px solid #30363d}}tr:hover{{background:#1c2128}}</style></head><body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a><h1>ДОСЬЕ: {nick}</h1><table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table></div></body></html>'''
+        
+        html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {nick}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+        <style>
+            body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}
+            .container{{max-width:800px;margin:0 auto}}
+            h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem;margin-bottom:10px}}
+            h2{{font-family:'Orbitron';font-size:1.1rem;color:#8b949e;border-bottom:1px solid #30363d;padding-bottom:5px;margin-top:20px}}
+            .back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}
+            table{{width:100%;border-collapse:collapse;background:#161b22;border-radius:8px;overflow:hidden;margin-top:20px}}
+            th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}
+            td{{padding:12px;border-bottom:1px solid #30363d}}
+            tr:hover{{background:#1c2128}}
+            .tactical-summary {{ background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-bottom: 20px; }}
+            .comp-box {{ border-bottom: 1px solid #30363d; padding: 8px 0; }}
+            .comp-box:last-child {{ border-bottom: none; }}
+            .comp-units {{ color: #58a6ff; font-family: 'Roboto Mono'; font-size: 0.8rem; font-weight: bold; }}
+            .comp-stats {{ font-size: 0.75rem; color: #8b949e; margin-top: 3px; }}
+        </style></head>
+        <body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a>
+        <h1>ДОСЬЕ: {nick}</h1>
+        {tactical_html}
+        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table>
+        </div></body></html>'''
+        
         with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
 
 def generate_html_template():
