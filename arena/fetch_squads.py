@@ -65,7 +65,7 @@ def fetch_squads():
         print("No users found in registry. Run with --update_history to rebuild.")
         return
 
-    print(f"Fetching squads for {len(user_ids)} tracked players (via Registry)...")
+    print(f"Fetching squads for {len(user_ids)} tracked players (all registry users)...")
 
     # 1. Try to reuse session ID
     session_id = None

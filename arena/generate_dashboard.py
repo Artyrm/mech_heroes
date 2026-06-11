@@ -48,11 +48,11 @@ def generate():
     snap_files = sorted(glob.glob(os.path.join(snaps_dir, "arena_*.json")))
     if not snap_files: return
 
-    # Для дашборда берем последние 100 (этого хватит на 4 дня истории)
+    # Для дашборда берем последние 100
     if not update_history and len(snap_files) > 100:
         snap_files = snap_files[-100:]
 
-    # 3. Загружаем истории (для выпавших)
+    # 3. Загружаем истории
     all_histories = {}
     for hf_path in glob.glob('arena/squads/*/history.json'):
         uid = int(os.path.basename(os.path.dirname(hf_path)))
@@ -93,40 +93,41 @@ def generate():
             current_dt = parse_any_date(ts)
             current_uids = {int(p.get('userID', p.get('userId'))) for p in data['players'] if p.get('userID') or p.get('userId')}
             
-            # Добавляем выпавших
-            dropped = []
-            for uid, history in all_histories.items():
-                if uid not in current_uids:
-                    he = get_history_entry_at(uid, current_dt, all_histories)
-                    if he:
-                        squad = he.get('squad', {})
-                        gen = squad.get('general', {})
-                        dropped.append({
-                            'userID': uid,
-                            'rating': he.get('power', 0),
-                            'isDropped': True,
-                            'power': gen.get('power', 0),
-                            'profileState': {
-                                'nickname': known_users.get(str(uid), str(uid)),
-                                'winCount': gen.get('winCount', 0),
-                                'defeatCount': gen.get('defeatCount', 0)
-                            },
-                            'clanProfile': {
-                                'clanName': squad.get('clanName', '-'),
-                                'clanTag': squad.get('clanTag', '')
-                            }
-                        })
+            # Добавляем ВСЕХ зарегистрированных игроков, которых нет в этом снимке
+            all_known_uids = {int(uid) for uid in known_users.keys()}
+            missing_uids = all_known_uids - current_uids
+            
+            for uid in missing_uids:
+                he = get_history_entry_at(uid, current_dt, all_histories)
+                if he:
+                    squad = he.get('squad', {})
+                    gen = squad.get('general', {})
+                    data['players'].append({
+                        'userID': uid,
+                        'rating': he.get('power', 0),
+                        'isDropped': True,
+                        'power': gen.get('power', 0),
+                        'profileState': {
+                            'nickname': known_users.get(str(uid), str(uid)),
+                            'winCount': gen.get('winCount', 0),
+                            'defeatCount': gen.get('defeatCount', 0)
+                        },
+                        'clanProfile': {
+                            'clanName': squad.get('clanName', '-'),
+                            'clanTag': squad.get('clanTag', '')
+                        }
+                    })
             
             # Маркеры
-            for p in data['players'] + dropped:
+            for p in data['players']:
                 uid = int(p.get('userID', p.get('userId')))
                 if uid in holders: p['hasSuppressionCore'] = True
                 if uid in players_online_info: p['lastOnline'] = players_online_info[uid]
             
-            dropped.sort(key=lambda x: int(x.get('rating', 0)), reverse=True)
-            data['players'].extend(dropped)
+            # Сортировка по рейтингу
+            data['players'].sort(key=lambda x: int(x.get('rating', 0)), reverse=True)
             
-            # Вшиваем ВСЁ в один объект (для локальной работы без fetch)
+            # Вшиваем ВСЁ в один объект
             processed_snaps[ts] = {"players": data['players']}
         except Exception as e:
             print(f"Error: {e}")
