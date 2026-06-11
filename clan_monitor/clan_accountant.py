@@ -231,6 +231,41 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
         reset_players = set()
         for d_str in adj_db:
             reset_players.update(adj_db[d_str].keys())
+        
+        # Prepare player_resets with automatic detection
+        player_resets = {}
+        # 1. Add manual adjustments
+        for date, users_data in adj_db.items():
+            for uid, vals in users_data.items():
+                if uid == "burned_override": continue
+                if uid not in player_resets: player_resets[uid] = {}
+                # Keep existing format but maybe store as dict with time if possible
+                player_resets[uid][f"{date} 00:00 (manual)"] = vals
+        
+        # 2. Detect automatic resets from all snapshots (sd)
+        # Sort all snapshots by time
+        sorted_sd = sorted(sd, key=lambda x: x['time'])
+        for i in range(1, len(sorted_sd)):
+            prev_s = sorted_sd[i-1]
+            curr_s = sorted_sd[i]
+            # Skip weekly Monday 03:00 MSK reset (00:00 UTC)
+            msk_time = curr_s['time'].astimezone(timezone(timedelta(hours=3)))
+            is_monday_reset = msk_time.weekday() == 0 and msk_time.hour == 3
+            if is_monday_reset: continue
+            
+            for uid, curr_pts in curr_s['pts'].items():
+                if uid in prev_s['pts']:
+                    prev_pts = prev_s['pts'][uid]
+                    # Reset detected if current < previous
+                    if curr_pts < prev_pts:
+                        msk_time = curr_s['time'].astimezone(timezone(timedelta(hours=3))).strftime("%d.%m %H:%M")
+                        if uid not in player_resets: player_resets[uid] = {}
+                        if msk_time not in player_resets[uid]:
+                            player_resets[uid][msk_time] = [prev_pts, curr_pts]
+                        else:
+                            player_resets[uid][msk_time].append(curr_pts)
+        
+        resets_json = json.dumps(player_resets)
 
         pl_res = {}
         for uid in players:
@@ -339,14 +374,64 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     .fact-grow {{ color: var(--accent); font-size: 0.9rem; font-family: 'Roboto Mono'; }}
     td {{ padding: 10px 12px; border-bottom: 1px solid var(--border); border-right: 1px solid rgba(48, 54, 61, 0.3); }}
     .nick-cell {{ display: flex; flex-direction: column; gap: 6px; }}
-    .nick {{ color: #fff; font-weight: 700; font-size: 0.9rem; }}
+    .nick {{ color: #fff; font-weight: 700; font-size: 0.9rem; cursor: pointer; }}
     .trait {{ color: var(--gold); font-size: 0.68rem; font-weight: 500; font-style: italic; opacity: 0.7; }}
     .role {{ font-size: 0.58rem; color: #8b949e; border: 1px solid var(--border); padding: 1px 3px; border-radius: 3px; }}
     .main-score {{ font-family: 'Roboto Mono'; font-size: 1rem; color: var(--gold); font-weight: 700; }}
     .day-growth {{ font-family: 'Roboto Mono'; font-size: 0.9rem; color: var(--green); font-weight: 700; }}
     .absent {{ color: var(--error); font-weight: 900; font-size: 1.1rem; font-family: 'Orbitron'; }}
     .no-growth {{ color: #484f58; opacity: 0.4; font-family: 'Roboto Mono'; text-align: center; }}
-</style></head><body><div class="container"><header>
+    .modal {{ display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }}
+    .modal-content {{ background: var(--card); margin: 15% auto; padding: 20px; border: 1px solid var(--border); width: 400px; border-radius: 8px; color: var(--text); }}
+</style>
+<script>
+    const playerResets = {resets_json};
+    function showResets(nick, uid) {{
+        const resets = playerResets[uid];
+        const modal = document.getElementById('resetsModal');
+        const content = document.getElementById('resetsContent');
+        if (!resets) {{ content.innerHTML = `<h3>${{nick}}</h3><p>Нет записей о сбросах.</p>`; }}
+        else {{
+            // Convert to array of {{date_str, timestamp, info}} for sorting
+            const resetEntries = Object.entries(resets).map(([date, vals]) => {{
+                // Try to parse date from string (e.g., "11.06 14:27" or "2026-06-04 00:00 (manual)")
+                let timestamp = 0;
+                if (date.includes("(manual)")) {{
+                    timestamp = new Date(date.split(" ")[0]).getTime();
+                }} else {{
+                    const [d, t] = date.split(" ");
+                    const [day, mon] = d.split(".");
+                    timestamp = new Date(2026, mon-1, day, ...t.split(":").map(Number)).getTime();
+                }}
+                return {{ date, timestamp, vals }};
+            }});
+            
+            // Filter last 7 days and sort reverse chronologically
+            const now = new Date().getTime();
+            const sevenDaysAgo = now - (7 * 24 * 60 * 60 * 1000);
+            
+            const filteredResets = resetEntries
+                .filter(e => e.timestamp >= sevenDaysAgo)
+                .sort((a, b) => b.timestamp - a.timestamp);
+
+            let html = `<h3>${{nick}} - История сбросов (последние 7 дней)</h3><ul>`;
+            if (filteredResets.length === 0) {{
+                html += `<li>Нет записей за последние 7 дней.</li>`;
+            }} else {{
+                filteredResets.forEach(e => {{
+                    html += `<li>${{e.date}}: ${{e.vals.join(', ')}}</li>`;
+                }});
+            }}
+            html += `</ul>`;
+            content.innerHTML = html;
+        }}
+        modal.style.display = 'block';
+    }}
+    function closeModal() {{ document.getElementById('resetsModal').style.display = 'none'; }}
+</script>
+</head><body>
+<div id="resetsModal" class="modal" onclick="closeModal()"><div class="modal-content" onclick="event.stopPropagation()"><div id="resetsContent"></div><button onclick="closeModal()">Закрыть</button></div></div>
+<header>
 <h1>O R D A</h1><div class="subtitle">CLAN ANALYTICS CORE</div></header>
 <nav>{nav}</nav>
 <div class="table-container"><div class="update-time">ДАННЫЕ ОТ: {last_data_ts} (MSK)</div><table>
@@ -356,7 +441,7 @@ def generate_web_report(hier, users, current_rating, last_update_time=None):
     <tr class="clan-row"><td style="text-align:center; color:#58a6ff">--</td><td colspan="2">ИСТОРИЧЕСКИЙ РЕЙТИНГ</td><td style="text-align:center"><span class="main-score" style="color:#fff">{fmt(tr)}</span></td>{" ".join(c_cells)}</tr>
     <tr class="clan-row" style="background:#0d1117; height: 45px;"><td style="text-align:center; color:var(--green)">--</td><td colspan="2" style="color:var(--green); font-size: 0.8rem;">СУММАРНЫЙ ЗАРАБОТОК</td><td style="text-align:center"><span class="main-score" style="color:var(--green); font-size: 0.95rem;">{fmt(sum(clan_growths))}</span></td>{" ".join(s_cells)}</tr>"""
         for count, uid in enumerate(sorted_ids, 1):
-            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"}); p_res = pl_res[uid]; nick_sec = f"<div class='nick-cell'><span class='nick'>{p['nick']}</span>"
+            p = names_map.get(uid, {"nick": f"ID:{uid}", "role": "Soldier"}); p_res = pl_res[uid]; nick_sec = f"<div class='nick-cell'><span class='nick' onclick='showResets(\"{p['nick']}\", \"{uid}\")'>{p['nick']}</span>"
             if p.get('nick') in dupes: nick_sec += f"<span class='trait'>({p.get('traits','') if p.get('traits','') else 'Без особых примет'})</span>"
             nick_sec += "</div>"
             html += f"<tr><td style='text-align:center; color:#484f58; font-family:\"Roboto Mono\"; font-size: 0.7rem;'>{count}</td><td>{nick_sec}</td><td><span class='role'>{p['role']}</span></td><td style='text-align:center'><span class='main-score'>{fmt(p_res['total'])}</span></td>"
