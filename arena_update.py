@@ -62,14 +62,23 @@ def main():
         ("DEPLOYING TO SERVER", "deploy.py")
     ]
 
+    # Список скриптов, которым нужен --force при принудительном запуске (только те, что общаются с API)
+    force_enabled_scripts = [
+        "arena/fetch_arena.py",
+        "arena/fetch_squads.py",
+        "battle_analytics/fetch_and_store_battles.py"
+    ]
+
     for name, cmd in steps:
         if name == "DEPLOYING TO SERVER" and local_mode:
             print(f"\n>>> [STEP] {name} SKIPPED (local mode)")
             continue
 
         actual_cmd = cmd
-        if force_run and "--force" not in actual_cmd:
-            actual_cmd += " --force"
+        # Пробрасываем флаг только если скрипт в списке разрешенных
+        if force_run and any(s in actual_cmd for s in force_enabled_scripts):
+            if "--force" not in actual_cmd:
+                actual_cmd += " --force"
         if update_history and "--update_history" not in actual_cmd:
             actual_cmd += " --update_history"
             

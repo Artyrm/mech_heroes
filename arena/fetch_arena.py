@@ -70,6 +70,9 @@ def fetch_arena():
     
     force_run = "--force" in sys.argv
     update_history = "--update_history" in sys.argv
+    
+    if update_history:
+        print("[!] WARNING: --update_history is active. This will trigger a full registry rebuild and may take a long time.")
 
     # 0. Используем реестр вместо сканирования папки
     reg = rm.load_registry(force_rebuild=update_history)

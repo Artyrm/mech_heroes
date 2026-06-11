@@ -34,6 +34,17 @@ def compute_players_hash(players):
         )
     return hashlib.md5("|".join(hash_data).encode()).hexdigest()
 
+def load_clan_members():
+    db_path = os.path.join('clan_monitor', 'members_name_db.json')
+    if not os.path.exists(db_path):
+        return {}
+    try:
+        with open(db_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            return {uid: info.get('nick', 'Unknown') for uid, info in data.items()}
+    except:
+        return {}
+
 def rebuild_registry():
     print("[REGISTRY] Rebuilding arena registry from all files (Slow mode)...")
     reg = {
@@ -60,6 +71,12 @@ def rebuild_registry():
                     reg['known_users'][uid] = nick
         except:
             print(f"[REGISTRY] Warning: Failed to read {fname}")
+
+    # Add clan members with lower priority
+    clan_members = load_clan_members()
+    for uid, nick in clan_members.items():
+        if uid not in reg['known_users']:
+            reg['known_users'][uid] = nick
 
     squads_base = os.path.join('arena', 'squads')
     if os.path.exists(squads_base):
