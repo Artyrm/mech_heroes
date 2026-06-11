@@ -229,9 +229,10 @@ User-Agent: Mozilla/5.0 ... Chrome/124.0.0.0
 
 | Запрос | Endpoint | Ключевые поля |
 |---|---|---|
-| Инициализация | `POST /init?userid={USER_ID}` | `userID`, `authKey`, `locale: "ru"`, `platform`, `version` |
+| Инициализация | `POST /init?userid={USER_ID}` | `userID`, `authKey`, `locale: "ru"`, `platform`, `version` |  
 | Данные участников | `POST /directcommand?userid={USER_ID}` | `userId`, `sessionID`, `type: "GetUsersRawInfos"`, `request: JSON({users: [ids]})` |
 
+*Пример реального ответа сервера от `GetUsersRawInfos` можно посмотреть в файле [raw_api_response_sample.json](raw_api_response_sample.json).*
 ---
 
 ## История версий

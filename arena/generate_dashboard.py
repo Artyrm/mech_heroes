@@ -29,6 +29,16 @@ def get_history_entry_at(uid, target_dt, all_histories):
         else: break
     return best_entry
 
+def get_profile_at(uid, target_dt):
+    profile_file = os.path.join('arena', 'squads', str(uid), 'profile_history.json')
+    if not os.path.exists(profile_file): return None
+    try:
+        with open(profile_file, 'r', encoding='utf-8') as f:
+            history = json.load(f)
+            # Просто берем последнюю запись - профиль не привязан к снимку Арены
+            return history[-1] if history else None
+    except: return None
+
 def generate():
     snaps_dir = "arena/snapshots"
     template_path = "arena/reports/template.html"
@@ -93,28 +103,43 @@ def generate():
             current_dt = parse_any_date(ts)
             current_uids = {int(p.get('userID', p.get('userId'))) for p in data['players'] if p.get('userID') or p.get('userId')}
             
-            # Добавляем ВСЕХ зарегистрированных игроков, которых нет в этом снимке
             all_known_uids = {int(uid) for uid in known_users.keys()}
             missing_uids = all_known_uids - current_uids
             
             for uid in missing_uids:
-                he = get_history_entry_at(uid, current_dt, all_histories)
-                if he:
-                    squad = he.get('squad', {})
-                    gen = squad.get('general', {})
+                pe = get_profile_at(uid, current_dt)
+                
+                if pe:
+                    clan_profile = pe.get('clanProfile', {})
                     data['players'].append({
                         'userID': uid,
-                        'rating': he.get('power', 0),
+                        'rating': pe.get('arenaRating', 0),
                         'isDropped': True,
-                        'power': gen.get('power', 0),
+                        'power': 0, 
                         'profileState': {
-                            'nickname': known_users.get(str(uid), str(uid)),
-                            'winCount': gen.get('winCount', 0),
-                            'defeatCount': gen.get('defeatCount', 0)
+                            'nickname': pe.get('nickname', known_users.get(str(uid), str(uid))),
+                            'winCount': 0,
+                            'defeatCount': 0
                         },
                         'clanProfile': {
-                            'clanName': squad.get('clanName', '-'),
-                            'clanTag': squad.get('clanTag', '')
+                            'clanName': clan_profile.get('clanName', '-'),
+                            'clanTag': clan_profile.get('clanTag', '')
+                        }
+                    })
+                else:
+                    data['players'].append({
+                        'userID': uid,
+                        'rating': 0,
+                        'isDropped': True,
+                        'power': 0,
+                        'profileState': {
+                            'nickname': known_users.get(str(uid), str(uid)),
+                            'winCount': 0,
+                            'defeatCount': 0
+                        },
+                        'clanProfile': {
+                            'clanName': '-',
+                            'clanTag': ''
                         }
                     })
             
@@ -132,13 +157,11 @@ def generate():
         except Exception as e:
             print(f"Error: {e}")
 
-    users_with_squads = [int(u) for u in all_histories.keys()]
-
     with open(template_path, 'r', encoding='utf-8') as tf:
         html = tf.read()
     
     html = html.replace('SNAPSHOTS_DATA', json.dumps(processed_snaps, ensure_ascii=False))
-    html = html.replace('USERS_WITH_SQUADS', json.dumps(users_with_squads))
+    html = html.replace('USERS_WITH_SQUADS', json.dumps([int(u) for u in all_histories.keys()]))
     now_msk = datetime.utcnow() + timedelta(hours=3)
     html = html.replace('LAST_CHECK_TIME', now_msk.strftime("%d.%m.%Y %H:%M:%S МСК"))
     

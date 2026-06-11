@@ -114,13 +114,20 @@ def fetch_squads():
 
     try:
         r = requests.post(cmd_url, json=cmd_payload, headers=HEADERS, timeout=30)
-        if r.status_code != 200: return
+        if r.status_code != 200: 
+            print(f"[DEBUG] API failed with status {r.status_code}")
+            return
         raw_resp = r.json()
-    except: return
+    except Exception as e:
+        print(f"[DEBUG] API exception: {e}")
+        return
 
-    if "data" not in raw_resp or "response" not in raw_resp["data"]: return
+    if "data" not in raw_resp or "response" not in raw_resp["data"]: 
+        print(f"[DEBUG] Invalid API response: {raw_resp}")
+        return
     inner = json.loads(raw_resp["data"]["response"])
     fetched_users = inner.get("Users", [])
+    print(f"[DEBUG] Fetched {len(fetched_users)} users from API")
     
     squads_dir = os.path.join("arena", "squads")
     now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
@@ -140,10 +147,6 @@ def fetch_squads():
         # Online history
         last_visit = u.get('lastVisit')
         if last_visit:
-            # DEBUG
-            if uid == '113012':
-                print(f"[DEBUG] Хоббит (113012) lastVisit from API: {last_visit}")
-
             online_file = os.path.join(user_dir, "online_history.json")
             online_history = []
             if os.path.exists(online_file):
@@ -165,21 +168,71 @@ def fetch_squads():
                 with open(history_file, 'r', encoding='utf-8') as f:
                     history = json.load(f)
             except: pass
+        
+        # Profile history
+        profile_file = os.path.join(user_dir, "profile_history.json")
+        profile_history = []
+        if os.path.exists(profile_file):
+            try:
+                with open(profile_file, 'r', encoding='utf-8') as f:
+                    profile_history = json.load(f)
+            except: pass
                 
         current_rating = int(u.get('arenaRating', 0))
-        is_new = True
+        current_clan = u.get('clanProfile', {})
+        current_nick = u.get('nickname', 'Unknown')
+        
+        try: 
+            squad_data = json.loads(squad_str)
+            current_power = squad_data.get('general', {}).get('power', 0)
+        except: 
+            squad_data = squad_str
+            current_power = 0
+            
+        # 1. Update squad history
+        is_squad_new = True
         if history:
             last_entry = history[-1]
-            if last_entry.get('hash') == content_hash and int(last_entry.get('power', 0)) == current_rating:
-                is_new = False
-                
-        if is_new:
-            try: squad_data = json.loads(squad_str)
-            except: squad_data = squad_str
-            history.append({"timestamp": now_str, "hash": content_hash, "power": current_rating, "squad": squad_data})
+            if last_entry.get('hash') == content_hash:
+                is_squad_new = False
+        
+        if is_squad_new:
+            history.append({
+                "timestamp": now_str, 
+                "hash": content_hash, 
+                "power": current_power, 
+                "squad": squad_data
+            })
             with open(history_file, 'w', encoding='utf-8') as f:
                 json.dump(history, f, ensure_ascii=False, indent=2)
+
+        # 2. Update profile history
+        profile_file = os.path.join(user_dir, "profile_history.json")
+        profile_history = []
+        if os.path.exists(profile_file):
+            try:
+                with open(profile_file, 'r', encoding='utf-8') as f:
+                    profile_history = json.load(f)
+            except: pass
+
+        is_profile_new = True
+        if profile_history:
+            last_p = profile_history[-1]
+            if last_p.get('arenaRating') == current_rating and \
+               last_p.get('clanProfile') == current_clan and \
+               last_p.get('nickname') == current_nick:
+                is_profile_new = False
+        if is_profile_new:
+            profile_history.append({
+                "timestamp": now_str,
+                "arenaRating": current_rating,
+                "clanProfile": current_clan,
+                "nickname": current_nick
+            })
+            with open(profile_file, 'w', encoding='utf-8') as f:
+                json.dump(profile_history, f, ensure_ascii=False, indent=2)
             updates_count += 1
+
 
     print(f"Squad synchronization complete. {updates_count} new states recorded.")
 
