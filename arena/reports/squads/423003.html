@@ -59,7 +59,7 @@
     </div>
 
     <script>
-        const history = [{"timestamp": "2026-06-11T16-55-53", "hash": "1b6fba91c0d9c693fbfa98a89b7dba04", "power": 517, "squad": {"general": {"defId": "cat", "isTrial": false, "level": "80", "stateId": 1}, "units": [{"defId": "valkyrie", "isTrial": false, "level": "96", "stars": "1", "stateId": 1039, "unitType": "Ordinary"}, {"defId": "toxin", "isTrial": false, "level": "99", "stars": "4", "stateId": 1020, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "94", "stars": "2", "stateId": 1040, "unitType": "Ordinary"}, {"defId": "shocker", "isTrial": false, "level": "99", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}, {"defId": "rm23beam", "isTrial": false, "level": "99", "stars": "1", "stateId": 1050, "unitType": "Ordinary"}]}}];
+        const history = [{"timestamp": "2026-06-11T16-55-53", "hash": "1b6fba91c0d9c693fbfa98a89b7dba04", "power": 517, "squad": {"general": {"defId": "cat", "isTrial": false, "level": "80", "stateId": 1}, "units": [{"defId": "valkyrie", "isTrial": false, "level": "96", "stars": "1", "stateId": 1039, "unitType": "Ordinary"}, {"defId": "toxin", "isTrial": false, "level": "99", "stars": "4", "stateId": 1020, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "94", "stars": "2", "stateId": 1040, "unitType": "Ordinary"}, {"defId": "shocker", "isTrial": false, "level": "99", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}, {"defId": "rm23beam", "isTrial": false, "level": "99", "stars": "1", "stateId": 1050, "unitType": "Ordinary"}]}}, {"timestamp": "2026-06-13T14-12-11", "hash": "1b6fba91c0d9c693fbfa98a89b7dba04", "power": 0, "arenaRating": 517, "squad": {"general": {"defId": "cat", "isTrial": false, "level": "80", "stateId": 1}, "units": [{"defId": "valkyrie", "isTrial": false, "level": "96", "stars": "1", "stateId": 1039, "unitType": "Ordinary"}, {"defId": "toxin", "isTrial": false, "level": "99", "stars": "4", "stateId": 1020, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "94", "stars": "2", "stateId": 1040, "unitType": "Ordinary"}, {"defId": "shocker", "isTrial": false, "level": "99", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}, {"defId": "rm23beam", "isTrial": false, "level": "99", "stars": "1", "stateId": 1050, "unitType": "Ordinary"}]}}];
         const SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot'];
 
         function formatDateMSK(s) {
@@ -85,15 +85,20 @@
         const t2Select = document.getElementById('t2-select');
 
         history.forEach((entry, idx) => {
-            const label = `${formatDateMSK(entry.timestamp)} (Рейтинг: ${entry.power || 'N/A'})`;
+            // Приоритет: arenaRating (новое поле). Если его нет (старые данные) - берем power.
+            let rating = entry.arenaRating;
+            if (rating === undefined || rating === null) rating = entry.power;
+            
+            const ratingStr = (rating !== undefined && rating !== null) ? rating : 'N/A';
+            const label = `${formatDateMSK(entry.timestamp)} (Рейтинг: ${ratingStr})`;
             t1Select.add(new Option(label, idx));
             t2Select.add(new Option(label, idx));
         });
 
-        // Default selection: T1 is first (oldest), T2 is last (newest)
+        // Default selection: T1 is penultimate, T2 is last
         if (history.length > 0) {
-            t1Select.selectedIndex = 0;
             t2Select.selectedIndex = history.length - 1;
+            t1Select.selectedIndex = Math.max(0, history.length - 2);
         }
 
         function formatLevel(rawLvl) {

@@ -2,6 +2,19 @@ import json
 import os
 import sys
 import glob
+from datetime import datetime
+
+def parse_any_date(s):
+    if not s: return datetime(1970, 1, 1)
+    try:
+        if 'T' in s:
+            return datetime.strptime(s.split('.')[0], "%Y-%m-%dT%H-%M-%S")
+        else:
+            d, t = s.split('_')
+            day, month, year = d.split('/')
+            h, m, sec = t.split(':')
+            return datetime(int(year), int(month), int(day), int(h), int(m), int(sec.split('.')[0]))
+    except: return datetime(1970, 1, 1)
 
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
@@ -27,11 +40,43 @@ def generate_squad_reports():
         history_file = os.path.join(squads_dir, uid, "history.json")
         if not os.path.exists(history_file): continue
         
+        profile_file = os.path.join(squads_dir, uid, "profile_history.json")
+        
         with open(history_file, 'r', encoding='utf-8') as f:
             history = json.load(f)
             
         if not history: continue
-        
+
+        # Загружаем историю профиля для восстановления рейтингов
+        profile_history = []
+        if os.path.exists(profile_file):
+            try:
+                with open(profile_file, 'r', encoding='utf-8') as f:
+                    profile_history = json.load(f)
+            except: pass
+
+        # Обогащаем данные: если в истории отряда нет рейтинга (или он 0), 
+        # берем его из истории профиля по таймстампу.
+        for h_entry in history:
+            h_dt = parse_any_date(h_entry.get('timestamp'))
+            # Если рейтинг в истории отряда не задан или равен 0
+            curr_r = h_entry.get('arenaRating', h_entry.get('power', 0))
+            if not curr_r or curr_r == 0:
+                # Ищем ближайший профиль ДО этого момента
+                best_p = None
+                for p_entry in profile_history:
+                    p_dt = parse_any_date(p_entry.get('timestamp'))
+                    if p_dt <= h_dt:
+                        best_p = p_entry
+                    else: break
+                
+                # Если нашли в профиле - подставляем
+                if best_p:
+                    h_entry['arenaRating'] = best_p.get('arenaRating')
+                elif profile_history:
+                    # Если история профиля есть, но все записи позже - берем самую первую доступную
+                    h_entry['arenaRating'] = profile_history[0].get('arenaRating')
+
         nick = nicknames.get(uid, f"User {uid}")
         
         # We will generate a single HTML file that contains the history JSON
@@ -124,15 +169,20 @@ def generate_squad_reports():
         const t2Select = document.getElementById('t2-select');
 
         history.forEach((entry, idx) => {{
-            const label = `${{formatDateMSK(entry.timestamp)}} (Рейтинг: ${{entry.power || 'N/A'}})`;
+            // Приоритет: arenaRating (новое поле). Если его нет (старые данные) - берем power.
+            let rating = entry.arenaRating;
+            if (rating === undefined || rating === null) rating = entry.power;
+            
+            const ratingStr = (rating !== undefined && rating !== null) ? rating : 'N/A';
+            const label = `${{formatDateMSK(entry.timestamp)}} (Рейтинг: ${{ratingStr}})`;
             t1Select.add(new Option(label, idx));
             t2Select.add(new Option(label, idx));
         }});
 
-        // Default selection: T1 is first (oldest), T2 is last (newest)
+        // Default selection: T1 is penultimate, T2 is last
         if (history.length > 0) {{
-            t1Select.selectedIndex = 0;
             t2Select.selectedIndex = history.length - 1;
+            t1Select.selectedIndex = Math.max(0, history.length - 2);
         }}
 
         function formatLevel(rawLvl) {{

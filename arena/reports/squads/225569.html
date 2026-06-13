@@ -59,7 +59,7 @@
     </div>
 
     <script>
-        const history = [{"timestamp": "2026-06-11T16-55-53", "hash": "3652ed8a97ff7d88f5a10246a9b43033", "power": 632, "squad": {"general": {"defId": "brain", "equipables": {"1180": {"id": "heal_armor", "itemType": "Equipment", "level": "59", "sharpening": {"1": "e_reload_sharpening_weak", "30": "e_health_sharpening"}, "stateId": 1180}, "1181": {"id": "heal_weapon", "itemType": "Equipment", "level": "27", "sharpening": {"1": "e_health_sharpening_weak"}, "stateId": 1181}}, "isTrial": false, "level": "94", "stateId": 1144}, "units": [{"defId": "shocker", "isTrial": false, "level": "101", "stars": "6", "stateId": 1018, "unitType": "Ordinary"}, {"defId": "armageddon", "isTrial": false, "level": "140", "stars": "2", "stateId": 1094, "unitType": "Ordinary"}, {"defId": "sobr", "isTrial": false, "level": "148", "stars": "1", "stateId": 1092, "unitType": "Ordinary"}, {"defId": "furnace", "equipables": {"1173": {"id": "health_tracker_legendary", "itemType": "Gear", "level": "31", "sharpening": {"1": "e_dodge_sharpening_weak", "30": "e_crit_sharpening"}, "stateId": 1173}}, "isTrial": false, "level": "144", "stars": "1", "stateId": 1137, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "95", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}]}}];
+        const history = [{"timestamp": "2026-06-11T16-55-53", "hash": "3652ed8a97ff7d88f5a10246a9b43033", "power": 632, "squad": {"general": {"defId": "brain", "equipables": {"1180": {"id": "heal_armor", "itemType": "Equipment", "level": "59", "sharpening": {"1": "e_reload_sharpening_weak", "30": "e_health_sharpening"}, "stateId": 1180}, "1181": {"id": "heal_weapon", "itemType": "Equipment", "level": "27", "sharpening": {"1": "e_health_sharpening_weak"}, "stateId": 1181}}, "isTrial": false, "level": "94", "stateId": 1144}, "units": [{"defId": "shocker", "isTrial": false, "level": "101", "stars": "6", "stateId": 1018, "unitType": "Ordinary"}, {"defId": "armageddon", "isTrial": false, "level": "140", "stars": "2", "stateId": 1094, "unitType": "Ordinary"}, {"defId": "sobr", "isTrial": false, "level": "148", "stars": "1", "stateId": 1092, "unitType": "Ordinary"}, {"defId": "furnace", "equipables": {"1173": {"id": "health_tracker_legendary", "itemType": "Gear", "level": "31", "sharpening": {"1": "e_dodge_sharpening_weak", "30": "e_crit_sharpening"}, "stateId": 1173}}, "isTrial": false, "level": "144", "stars": "1", "stateId": 1137, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "95", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}]}}, {"timestamp": "2026-06-13T14-12-11", "hash": "3652ed8a97ff7d88f5a10246a9b43033", "power": 0, "arenaRating": 628, "squad": {"general": {"defId": "brain", "equipables": {"1180": {"id": "heal_armor", "itemType": "Equipment", "level": "59", "sharpening": {"1": "e_reload_sharpening_weak", "30": "e_health_sharpening"}, "stateId": 1180}, "1181": {"id": "heal_weapon", "itemType": "Equipment", "level": "27", "sharpening": {"1": "e_health_sharpening_weak"}, "stateId": 1181}}, "isTrial": false, "level": "94", "stateId": 1144}, "units": [{"defId": "shocker", "isTrial": false, "level": "101", "stars": "6", "stateId": 1018, "unitType": "Ordinary"}, {"defId": "armageddon", "isTrial": false, "level": "140", "stars": "2", "stateId": 1094, "unitType": "Ordinary"}, {"defId": "sobr", "isTrial": false, "level": "148", "stars": "1", "stateId": 1092, "unitType": "Ordinary"}, {"defId": "furnace", "equipables": {"1173": {"id": "health_tracker_legendary", "itemType": "Gear", "level": "31", "sharpening": {"1": "e_dodge_sharpening_weak", "30": "e_crit_sharpening"}, "stateId": 1173}}, "isTrial": false, "level": "144", "stars": "1", "stateId": 1137, "unitType": "Ordinary"}, {"defId": "defender42", "isTrial": false, "level": "95", "stars": "4", "stateId": 1019, "unitType": "Ordinary"}]}}];
         const SLOT_ORDER = ['tracker', 'armor', 'weapon', 'engine', 'ammunition', 'foot'];
 
         function formatDateMSK(s) {
@@ -85,15 +85,20 @@
         const t2Select = document.getElementById('t2-select');
 
         history.forEach((entry, idx) => {
-            const label = `${formatDateMSK(entry.timestamp)} (Рейтинг: ${entry.power || 'N/A'})`;
+            // Приоритет: arenaRating (новое поле). Если его нет (старые данные) - берем power.
+            let rating = entry.arenaRating;
+            if (rating === undefined || rating === null) rating = entry.power;
+            
+            const ratingStr = (rating !== undefined && rating !== null) ? rating : 'N/A';
+            const label = `${formatDateMSK(entry.timestamp)} (Рейтинг: ${ratingStr})`;
             t1Select.add(new Option(label, idx));
             t2Select.add(new Option(label, idx));
         });
 
-        // Default selection: T1 is first (oldest), T2 is last (newest)
+        // Default selection: T1 is penultimate, T2 is last
         if (history.length > 0) {
-            t1Select.selectedIndex = 0;
             t2Select.selectedIndex = history.length - 1;
+            t1Select.selectedIndex = Math.max(0, history.length - 2);
         }
 
         function formatLevel(rawLvl) {

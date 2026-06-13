@@ -129,6 +129,23 @@ def fetch_squads():
     fetched_users = inner.get("Users", [])
     print(f"[DEBUG] Fetched {len(fetched_users)} users from API")
     
+    # 0. Загружаем последний снэпшот Арены для получения мощности (ТОП-50)
+    arena_power_map = {}
+    arena_snaps = sorted(glob.glob(os.path.join("arena", "snapshots", "arena_*.json")))
+    if arena_snaps:
+        try:
+            with open(arena_snaps[-1], 'r', encoding='utf-8') as f:
+                arena_data = json.load(f)
+                for p in arena_data.get('players', []):
+                    u_id = str(p.get('userID', p.get('userId')))
+                    p_power = p.get('power', '0')
+                    # Чистим строку мощности от запятых и дробных частей
+                    try:
+                        arena_power_map[u_id] = int(float(p_power.replace(',', '.')))
+                    except:
+                        arena_power_map[u_id] = 0
+        except: pass
+
     squads_dir = os.path.join("arena", "squads")
     now_str = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
     updates_count = 0
@@ -182,18 +199,20 @@ def fetch_squads():
         current_clan = u.get('clanProfile', {})
         current_nick = u.get('nickname', 'Unknown')
         
+        # Получаем реальную мощность из снэпшота (если есть)
+        current_power = arena_power_map.get(uid, 0)
+        
         try: 
             squad_data = json.loads(squad_str)
-            current_power = squad_data.get('general', {}).get('power', 0)
         except: 
             squad_data = squad_str
-            current_power = 0
             
         # 1. Update squad history
         is_squad_new = True
         if history:
             last_entry = history[-1]
-            if last_entry.get('hash') == content_hash:
+            # Обновляем, если изменился состав ИЛИ мощность
+            if last_entry.get('hash') == content_hash and int(last_entry.get('power', 0)) == current_power:
                 is_squad_new = False
         
         if is_squad_new:
@@ -201,6 +220,7 @@ def fetch_squads():
                 "timestamp": now_str, 
                 "hash": content_hash, 
                 "power": current_power, 
+                "arenaRating": current_rating,
                 "squad": squad_data
             })
             with open(history_file, 'w', encoding='utf-8') as f:
