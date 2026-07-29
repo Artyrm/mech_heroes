@@ -1,0 +1,2 @@
+CRITICAL INSTRUCTION FOR TASK COMPLETION:
+When all steps in the Todo Progress are complete, YOU MUST NOT just output a text saying "it is complete". You MUST use the appropriate tool to exit or explicitly wait for user input. If you have no tools to exit, output EXACTLY the phrase: [TASK_FINISHED_AWAITING_HUMAN] and STOP generating anything else.
