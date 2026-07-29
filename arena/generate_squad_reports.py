@@ -121,7 +121,7 @@ def generate_squad_reports():
 <body>
     <div class="container">
         <div class="header">
-            <a href="../dashboard.html" class="back-link">&larr; Назад к Арене</a>
+            <a href="../orcspower.html" class="back-link">&larr; Назад к Арене</a>
             <h1>Отряд игрока: {nick}</h1>
             <p style="color: #888; margin: 0;">ID: {uid}</p>
         </div>

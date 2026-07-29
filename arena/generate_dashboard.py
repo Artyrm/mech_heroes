@@ -42,7 +42,7 @@ def get_profile_at(uid, target_dt):
 def generate():
     snaps_dir = "arena/snapshots"
     template_path = "arena/reports/template.html"
-    output_path = "arena/reports/dashboard.html"
+    output_path = "arena/reports/orcspower.html"
     
     update_history = "--update_history" in sys.argv
     
@@ -168,7 +168,7 @@ def generate():
     with open(output_path, 'w', encoding='utf-8') as of:
         of.write(html)
         
-    print(f"Dashboard generated: {output_path}. {len(processed_snaps)} snapshots inlined.")
+    print(f"Orcspower dashboard generated: {output_path}. {len(processed_snaps)} snapshots inlined.")
 
 if __name__ == "__main__":
     generate()

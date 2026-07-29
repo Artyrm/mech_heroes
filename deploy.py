@@ -16,7 +16,7 @@ def deploy():
 
     # Files to upload
     files_to_upload = {
-        "arena/reports/dashboard.html": "dashboard.html",
+        "arena/reports/orcspower.html": "orcspower.html",
         "arena/reports/suppression_core.png": "suppression_core.png",
         "battle_analytics/personal_stats.html": "personal.html"
     }
