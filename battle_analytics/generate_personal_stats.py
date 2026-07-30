@@ -226,7 +226,10 @@ def generate_dossiers(player_timelines):
             
         sorted_comps = sorted(compositions.items(), key=lambda x: (x[1]['wins'] + x[1]['losses']), reverse=True)
         
-        tactical_html = '<div class="tactical-summary"><h2>Тактический анализ (по составам)</h2>'
+        tactical_html = ''
+        tactical_html = ''
+        if nick != 'ksotar':
+            tactical_html = '<div class="tactical-summary"><h2>Тактический анализ (по составам)</h2>'
         if not sorted_comps:
             tactical_html += '<div style="color:#8b949e;padding:10px">Нет данных о составах</div>'
         for units, res in sorted_comps:
@@ -283,7 +286,7 @@ def generate_dossiers(player_timelines):
             th{{background:#21262d;padding:12px;text-align:left;font-size:0.7rem;text-transform:uppercase;color:#888;letter-spacing:1px}}
             td{{padding:12px;border-bottom:1px solid #30363d}}
             tr:hover{{background:#1c2128}}
-            .tactical-summary {{ background: #161b22; padding: 15px; border-radius: 8px; border: 1px solid #30363d; margin-bottom: 20px; }}
+            /* tactical-summary style */
             .comp-box {{ border-bottom: 1px solid #30363d; padding: 8px 0; }}
             .comp-box:last-child {{ border-bottom: none; }}
             .comp-units {{ color: #58a6ff; font-family: 'Roboto Mono'; font-size: 0.8rem; font-weight: bold; }}
