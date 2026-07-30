@@ -109,6 +109,17 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
             }
         })
 
+    # Также гарантируем, что все игроки из player_timelines (у кого есть бои) присутствуют в списке игроков
+    existing_nicks = {p.get('profileState', {}).get('nickname', '').strip() for p in arena_data.get('players', [])}
+    for nick in player_timelines.keys():
+        if nick not in existing_nicks and nick != 'ksotar':
+            arena_data['players'].append({
+                'rating': 0,
+                'power': 0,
+                'profileState': { 'nickname': nick },
+                'clanProfile': { 'clanName': '-', 'clanTag': '' }
+            })
+
     players = []
     for i, p in enumerate(arena_data.get('players', []), 1):
         players.append({'rank': i, 'nick': p.get('profileState', {}).get('nickname', '').strip(), 'clan': p.get('clanProfile', {}).get('clanName', '-'), 'clan_tag': p.get('clanProfile', {}).get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
@@ -163,7 +174,7 @@ def generate_dossiers(player_timelines):
             is_attack = p_min < e_min
             
             ksotar_is_attack = not is_attack
-            ksotar_is_win = delta < 0
+            ksotar_is_win = delta <= 0
             ksotar_delta = -delta
             
             p_name = sd.get('player', {}).get('name', p_nick)
@@ -179,12 +190,18 @@ def generate_dossiers(player_timelines):
                 if u_def: player_units.append(u_def)
             player_units.sort()
             
+            # Инвертируем обратно по твоему требованию:
+            # Если игрок атаковал (is_attack), то и для ksotar это отображается как атака (или наоборот, как ты указал — вернем исходное)
+            ksotar_is_attack = is_attack
+            ksotar_is_win = delta > 0
+            ksotar_delta = delta
+            
             all_ksotar_battles.append({
                 'dt': dt,
                 'is_win': ksotar_is_win,
                 'is_attack': ksotar_is_attack,
                 'delta': ksotar_delta,
-                'file_html': os.path.basename(bf).replace('.json', '.html'),
+                'file_html': '../' + os.path.basename(bf).replace('.json', '.html'),
                 'units': tuple(player_units),
                 'opponent': opponent
             })
