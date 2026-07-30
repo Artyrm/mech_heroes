@@ -2,7 +2,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
         <style>
             body{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}
-            .container{max-width:800px;margin:0 auto}
+            .container{max-width:900px;margin:0 auto}
             h1{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem;margin-bottom:10px}
             h2{font-family:'Orbitron';font-size:1.1rem;color:#8b949e;border-bottom:1px solid #30363d;padding-bottom:5px;margin-top:20px}
             .back-link{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}
@@ -15,6 +15,10 @@
             .comp-box:last-child { border-bottom: none; }
             .comp-units { color: #58a6ff; font-family: 'Roboto Mono'; font-size: 0.8rem; font-weight: bold; }
             .comp-stats { font-size: 0.75rem; color: #8b949e; margin-top: 3px; }
+            .type-attack { color: #f2cc60; font-weight: bold; }
+            .type-defense { color: #58a6ff; font-weight: bold; }
+            .res-win { color: #3fb950; font-weight: bold; }
+            .res-loss { color: #f85149; font-weight: bold; }
         </style></head>
         <body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a>
         <h1>ДОСЬЕ: Crazy Fox</h1>
@@ -23,5 +27,12 @@
                 <div class="comp-units">bhramarah, fury, predator, rm23beam, ronin</div>
                 <div class="comp-stats">Боёв: <b>1</b> | Винрейт: <span style="color:#f85149;font-weight:bold">0.0%</span> (0В / 1П)</div>
             </div></div>
-        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody><tr onclick="window.location='battle_2026-07-29_19-49-20_7250.html'" style="cursor:pointer"><td>29.07 22:49</td><td>АТАКА</td><td>ПОРАЖЕНИЕ</td><td style="text-align:right;font-family:'Roboto Mono';color:#f85149">-12</td></tr></tbody></table>
+        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Состав отряда</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody><tr onclick="window.location='battle_2026-07-29_19-49-20_7250.html'" style="cursor:pointer" title="Нажмите, чтобы открыть подробную карточку боя">
+                    <td>29.07 22:49</td>
+                    <td><span class="type-attack">АТАКА</span></td>
+                    <td style="color:#58a6ff;font-family:'Inter',sans-serif;font-weight:600">Противник</td>
+                    <td style="font-family:'Roboto Mono';font-size:0.75rem;color:#8b949e">bhramarah, fury, predator, rm23beam, ronin</td>
+                    <td><span class="res-loss">ПОРАЖЕНИЕ</span></td>
+                    <td style="text-align:right;font-family:'Roboto Mono';color:#f85149;font-weight:bold">-12</td>
+                </tr></tbody></table>
         </div></body></html>

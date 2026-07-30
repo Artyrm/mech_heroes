@@ -5,6 +5,10 @@ import glob
 import sys
 from datetime import datetime, timedelta
 
+# Fix imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import arena.registry_manager as rm
+
 # Path Configuration
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
@@ -42,7 +46,6 @@ def get_player_battles_timeline():
             p_u_data = sd.get('player', {}).get('units', {})
             e_u_data = sd.get('enemy', {}).get('units', {})
             
-            # Извлекаем юнитов игрока
             player_units = []
             for slot in p_u_data.values():
                 u_def = slot.get('state', {}).get('defId')
@@ -52,13 +55,21 @@ def get_player_battles_timeline():
             p_min = min([int(s) for s in p_u_data.keys()]) if p_u_data else 99
             e_min = min([int(s) for s in e_u_data.keys()]) if e_u_data else 99
             
+            p_name = sd.get('player', {}).get('name', nick)
+            e_name = sd.get('enemy', {}).get('name', 'Противник')
+            is_attack = p_min < e_min
+            opponent = e_name if is_attack else p_name
+            if opponent == nick:
+                opponent = e_name if p_name == nick else p_name
+
             battles.append({
                 'dt': dt, 
                 'is_win': delta > 0, 
-                'is_attack': p_min < e_min, 
+                'is_attack': is_attack, 
                 'delta': delta, 
                 'file_html': os.path.basename(bf).replace('.json', '.html'),
-                'units': tuple(player_units)
+                'units': tuple(player_units),
+                'opponent': opponent
             })
         battles.sort(key=lambda x: x['dt'])
         timeline[nick] = battles
@@ -67,11 +78,46 @@ def get_player_battles_timeline():
 def get_state_at_optimized(arena_snap_path, player_timelines):
     snap_dt = get_snapshot_dt(arena_snap_path)
     arena_data = load_json(arena_snap_path)
+    
+    reg = rm.load_registry()
+    known_users = reg.get('known_users', {})
+    
+    current_uids = {int(p.get('userID', p.get('userId'))) for p in arena_data.get('players', []) if p.get('userID') or p.get('userId')}
+    all_known_uids = {int(uid) for uid in known_users.keys()}
+    missing_uids = all_known_uids - current_uids
+    
+    for uid in missing_uids:
+        profile_file = os.path.join(ROOT_DIR, 'arena', 'squads', str(uid), 'profile_history.json')
+        pe = None
+        if os.path.exists(profile_file):
+            try:
+                with open(profile_file, 'r', encoding='utf-8') as pf:
+                    ph = json.load(pf)
+                    if ph: pe = ph[-1]
+            except: pass
+        
+        arena_data['players'].append({
+            'userID': uid,
+            'rating': pe.get('arenaRating', 0) if pe else 0,
+            'power': 0,
+            'profileState': {
+                'nickname': (pe.get('nickname') if pe else None) or known_users.get(str(uid), str(uid)),
+            },
+            'clanProfile': {
+                'clanName': pe.get('clanProfile', {}).get('clanName', '-') if pe else '-',
+                'clanTag': pe.get('clanProfile', {}).get('clanTag', '') if pe else ''
+            }
+        })
+
     players = []
     for i, p in enumerate(arena_data.get('players', []), 1):
         players.append({'rank': i, 'nick': p.get('profileState', {}).get('nickname', '').strip(), 'clan': p.get('clanProfile', {}).get('clanName', '-'), 'clan_tag': p.get('clanProfile', {}).get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
 
-    battle_stats, global_sum = {}, {"a_wins": 0, "a_losses": 0, "d_wins": 0, "d_losses": 0}
+    players.sort(key=lambda x: int(x.get('rating', 0) or 0), reverse=True)
+    for idx, p in enumerate(players, 1):
+        p['rank'] = idx
+
+    battle_stats, global_sum = {}, {'a_wins': 0, 'a_losses': 0, 'd_wins': 0, 'd_losses': 0}
     for nick, battles in player_timelines.items():
         wins, losses, a_total, d_total, last_battle = 0, 0, 0, 0, datetime.min
         for b in battles:
@@ -80,22 +126,78 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
             else: losses += 1
             if b['is_attack']:
                 a_total += 1
-                if b['is_win']: global_sum["a_wins"] += 1
-                else: global_sum["a_losses"] += 1
+                if b['is_win']: global_sum['a_wins'] += 1
+                else: global_sum['a_losses'] += 1
             else:
                 d_total += 1
-                if b['is_win']: global_sum["d_wins"] += 1
-                else: global_sum["d_losses"] += 1
+                if b['is_win']: global_sum['d_wins'] += 1
+                else: global_sum['d_losses'] += 1
             last_battle = b['dt']
         if wins + losses > 0:
             battle_stats[nick] = {'wins': wins, 'losses': losses, 'a_total': a_total, 'd_total': d_total, 'winrate': round(wins/(wins+losses)*100, 1), 'last_battle_utc': last_battle.isoformat() if last_battle != datetime.min else None}
-    return {"timestamp_utc": snap_dt.strftime("%Y-%m-%dT%H-%M-%S"), "players": players, "battle_stats": battle_stats, "summary": global_sum}
+    return {'timestamp_utc': snap_dt.strftime('%Y-%m-%dT%H-%M-%S'), 'players': players, 'battle_stats': battle_stats, 'summary': global_sum}
 
 def generate_dossiers(player_timelines):
-    for nick, battles in player_timelines.items():
-        if not battles: continue
-        
-        # Считаем тактическую статистику
+    reg = rm.load_registry()
+    known_users = reg.get('known_users', {})
+    all_nicks = set(player_timelines.keys())
+    for uid_str, nick in known_users.items():
+        all_nicks.add(nick)
+    all_nicks.add('ksotar')
+
+    # Соберем все бои со всех папок игроков для ksotar (последние 100)
+    all_ksotar_battles = []
+    player_keys = [d for d in os.listdir(ANALYTICS_DIR) if os.path.isdir(os.path.join(ANALYTICS_DIR, d)) and not d.startswith('__') and d != 'snapshots']
+    for p_nick in player_keys:
+        p_dir = os.path.join(ANALYTICS_DIR, p_nick)
+        for bf in glob.glob(os.path.join(p_dir, 'battle_*.json')):
+            b = load_json(bf)
+            dt = parse_fight_time(b.get('fightTime'))
+            delta = int(b.get('ourRatingDelta', 0))
+            sd = b.get('statistics', {})
+            p_u_data = sd.get('player', {}).get('units', {})
+            e_u_data = sd.get('enemy', {}).get('units', {})
+            
+            p_min = min([int(s) for s in p_u_data.keys()]) if p_u_data else 99
+            e_min = min([int(s) for s in e_u_data.keys()]) if e_u_data else 99
+            is_attack = p_min < e_min
+            
+            ksotar_is_attack = not is_attack
+            ksotar_is_win = delta < 0
+            ksotar_delta = -delta
+            
+            p_name = sd.get('player', {}).get('name', p_nick)
+            e_name = sd.get('enemy', {}).get('name', 'ksotar')
+            opponent = p_name if ksotar_is_attack else e_name
+            if opponent == 'ksotar' or not opponent:
+                opponent = p_nick
+                
+            player_units = []
+            target_units_data = e_u_data if ksotar_is_attack else p_u_data
+            for slot in target_units_data.values():
+                u_def = slot.get('state', {}).get('defId')
+                if u_def: player_units.append(u_def)
+            player_units.sort()
+            
+            all_ksotar_battles.append({
+                'dt': dt,
+                'is_win': ksotar_is_win,
+                'is_attack': ksotar_is_attack,
+                'delta': ksotar_delta,
+                'file_html': os.path.basename(bf).replace('.json', '.html'),
+                'units': tuple(player_units),
+                'opponent': opponent
+            })
+            
+    all_ksotar_battles.sort(key=lambda x: x['dt'])
+    all_ksotar_battles = all_ksotar_battles[-100:]
+    player_timelines['ksotar'] = all_ksotar_battles
+
+    for nick in all_nicks:
+        battles = player_timelines.get(nick, [])
+        if nick == 'ksotar':
+            battles = all_ksotar_battles
+            
         compositions = {}
         for b in battles:
             u = b.get('units')
@@ -108,29 +210,55 @@ def generate_dossiers(player_timelines):
         sorted_comps = sorted(compositions.items(), key=lambda x: (x[1]['wins'] + x[1]['losses']), reverse=True)
         
         tactical_html = '<div class="tactical-summary"><h2>Тактический анализ (по составам)</h2>'
+        if not sorted_comps:
+            tactical_html += '<div style="color:#8b949e;padding:10px">Нет данных о составах</div>'
         for units, res in sorted_comps:
             total = res['wins'] + res['losses']
             wr = (res['wins'] / total) * 100
             color = '#3fb950' if wr >= 60 else ('#f85149' if wr <= 40 else '#f2cc60')
+            units_str = ", ".join(units)
             tactical_html += f'''
             <div class="comp-box">
-                <div class="comp-units">{", ".join(units)}</div>
+                <div class="comp-units">{units_str}</div>
                 <div class="comp-stats">Боёв: <b>{total}</b> | Винрейт: <span style="color:{color};font-weight:bold">{wr:.1f}%</span> ({res['wins']}В / {res['losses']}П)</div>
             </div>'''
         tactical_html += '</div>'
 
         rows = ""
-        for b in reversed(battles):
-            rows += f"<tr onclick=\"window.location='{b['file_html']}'\" style=\"cursor:pointer\"><td>{(b['dt']+timedelta(hours=3)).strftime('%d.%m %H:%M')}</td><td>{'АТАКА' if b['is_attack'] else 'ЗАЩИТА'}</td><td>{'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'}</td><td style=\"text-align:right;font-family:'Roboto Mono';color:{'#3fb950' if b['delta']>0 else ('#f85149' if b['delta']<0 else '#8b949e')}\">{'+' if b['delta']>0 else ''}{b['delta']}</td></tr>"
-        
-        target_dir = os.path.join(ANALYTICS_DIR, nick)
+        if battles:
+            for b in reversed(battles):
+                dt_str = (b['dt'] + timedelta(hours=3)).strftime('%d.%m %H:%M')
+                type_str = 'АТАКА' if b['is_attack'] else 'ЗАЩИТА'
+                type_class = 'type-attack' if b['is_attack'] else 'type-defense'
+                res_str = 'ПОБЕДА' if b['is_win'] else 'ПОРАЖЕНИЕ'
+                res_class = 'res-win' if b['is_win'] else 'res-loss'
+                delta_val = b['delta']
+                delta_str = f"+{delta_val}" if delta_val > 0 else str(delta_val)
+                delta_color = '#3fb950' if delta_val > 0 else ('#f85149' if delta_val < 0 else '#8b949e')
+                
+                opponent = b.get('opponent', '-')
+                compo_units = ", ".join(b.get('units', [])) or '-'
+                file_html = b.get('file_html', '#')
+                
+                rows += f'''<tr onclick="window.location='{file_html}'" style="cursor:pointer" title="Нажмите, чтобы открыть подробную карточку боя">
+                    <td>{dt_str}</td>
+                    <td><span class="{type_class}">{type_str}</span></td>
+                    <td style="color:#58a6ff;font-family:'Inter',sans-serif;font-weight:600">{opponent}</td>
+                    <td style="font-family:'Roboto Mono';font-size:0.75rem;color:#8b949e">{compo_units}</td>
+                    <td><span class="{res_class}">{res_str}</span></td>
+                    <td style="text-align:right;font-family:'Roboto Mono';color:{delta_color};font-weight:bold">{delta_str}</td>
+                </tr>'''
+        else:
+            rows = '<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px">Бои не найдены</td></tr>'
+            
+        target_dir = os.path.join(ANALYTICS_DIR, nick.strip())
         os.makedirs(target_dir, exist_ok=True)
         
         html = f'''<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>История: {nick}</title>
         <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
         <style>
             body{{background:#0d1117;color:#c9d1d9;font-family:'Inter',sans-serif;margin:20px;font-size:0.9rem}}
-            .container{{max-width:800px;margin:0 auto}}
+            .container{{max-width:900px;margin:0 auto}}
             h1{{font-family:'Orbitron';color:#fff;text-align:center;font-size:1.8rem;margin-bottom:10px}}
             h2{{font-family:'Orbitron';font-size:1.1rem;color:#8b949e;border-bottom:1px solid #30363d;padding-bottom:5px;margin-top:20px}}
             .back-link{{color:#58a6ff;text-decoration:none;display:inline-block;margin-bottom:20px;font-size:0.85rem}}
@@ -143,11 +271,15 @@ def generate_dossiers(player_timelines):
             .comp-box:last-child {{ border-bottom: none; }}
             .comp-units {{ color: #58a6ff; font-family: 'Roboto Mono'; font-size: 0.8rem; font-weight: bold; }}
             .comp-stats {{ font-size: 0.75rem; color: #8b949e; margin-top: 3px; }}
+            .type-attack {{ color: #f2cc60; font-weight: bold; }}
+            .type-defense {{ color: #58a6ff; font-weight: bold; }}
+            .res-win {{ color: #3fb950; font-weight: bold; }}
+            .res-loss {{ color: #f85149; font-weight: bold; }}
         </style></head>
         <body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a>
         <h1>ДОСЬЕ: {nick}</h1>
         {tactical_html}
-        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table>
+        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Состав отряда</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table>
         </div></body></html>'''
         
         with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
@@ -216,7 +348,7 @@ def generate_html_template():
         }
         function fmtNum(val) {
             if (!val) return "0"; let v = parseFloat(val.toString().replace(',', '.'));
-            return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;') + 'k' : Math.floor(v).toLocaleString('ru-RU').replace(/[\s\u00A0]/g, '&nbsp;');
+            return (v >= 1000000) ? (Math.floor(v/1000)).toLocaleString('ru-RU').replace(/[\\s\\u00A0]/g, '&nbsp;') + 'k' : Math.floor(v).toLocaleString('ru-RU').replace(/[\\s\\u00A0]/g, '&nbsp;');
         }
         function parseTS(ts) { 
             const p = ts.split(/[-T]/); 
