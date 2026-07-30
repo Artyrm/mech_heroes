@@ -227,23 +227,22 @@ def generate_dossiers(player_timelines):
         sorted_comps = sorted(compositions.items(), key=lambda x: (x[1]['wins'] + x[1]['losses']), reverse=True)
         
         tactical_html = ''
-        tactical_html = ''
         if nick != 'ksotar':
             tactical_html = '<div class="tactical-summary"><h2>Тактический анализ (по составам)</h2>'
-        if not sorted_comps:
-            tactical_html += '<div style="color:#8b949e;padding:10px">Нет данных о составах</div>'
-        for units, res in sorted_comps:
-            total = res['wins'] + res['losses']
-            wr = (res['wins'] / total) * 100
-            color = '#3fb950' if wr >= 60 else ('#f85149' if wr <= 40 else '#f2cc60')
-            units_str = ", ".join(units)
-            tactical_html += f'''
-            <div class="comp-box">
-                <div class="comp-units">{units_str}</div>
-                <div class="comp-stats">Боёв: <b>{total}</b> | Винрейт: <span style="color:{color};font-weight:bold">{wr:.1f}%</span> ({res['wins']}В / {res['losses']}П)</div>
-            </div>'''
-        tactical_html += '</div>'
-
+            if not sorted_comps:
+                tactical_html += '<div style="color:#8b949e;padding:10px">Нет данных о составах</div>'
+            for units, res in sorted_comps:
+                total = res['wins'] + res['losses']
+                wr = (res['wins'] / total) * 100
+                color = '#3fb950' if wr >= 60 else ('#f85149' if wr <= 40 else '#f2cc60')
+                units_str = ", ".join(units)
+                tactical_html += f'''
+                <div class="comp-box">
+                    <div class="comp-units">{units_str}</div>
+                    <div class="comp-stats">Боёв: <b>{total}</b> | Винрейт: <span style="color:{color};font-weight:bold">{wr:.1f}%</span> ({res['wins']}В / {res['losses']}П)</div>
+                </div>'''
+            tactical_html += '</div>'
+        
         rows = ""
         if battles:
             for b in reversed(battles):
