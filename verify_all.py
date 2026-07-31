@@ -20,18 +20,17 @@ def verify():
     deploy_ok = 'personal.html' in deploy_content and 'personal_stats.html' not in deploy_content
     print(f"2. Деплой настроен на personal.html: {'ОК' if deploy_ok else 'ОШИБКА'}")
 
-    # 3. Проверяем досье обычных игроков (например, Борис или VadSJ) на отсутствие колонки 'Противник' и наличие сокращенных отрядов
+    # 3. Проверяем досье обычных игроков на отсутствие колонки 'Противник'
     sample_dossier = 'battle_analytics/VadSJ/summary.html'
     if os.path.exists(sample_dossier):
         with open(sample_dossier, 'r', encoding='utf-8') as f:
             dossier_html = f.read()
-        # Проверяем заголовки таблицы: не должно быть колонки "Противник"
         has_opponent_col = 'Противник' in dossier_html
         print(f"3. Колонка 'Противник' в досье обычного игрока: {'ОШИБКА (она есть)' if has_opponent_col else 'ОК (успешно удалена)'}")
     else:
         print("3. Досье VadSJ не найдено для проверки.")
 
-    # 4. Проверяем индивидуальное досье ksotar (наличие ссылок на карточки боев и отсутствие тактического блока)
+    # 4. Проверяем индивидуальное досье ksotar
     ksotar_dossier = 'battle_analytics/ksotar/summary.html'
     if os.path.exists(ksotar_dossier):
         with open(ksotar_dossier, 'r', encoding='utf-8') as f:
@@ -50,8 +49,15 @@ def verify():
             if "window.location=" in onclick:
                 total_links += 1
                 link = onclick.split("'")[1]
-                # Ссылка должна вести в относительный путь ../<opponent>/battle_*.html или battle_*.html
-                full_path = os.path.normpath(os.path.join(os.path.dirname(ksotar_dossier), link))
+                # link имеет вид '../<p_folder>/battle_*.html'
+                # Реальный путь в файловой системе: battle_analytics/<link без ../>
+                parts = link.replace('../', '').split('/')
+                if len(parts) == 2:
+                    p_folder, filename = parts
+                    full_path = os.path.normpath(os.path.join('battle_analytics', p_folder, filename))
+                else:
+                    full_path = os.path.normpath(os.path.join('battle_analytics', link.replace('../', '')))
+                
                 if not os.path.exists(full_path):
                     broken_links += 1
                     print(f"   [!] Битый путь к бою: {link} (разрешен в {full_path})")

@@ -288,6 +288,7 @@ def generate_dossiers(player_timelines):
                 </div>'''
             tactical_html += '</div>'
         
+        table_headers = "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Состав отряда</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>" if nick == "ksotar" else "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>"
         rows = ""
         if battles:
             for b in reversed(battles):
@@ -299,22 +300,19 @@ def generate_dossiers(player_timelines):
                 delta_val = b['delta']
                 delta_str = f"+{delta_val}" if delta_val > 0 else str(delta_val)
                 delta_color = '#3fb950' if delta_val > 0 else ('#f85149' if delta_val < 0 else '#8b949e')
-                
-                opponent = b.get('opponent', '-')
-                compo_units = ", ".join(b.get('units', [])) or '-'
-                file_html = b.get('file_html', '#')
-                
-                rows += f'''<tr onclick="window.location='{file_html}'" style="cursor:pointer" title="Нажмите, чтобы открыть подробную карточку боя">
-                    <td>{dt_str}</td>
-                    <td><span class="{type_class}">{type_str}</span></td>
-                    <td style="color:#58a6ff;font-family:'Inter',sans-serif;font-weight:600">{opponent}</td>
-                    <td style="font-family:'Roboto Mono';font-size:0.75rem;color:#8b949e">{compo_units}</td>
-                    <td><span class="{res_class}">{res_str}</span></td>
-                    <td style="text-align:right;font-family:'Roboto Mono';color:{delta_color};font-weight:bold">{delta_str}</td>
-                </tr>'''
+                my_units_abbr = abbrev_units(b.get('units', []))
+                enemy_units_abbr = abbrev_units(b.get('enemy_units', []))
+                if nick == 'ksotar':
+                    opponent = b.get('opponent', '-')
+                    p_folder = b.get('p_nick', '')
+                    file_html = f"../{p_folder}/{b.get('file_html', '#')}"
+                    rows += f"<tr onclick=\"window.location='{file_html}'\" style=\"cursor:pointer\" title=\"Нажмите, чтобы открыть подробную карточку боя\"><td>{dt_str}</td><td><span class='{type_class}'>{type_str}</span></td><td style=\"color:#58a6ff;font-family:'Inter',sans-serif;font-weight:600\">{opponent}</td><td style=\"font-family:'Roboto Mono';font-size:0.75rem;color:#8b949e\">{my_units_abbr}</td><td><span class='{res_class}'>{res_str}</span></td><td style=\"text-align:right;font-family:'Roboto Mono';color:{delta_color};font-weight:bold\">{delta_str}</td></tr>"
+                else:
+                    file_html = b.get('file_html', '#')
+                    rows += f"<tr onclick=\"window.location='{file_html}'\" style=\"cursor:pointer\" title=\"Нажмите, чтобы открыть подробную карточку боя\"><td>{dt_str}</td><td><span class='{type_class}'>{type_str}</span></td><td style=\"font-family:'Roboto Mono';font-size:0.75rem;color:#58a6ff\" title=\"{ ', '.join(b.get('units', [])) }\">{my_units_abbr}</td><td style=\"font-family:'Roboto Mono';font-size:0.75rem;color:#8b949e\" title=\"{ ', '.join(b.get('enemy_units', [])) }\">{enemy_units_abbr}</td><td><span class='{res_class}'>{res_str}</span></td><td style=\"text-align:right;font-family:'Roboto Mono';color:{delta_color};font-weight:bold\">{delta_str}</td></tr>"
         else:
-            rows = '<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:20px">Бои не найдены</td></tr>'
-            
+            col_span = 6
+            rows = f"<tr><td colspan=\"{col_span}\" style=\"text-align:center;color:#8b949e;padding:20px\">Бои не найдены</td></tr>"
         target_dir = os.path.join(ANALYTICS_DIR, nick.strip())
         os.makedirs(target_dir, exist_ok=True)
         
@@ -343,7 +341,7 @@ def generate_dossiers(player_timelines):
         <body><div class="container"><a href="../personal.html" class="back-link">← К списку игроков</a>
         <h1>ДОСЬЕ: {nick}</h1>
         {tactical_html}
-        <table><thead><tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Состав отряда</th><th>Результат</th><th style="text-align:right">Δ Рейтинг</th></tr></thead><tbody>{rows}</tbody></table>
+        <table><thead>{table_headers}</thead><tbody>{rows}</tbody></table>
         </div></body></html>'''
         
         with open(os.path.join(target_dir, 'summary.html'), 'w', encoding='utf-8') as f: f.write(html)
