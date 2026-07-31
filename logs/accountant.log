@@ -108795,3 +108795,121 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [31.07.2026 22:08:35,70] Syncing with Git... 
+warning: in the working copy of 'fix_enemy_units_final.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_fstring.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_fstring_clean.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_ksotar_table_complete.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_ksotar_table_v2.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_quotes.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'fix_quotes_simple.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'rebuild_generate.py', LF will be replaced by CRLF the next time Git touches it
+[main 12bfdee9] Auto-update 31.07.2026 22:08:41,01
+ 24 files changed, 1482 insertions(+), 284 deletions(-)
+ create mode 100644 battle_analytics/Makolni/summary.html
+ create mode 100644 battle_analytics/STELS/battle_2026-07-31_18-29-26_2020.html
+ create mode 100644 battle_analytics/SluttyAngel/battle_2026-07-31_17-50-55_6940.html
+ create mode 100644 battle_analytics/SluttyAngel/battle_2026-07-31_17-52-42_0500.html
+ create mode 100644 fix_enemy_units_final.py
+ create mode 100644 fix_fstring.py
+ create mode 100644 fix_fstring_clean.py
+ create mode 100644 fix_ksotar_table_complete.py
+ create mode 100644 fix_ksotar_table_v2.py
+ create mode 100644 fix_quotes.py
+ create mode 100644 fix_quotes_simple.py
+ create mode 100644 rebuild_generate.py
+[31.07.2026 22:08:42,31] Pushing to repository... 
+Enumerating objects: 59, done.
+Counting objects:   1% (1/59)Counting objects:   3% (2/59)Counting objects:   5% (3/59)Counting objects:   6% (4/59)Counting objects:   8% (5/59)Counting objects:  10% (6/59)Counting objects:  11% (7/59)Counting objects:  13% (8/59)Counting objects:  15% (9/59)Counting objects:  16% (10/59)Counting objects:  18% (11/59)Counting objects:  20% (12/59)Counting objects:  22% (13/59)Counting objects:  23% (14/59)Counting objects:  25% (15/59)Counting objects:  27% (16/59)Counting objects:  28% (17/59)Counting objects:  30% (18/59)Counting objects:  32% (19/59)Counting objects:  33% (20/59)Counting objects:  35% (21/59)Counting objects:  37% (22/59)Counting objects:  38% (23/59)Counting objects:  40% (24/59)Counting objects:  42% (25/59)Counting objects:  44% (26/59)Counting objects:  45% (27/59)Counting objects:  47% (28/59)Counting objects:  49% (29/59)Counting objects:  50% (30/59)Counting objects:  52% (31/59)Counting objects:  54% (32/59)Counting objects:  55% (33/59)Counting objects:  57% (34/59)Counting objects:  59% (35/59)Counting objects:  61% (36/59)Counting objects:  62% (37/59)Counting objects:  64% (38/59)Counting objects:  66% (39/59)Counting objects:  67% (40/59)Counting objects:  69% (41/59)Counting objects:  71% (42/59)Counting objects:  72% (43/59)Counting objects:  74% (44/59)Counting objects:  76% (45/59)Counting objects:  77% (46/59)Counting objects:  79% (47/59)Counting objects:  81% (48/59)Counting objects:  83% (49/59)Counting objects:  84% (50/59)Counting objects:  86% (51/59)Counting objects:  88% (52/59)Counting objects:  89% (53/59)Counting objects:  91% (54/59)Counting objects:  93% (55/59)Counting objects:  94% (56/59)Counting objects:  96% (57/59)Counting objects:  98% (58/59)Counting objects: 100% (59/59)Counting objects: 100% (59/59), done.
+Delta compression using up to 4 threads
+Compressing objects:   2% (1/34)Compressing objects:   5% (2/34)Compressing objects:   8% (3/34)Compressing objects:  11% (4/34)Compressing objects:  14% (5/34)Compressing objects:  17% (6/34)Compressing objects:  20% (7/34)Compressing objects:  23% (8/34)Compressing objects:  26% (9/34)Compressing objects:  29% (10/34)Compressing objects:  32% (11/34)Compressing objects:  35% (12/34)Compressing objects:  38% (13/34)Compressing objects:  41% (14/34)Compressing objects:  44% (15/34)Compressing objects:  47% (16/34)Compressing objects:  50% (17/34)Compressing objects:  52% (18/34)Compressing objects:  55% (19/34)Compressing objects:  58% (20/34)Compressing objects:  61% (21/34)Compressing objects:  64% (22/34)Compressing objects:  67% (23/34)Compressing objects:  70% (24/34)Compressing objects:  73% (25/34)Compressing objects:  76% (26/34)Compressing objects:  79% (27/34)Compressing objects:  82% (28/34)Compressing objects:  85% (29/34)Compressing objects:  88% (30/34)Compressing objects:  91% (31/34)Compressing objects:  94% (32/34)Compressing objects:  97% (33/34)Compressing objects: 100% (34/34)Compressing objects: 100% (34/34), done.
+Writing objects:   2% (1/37)Writing objects:   5% (2/37)Writing objects:   8% (3/37)Writing objects:  10% (4/37)Writing objects:  13% (5/37)Writing objects:  16% (6/37)Writing objects:  18% (7/37)Writing objects:  21% (8/37)Writing objects:  24% (9/37)Writing objects:  27% (10/37)Writing objects:  29% (11/37)Writing objects:  32% (12/37)Writing objects:  35% (13/37)Writing objects:  37% (14/37)Writing objects:  43% (16/37)Writing objects:  45% (17/37)Writing objects:  51% (19/37)Writing objects:  54% (20/37)Writing objects:  56% (21/37)Writing objects:  59% (22/37)Writing objects:  62% (23/37)Writing objects:  64% (24/37)Writing objects:  67% (25/37)Writing objects:  70% (26/37)Writing objects:  72% (27/37)Writing objects:  75% (28/37)Writing objects:  78% (29/37)Writing objects:  83% (31/37)Writing objects:  86% (32/37)Writing objects:  89% (33/37)Writing objects:  91% (34/37)Writing objects:  94% (35/37)Writing objects:  97% (36/37)Writing objects: 100% (37/37)Writing objects: 100% (37/37), 44.32 KiB | 375.00 KiB/s, done.
+Total 37 (delta 28), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/28)        remote: Resolving deltas:   3% (1/28)        remote: Resolving deltas:   7% (2/28)        remote: Resolving deltas:  10% (3/28)        remote: Resolving deltas:  14% (4/28)        remote: Resolving deltas:  17% (5/28)        remote: Resolving deltas:  21% (6/28)        remote: Resolving deltas:  25% (7/28)        remote: Resolving deltas:  28% (8/28)        remote: Resolving deltas:  32% (9/28)        remote: Resolving deltas:  35% (10/28)        remote: Resolving deltas:  39% (11/28)        remote: Resolving deltas:  42% (12/28)        remote: Resolving deltas:  46% (13/28)        remote: Resolving deltas:  50% (14/28)        remote: Resolving deltas:  53% (15/28)        remote: Resolving deltas:  57% (16/28)        remote: Resolving deltas:  60% (17/28)        remote: Resolving deltas:  64% (18/28)        remote: Resolving deltas:  67% (19/28)        remote: Resolving deltas:  71% (20/28)        remote: Resolving deltas:  75% (21/28)        remote: Resolving deltas:  78% (22/28)        remote: Resolving deltas:  82% (23/28)        remote: Resolving deltas:  85% (24/28)        remote: Resolving deltas:  89% (25/28)        remote: Resolving deltas:  92% (26/28)        remote: Resolving deltas:  96% (27/28)        remote: Resolving deltas: 100% (28/28)        remote: Resolving deltas: 100% (28/28), completed with 17 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   edadf880..12bfdee9  main -> main
+[31.07.2026 22:08:48,82] SUCCESS: Data pushed to Git. 
+[31.07.2026 22:08:48,85] PROCESS FINISHED 
+------------------------------------------ 
+[31.07.2026 22:55:02,38] STARTING PROCESS 
+[31.07.2026 22:55:02,42] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {'data': {'sessionID': '227408_6F1FE31E5EFCFC027CEDF13F17BEB296', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'devastator', 'down': 'bristle_black', 'frame': 'default', 'head': 'ru_male', 'middle': 'glasses', 'top': 'short_hair_black'}, 'clanRole': 'Leader', 'fightTime': '30/07/2026_21:01:40.2150', 'nick': 'Томский', 'opponentRating': '3962', 'ourRatingDelta': '
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[31.07.2026 22:55:18,42] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[22:55:18] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches registry hash), skipping save.
+Top-1: х3 (4597)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[22:55:24] --- [SUCCESS] FETCHING LATEST DATA completed in 5.5s
+
+[22:55:24] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-07-31 18:56:22
+Incremental mode: Processing only 0 files newer than 2026-07-31 18:56:22.
+
+Total new snapshots synced: 0
+[22:55:30] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 6.5s
+
+[22:55:30] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 11 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Sio: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 2 battles, 0 new saved and reported.
+STELS: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Makolni: Found 1 battles, 0 new saved and reported.
+1: Found 7 battles, 0 new saved and reported.
+����: Found 1 battles, 0 new saved and reported.
+SluttyAngel: Found 2 battles, 0 new saved and reported.
+Kolhoznik: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+�������: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[22:55:31] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.7s
+
+[22:55:31] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+[22:55:31] --- [SUCCESS] GENERATING PERSONAL STATS completed in 0.2s
+
+[22:55:31] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 165 tracked players (all registry users)...
+[DEBUG] Fetched 165 users from API
+Squad synchronization complete. 33 new states recorded.
+[22:55:42] --- [SUCCESS] FETCHING SQUADS completed in 11.1s
+
+[22:55:42] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 165 dynamic squad comparison reports.
+[22:55:48] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 6.1s
+
+[22:55:48] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[22:56:10] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 21.9s
+
+[22:56:10] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[23:09:24] --- [SUCCESS] DEPLOYING TO SERVER completed in 793.6s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[31.07.2026 23:09:24,36] Syncing with Git... 
