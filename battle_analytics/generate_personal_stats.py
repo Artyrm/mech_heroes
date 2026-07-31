@@ -14,7 +14,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 ANALYTICS_DIR = os.path.join(ROOT_DIR, 'battle_analytics')
 ARENA_SNAPSHOTS = os.path.join(ROOT_DIR, 'arena', 'snapshots')
-OUTPUT_FILE = os.path.join(ANALYTICS_DIR, 'personal_stats.html')
+OUTPUT_FILE = os.path.join(ANALYTICS_DIR, 'personal.html')
 CACHE_FILE = os.path.join(ROOT_DIR, 'arena', 'stats_cache.json')
 
 def load_json(path):
@@ -31,6 +31,16 @@ def get_snapshot_dt(fname):
     ts_str = os.path.basename(fname).replace('arena_', '').replace('.json', '')
     try: return datetime.strptime(ts_str, "%Y-%m-%dT%H-%M-%S")
     except: return datetime.now()
+
+
+def abbrev_units(units_list):
+    if not units_list: return '-'
+    res = []
+    for u in units_list:
+        clean_u = u.replace('_', '').replace('-', '')
+        abbr = clean_u[:2].upper()
+        res.append(abbr)
+    return ', '.join(res)
 
 def get_player_battles_timeline():
     timeline = {}
@@ -62,6 +72,13 @@ def get_player_battles_timeline():
             if opponent == nick:
                 opponent = e_name if p_name == nick else p_name
 
+
+            enemy_units = []
+            for slot in e_u_data.values():
+                u_def = slot.get('state', {}).get('defId')
+                if u_def: enemy_units.append(u_def)
+            enemy_units.sort()
+
             battles.append({
                 'dt': dt, 
                 'is_win': delta > 0, 
@@ -69,7 +86,9 @@ def get_player_battles_timeline():
                 'delta': delta, 
                 'file_html': os.path.basename(bf).replace('.json', '.html'),
                 'units': tuple(player_units),
-                'opponent': opponent
+                'enemy_units': tuple(enemy_units),
+                'opponent': opponent,
+                'p_nick': nick
             })
         battles.sort(key=lambda x: x['dt'])
         timeline[nick] = battles
@@ -84,6 +103,10 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
     
     current_uids = {int(p.get('userID', p.get('userId'))) for p in arena_data.get('players', []) if p.get('userID') or p.get('userId')}
     all_known_uids = {int(uid) for uid in known_users.keys()}
+    
+    # Также соберем uid для всех ников из player_timelines или папок battle_analytics
+    nick_to_uid = {n: u for u, n in known_users.items()}
+    
     missing_uids = all_known_uids - current_uids
     
     for uid in missing_uids:
@@ -98,8 +121,8 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
         
         arena_data['players'].append({
             'userID': uid,
-            'rating': pe.get('arenaRating', 0) if pe else 0,
-            'power': 0,
+            'rating': pe.get('arenaRating', pe.get('rating', 0)) if pe else 0,
+            'power': pe.get('power', 0) if pe else 0,
             'profileState': {
                 'nickname': (pe.get('nickname') if pe else None) or known_users.get(str(uid), str(uid)),
             },
@@ -109,20 +132,42 @@ def get_state_at_optimized(arena_snap_path, player_timelines):
             }
         })
 
-    # Также гарантируем, что все игроки из player_timelines (у кого есть бои) присутствуют в списке игроков
+    # Добавим игроков из player_timelines, если их нет
     existing_nicks = {p.get('profileState', {}).get('nickname', '').strip() for p in arena_data.get('players', [])}
     for nick in player_timelines.keys():
         if nick not in existing_nicks and nick != 'ksotar':
+            # Попробуем найти профиль по нику
+            pe = None
+            uid_str = nick_to_uid.get(nick)
+            if uid_str:
+                profile_file = os.path.join(ROOT_DIR, 'arena', 'squads', uid_str, 'profile_history.json')
+                if os.path.exists(profile_file):
+                    try:
+                        with open(profile_file, 'r', encoding='utf-8') as pf:
+                            ph = json.load(pf)
+                            if ph: pe = ph[-1]
+                    except: pass
+            
             arena_data['players'].append({
-                'rating': 0,
-                'power': 0,
+                'rating': pe.get('arenaRating', pe.get('rating', 0)) if pe else 0,
+                'power': pe.get('power', 0) if pe else 0,
                 'profileState': { 'nickname': nick },
-                'clanProfile': { 'clanName': '-', 'clanTag': '' }
+                'clanProfile': { 
+                    'clanName': pe.get('clanProfile', {}).get('clanName', '-') if pe else '-', 
+                    'clanTag': pe.get('clanProfile', {}).get('clanTag', '') if pe else '' 
+                }
             })
 
     players = []
     for i, p in enumerate(arena_data.get('players', []), 1):
-        players.append({'rank': i, 'nick': p.get('profileState', {}).get('nickname', '').strip(), 'clan': p.get('clanProfile', {}).get('clanName', '-'), 'clan_tag': p.get('clanProfile', {}).get('clanTag', ''), 'power': p.get('power'), 'rating': p.get('rating')})
+        players.append({
+            'rank': i, 
+            'nick': p.get('profileState', {}).get('nickname', '').strip(), 
+            'clan': p.get('clanProfile', {}).get('clanName', '-'), 
+            'clan_tag': p.get('clanProfile', {}).get('clanTag', ''), 
+            'power': p.get('power', 0), 
+            'rating': p.get('rating', 0)
+        })
 
     players.sort(key=lambda x: int(x.get('rating', 0) or 0), reverse=True)
     for idx, p in enumerate(players, 1):

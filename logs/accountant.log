@@ -107779,3 +107779,203 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [31.07.2026 13:09:50,30] Syncing with Git... 
+[main e3b5cc43] Auto-update 31.07.2026 13:09:54,68
+ 15 files changed, 1078 insertions(+), 167 deletions(-)
+ create mode 100644 battle_analytics/Experd/battle_2026-07-31_08-12-33_3410.html
+ create mode 100644 battle_analytics/Experd/battle_2026-07-31_08-23-01_9860.html
+ create mode 100644 battle_analytics/Experd/summary.html
+[31.07.2026 13:09:55,73] Pushing to repository... 
+Enumerating objects: 52, done.
+Counting objects:   1% (1/52)Counting objects:   3% (2/52)Counting objects:   5% (3/52)Counting objects:   7% (4/52)Counting objects:   9% (5/52)Counting objects:  11% (6/52)Counting objects:  13% (7/52)Counting objects:  15% (8/52)Counting objects:  17% (9/52)Counting objects:  19% (10/52)Counting objects:  21% (11/52)Counting objects:  23% (12/52)Counting objects:  25% (13/52)Counting objects:  26% (14/52)Counting objects:  28% (15/52)Counting objects:  30% (16/52)Counting objects:  32% (17/52)Counting objects:  34% (18/52)Counting objects:  36% (19/52)Counting objects:  38% (20/52)Counting objects:  40% (21/52)Counting objects:  42% (22/52)Counting objects:  44% (23/52)Counting objects:  46% (24/52)Counting objects:  48% (25/52)Counting objects:  50% (26/52)Counting objects:  51% (27/52)Counting objects:  53% (28/52)Counting objects:  55% (29/52)Counting objects:  57% (30/52)Counting objects:  59% (31/52)Counting objects:  61% (32/52)Counting objects:  63% (33/52)Counting objects:  65% (34/52)Counting objects:  67% (35/52)Counting objects:  69% (36/52)Counting objects:  71% (37/52)Counting objects:  73% (38/52)Counting objects:  75% (39/52)Counting objects:  76% (40/52)Counting objects:  78% (41/52)Counting objects:  80% (42/52)Counting objects:  82% (43/52)Counting objects:  84% (44/52)Counting objects:  86% (45/52)Counting objects:  88% (46/52)Counting objects:  90% (47/52)Counting objects:  92% (48/52)Counting objects:  94% (49/52)Counting objects:  96% (50/52)Counting objects:  98% (51/52)Counting objects: 100% (52/52)Counting objects: 100% (52/52), done.
+Delta compression using up to 4 threads
+Compressing objects:   3% (1/26)Compressing objects:   7% (2/26)Compressing objects:  11% (3/26)Compressing objects:  15% (4/26)Compressing objects:  19% (5/26)Compressing objects:  23% (6/26)Compressing objects:  26% (7/26)Compressing objects:  30% (8/26)Compressing objects:  34% (9/26)Compressing objects:  38% (10/26)Compressing objects:  42% (11/26)Compressing objects:  46% (12/26)Compressing objects:  50% (13/26)Compressing objects:  53% (14/26)Compressing objects:  57% (15/26)Compressing objects:  61% (16/26)Compressing objects:  65% (17/26)Compressing objects:  69% (18/26)Compressing objects:  73% (19/26)Compressing objects:  76% (20/26)Compressing objects:  80% (21/26)Compressing objects:  84% (22/26)Compressing objects:  88% (23/26)Compressing objects:  92% (24/26)Compressing objects:  96% (25/26)Compressing objects: 100% (26/26)Compressing objects: 100% (26/26), done.
+Writing objects:   3% (1/29)Writing objects:   6% (2/29)Writing objects:  10% (3/29)Writing objects:  13% (4/29)Writing objects:  17% (5/29)Writing objects:  20% (6/29)Writing objects:  24% (7/29)Writing objects:  27% (8/29)Writing objects:  31% (9/29)Writing objects:  34% (10/29)Writing objects:  37% (11/29)Writing objects:  41% (12/29)Writing objects:  44% (13/29)Writing objects:  48% (14/29)Writing objects:  51% (15/29)Writing objects:  62% (18/29)Writing objects:  65% (19/29)Writing objects:  68% (20/29)Writing objects:  72% (21/29)Writing objects:  75% (22/29)Writing objects:  79% (23/29)Writing objects:  82% (24/29)Writing objects:  86% (25/29)Writing objects:  89% (26/29)Writing objects:  93% (27/29)Writing objects:  96% (28/29)Writing objects: 100% (29/29)Writing objects: 100% (29/29), 36.80 KiB | 301.00 KiB/s, done.
+Total 29 (delta 22), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/22)        remote: Resolving deltas:   4% (1/22)        remote: Resolving deltas:   9% (2/22)        remote: Resolving deltas:  13% (3/22)        remote: Resolving deltas:  18% (4/22)        remote: Resolving deltas:  22% (5/22)        remote: Resolving deltas:  27% (6/22)        remote: Resolving deltas:  31% (7/22)        remote: Resolving deltas:  36% (8/22)        remote: Resolving deltas:  40% (9/22)        remote: Resolving deltas:  45% (10/22)        remote: Resolving deltas:  50% (11/22)        remote: Resolving deltas:  54% (12/22)        remote: Resolving deltas:  59% (13/22)        remote: Resolving deltas:  63% (14/22)        remote: Resolving deltas:  68% (15/22)        remote: Resolving deltas:  72% (16/22)        remote: Resolving deltas:  77% (17/22)        remote: Resolving deltas:  81% (18/22)        remote: Resolving deltas:  86% (19/22)        remote: Resolving deltas:  90% (20/22)        remote: Resolving deltas:  95% (21/22)        remote: Resolving deltas: 100% (22/22)        remote: Resolving deltas: 100% (22/22), completed with 18 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   49c24971..e3b5cc43  main -> main
+[31.07.2026 13:10:02,24] SUCCESS: Data pushed to Git. 
+[31.07.2026 13:10:02,26] PROCESS FINISHED 
+------------------------------------------ 
+[31.07.2026 13:55:01,40] STARTING PROCESS 
+[31.07.2026 13:55:01,49] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {'data': {'sessionID': '227408_C2173B5C68A41A724B656AD4EB6B505E', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'shoker', 'down': 'none', 'frame': 'default', 'head': 'ru_male', 'middle': 'visor', 'top': 'short_hair_brown'}, 'clanRole': 'Lieutenant', 'fightTime': '29/07/2026_21:40:37.0390', 'nick': 'Руслан', 'opponentRating': '3876', 'ourRatingDelta': '-11', 'stati
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[31.07.2026 13:55:16,09] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[13:55:16] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches registry hash), skipping save.
+Top-1: х3 (4597)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[13:55:21] --- [SUCCESS] FETCHING LATEST DATA completed in 5.0s
+
+[13:55:21] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-07-31 10:53:19
+Incremental mode: Processing only 0 files newer than 2026-07-31 10:53:19.
+
+Total new snapshots synced: 0
+[13:55:21] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 0.6s
+
+[13:55:21] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 8 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Kolhoznik: Found 6 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 3 battles, 0 new saved and reported.
+�����: Found 2 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+������: Found 4 battles, 0 new saved and reported.
+�������: Found 1 battles, 0 new saved and reported.
+Sio: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[13:55:22] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.4s
+
+[13:55:22] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\battle_analytics\personal.html
+[13:55:25] --- [SUCCESS] GENERATING PERSONAL STATS completed in 3.1s
+
+[13:55:25] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 165 tracked players (all registry users)...
+[DEBUG] Fetched 165 users from API
+Squad synchronization complete. 0 new states recorded.
+[13:55:29] --- [SUCCESS] FETCHING SQUADS completed in 3.6s
+
+[13:55:29] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 165 dynamic squad comparison reports.
+[13:55:32] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 3.9s
+
+[13:55:32] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Error: int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+Orcspower dashboard generated: arena/reports/orcspower.html. 0 snapshots inlined.
+[13:55:42] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 9.8s
+
+[13:55:42] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[14:07:31] --- [SUCCESS] DEPLOYING TO SERVER completed in 709.0s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[31.07.2026 14:07:31,83] Syncing with Git... 

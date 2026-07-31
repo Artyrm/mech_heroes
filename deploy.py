@@ -18,7 +18,7 @@ def deploy():
     files_to_upload = {
         "arena/reports/orcspower.html": "orcspower.html",
         "arena/reports/suppression_core.png": "suppression_core.png",
-        "battle_analytics/personal_stats.html": "personal.html"
+        "battle_analytics/personal.html": "personal.html"
     }
 
     try:
