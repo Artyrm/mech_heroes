@@ -67,11 +67,21 @@ def get_player_battles_timeline():
             
             p_name = sd.get('player', {}).get('name', nick)
             e_name = sd.get('enemy', {}).get('name', 'Противник')
+            
+            p_clan_data = sd.get('player', {}).get('clanProfile', sd.get('player', {}).get('clan', {}))
+            e_clan_data = sd.get('enemy', {}).get('clanProfile', sd.get('enemy', {}).get('clan', {}))
+            
+            p_clan = p_clan_data.get('clanTag', p_clan_data.get('clanName', '-')) if isinstance(p_clan_data, dict) else '-'
+            e_clan = e_clan_data.get('clanTag', e_clan_data.get('clanName', '-')) if isinstance(e_clan_data, dict) else '-'
+            
             is_attack = p_min < e_min
             opponent = e_name if is_attack else p_name
             if opponent == nick:
                 opponent = e_name if p_name == nick else p_name
-
+                
+            opponent_clan = e_clan if is_attack else p_clan
+            if not opponent_clan or opponent_clan == '-':
+                opponent_clan = e_clan if opponent == e_name else p_clan
 
             enemy_units = []
             for slot in e_u_data.values():
@@ -88,6 +98,7 @@ def get_player_battles_timeline():
                 'units': tuple(player_units),
                 'enemy_units': tuple(enemy_units),
                 'opponent': opponent,
+                'opponent_clan': opponent_clan or '-',
                 'p_nick': nick
             })
         battles.sort(key=lambda x: x['dt'])
@@ -233,7 +244,7 @@ def generate_dossiers(player_timelines):
                 </div>'''
             tactical_html += '</div>'
 
-        table_headers = "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Клан</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>" if nick == "ksotar" else "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>"
+                table_headers = "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Клан</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>" if nick == "ksotar" else "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\"text-align:right\">Δ Рейтинг</th></tr>"
         
         rows = ""
         if battles:
