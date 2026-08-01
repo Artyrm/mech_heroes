@@ -1,18 +1,14 @@
-path = 'battle_analytics/generate_personal_stats.py'
-with open(path, 'r', encoding='utf-8') as f:
-    lines = f.readlines()
+# -*- coding: utf-8 -*-
+with open('battle_analytics/generate_personal_stats.py', 'r', encoding='utf-8') as f:
+    text = f.read()
 
-new_lines = []
-for line in lines:
-    if 'tactical_html = ""' in line or 'tactical_html = \'\'\n' in line:
-        new_lines.append('        tactical_html = \'\'\n')
-    elif 'if nick != "ksotar":' in line or "if nick != 'ksotar':" in line:
-        new_lines.append('        if nick != \'ksotar\':\n')
-    elif 'tactical-summary' in line and 'tactical_html +=' not in line:
-        new_lines.append('            tactical_html = \'<div class=\"tactical-summary\"><h2>Тактический анализ (по составам)</h2>\'\n')
-    else:
-        new_lines.append(line)
+pos = text.find('table_headers =')
+end_pos = text.find('\n', pos)
 
-with open(path, 'w', encoding='utf-8') as f:
-    f.writelines(new_lines)
-print('Indentation fixed via fix_indent.py!')
+new_line = '    table_headers = "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Противник</th><th>Клан</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\\"text-align:right\\">Δ Рейтинг</th></tr>" if nick == "ksotar" else "<tr><th>Дата и время (МСК)</th><th>Тип</th><th>Свой отряд</th><th>Отряд противника</th><th>Результат</th><th style=\\"text-align:right\\">Δ Рейтинг</th></tr>"'
+text = text[:pos] + new_line + text[end_pos:]
+
+with open('battle_analytics/generate_personal_stats.py', 'w', encoding='utf-8') as f:
+    f.write(text)
+
+print('Fixed indentation successfully!')
