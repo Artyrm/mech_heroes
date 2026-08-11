@@ -133915,3 +133915,95 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [11.08.2026 20:08:58,74] Syncing with Git... 
+[main 7073ab1e] Auto-update 11.08.2026 20:09:00,97
+ 2 files changed, 93 insertions(+), 1 deletion(-)
+[11.08.2026 20:09:01,58] Pushing to repository... 
+Enumerating objects: 13, done.
+Counting objects:   7% (1/13)Counting objects:  15% (2/13)Counting objects:  23% (3/13)Counting objects:  30% (4/13)Counting objects:  38% (5/13)Counting objects:  46% (6/13)Counting objects:  53% (7/13)Counting objects:  61% (8/13)Counting objects:  69% (9/13)Counting objects:  76% (10/13)Counting objects:  84% (11/13)Counting objects:  92% (12/13)Counting objects: 100% (13/13)Counting objects: 100% (13/13), done.
+Delta compression using up to 4 threads
+Compressing objects:  16% (1/6)Compressing objects:  33% (2/6)Compressing objects:  50% (3/6)Compressing objects:  66% (4/6)Compressing objects:  83% (5/6)Compressing objects: 100% (6/6)Compressing objects: 100% (6/6), done.
+Writing objects:  14% (1/7)Writing objects:  28% (2/7)Writing objects:  42% (3/7)Writing objects:  57% (4/7)Writing objects:  71% (5/7)Writing objects:  85% (6/7)Writing objects: 100% (7/7)Writing objects: 100% (7/7), 1.43 KiB | 486.00 KiB/s, done.
+Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/5)        remote: Resolving deltas:  20% (1/5)        remote: Resolving deltas:  40% (2/5)        remote: Resolving deltas:  60% (3/5)        remote: Resolving deltas:  80% (4/5)        remote: Resolving deltas: 100% (5/5)        remote: Resolving deltas: 100% (5/5), completed with 5 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   c256dcd1..7073ab1e  main -> main
+[11.08.2026 20:09:08,67] SUCCESS: Data pushed to Git. 
+[11.08.2026 20:09:08,68] PROCESS FINISHED 
+------------------------------------------ 
+[11.08.2026 20:55:02,06] STARTING PROCESS 
+[11.08.2026 20:55:02,08] Running Python script... 
+[!] ОШИБКА FETCH: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.27.1/init?userid=227408 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1129)')))
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[11.08.2026 20:55:09,48] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[20:55:09] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Error: /init failed: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.27.1/init?userid=227408 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1129)')))
+[20:55:15] --- [SUCCESS] FETCHING LATEST DATA completed in 5.6s
+
+[20:55:15] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-06 09:55:20
+Incremental mode: Processing only 0 files newer than 2026-08-06 09:55:20.
+
+Total new snapshots synced: 0
+[20:55:23] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 8.5s
+
+[20:55:23] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+08���23�: Found 1 battles, 0 new saved and reported.
+�����: Found 3 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+�������: Found 1 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+������: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[20:55:24] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.5s
+
+[20:55:24] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+[20:55:24] --- [SUCCESS] GENERATING PERSONAL STATS completed in 0.2s
+
+[20:55:24] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 166 tracked players (all registry users)...
+[DEBUG] API exception: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.27.1/directcommand?userid=227408 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:1129)')))
+[20:55:30] --- [SUCCESS] FETCHING SQUADS completed in 5.6s
+
+[20:55:30] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 166 dynamic squad comparison reports.
+[20:55:48] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 18.3s
+
+[20:55:48] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[20:56:15] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 27.6s
+
+[20:56:15] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[21:09:07] --- [SUCCESS] DEPLOYING TO SERVER completed in 771.9s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[11.08.2026 21:09:07,80] Syncing with Git... 
