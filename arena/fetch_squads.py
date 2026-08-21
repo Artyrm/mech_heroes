@@ -59,7 +59,7 @@ def fetch_squads():
 
     # Используем реестр вместо сканирования всех файлов
     reg = rm.load_registry(force_rebuild=update_history)
-    user_ids = [int(uid) for uid in reg['known_users'].keys()]
+    user_ids = [int(uid) for uid in reg['known_users'].keys() if int(uid) > 0]
     
     if not user_ids:
         print("No users found in registry. Run with --update_history to rebuild.")
