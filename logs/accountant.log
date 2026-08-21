@@ -155813,3 +155813,98 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [21.08.2026 14:08:28,18] Syncing with Git... 
+[main 9269abd3] Auto-update 21.08.2026 14:08:30,22
+ 3 files changed, 99 insertions(+), 3 deletions(-)
+[21.08.2026 14:08:30,87] Pushing to repository... 
+Enumerating objects: 17, done.
+Counting objects:   5% (1/17)Counting objects:  11% (2/17)Counting objects:  17% (3/17)Counting objects:  23% (4/17)Counting objects:  29% (5/17)Counting objects:  35% (6/17)Counting objects:  41% (7/17)Counting objects:  47% (8/17)Counting objects:  52% (9/17)Counting objects:  58% (10/17)Counting objects:  64% (11/17)Counting objects:  70% (12/17)Counting objects:  76% (13/17)Counting objects:  82% (14/17)Counting objects:  88% (15/17)Counting objects:  94% (16/17)Counting objects: 100% (17/17)Counting objects: 100% (17/17), done.
+Delta compression using up to 4 threads
+Compressing objects:  12% (1/8)Compressing objects:  25% (2/8)Compressing objects:  37% (3/8)Compressing objects:  50% (4/8)Compressing objects:  62% (5/8)Compressing objects:  75% (6/8)Compressing objects:  87% (7/8)Compressing objects: 100% (8/8)Compressing objects: 100% (8/8), done.
+Writing objects:  11% (1/9)Writing objects:  22% (2/9)Writing objects:  33% (3/9)Writing objects:  44% (4/9)Writing objects:  55% (5/9)Writing objects:  66% (6/9)Writing objects:  77% (7/9)Writing objects:  88% (8/9)Writing objects: 100% (9/9)Writing objects: 100% (9/9), 18.80 KiB | 155.00 KiB/s, done.
+Total 9 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/7)        remote: Resolving deltas:  14% (1/7)        remote: Resolving deltas:  28% (2/7)        remote: Resolving deltas:  42% (3/7)        remote: Resolving deltas:  57% (4/7)        remote: Resolving deltas:  71% (5/7)        remote: Resolving deltas:  85% (6/7)        remote: Resolving deltas: 100% (7/7)        remote: Resolving deltas: 100% (7/7), completed with 7 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   fe9782fa..9269abd3  main -> main
+[21.08.2026 14:08:37,80] SUCCESS: Data pushed to Git. 
+[21.08.2026 14:08:37,82] PROCESS FINISHED 
+------------------------------------------ 
+[21.08.2026 14:55:01,84] STARTING PROCESS 
+[21.08.2026 14:55:01,86] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] РРµСЂР°СЂС…РёСЏ РЅРµ РЅР°Р№РґРµРЅР°. РћС‚РІРµС‚ API (РїРµСЂРІС‹Рµ 500 СЃРёРјРІ.): {'data': {'sessionID': '227408_D9B097A7EACE23A2978BEFA4C9647BBD', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'spark', 'down': 'goatee_2_red', 'frame': 'default', 'head': 'eu_male', 'middle': 'vr', 'top': 'long_wavy_black'}, 'clanRole': 'General', 'fightTime': '02/08/2026_08:19:35.3350', 'nick': 'VadSJ', 'opponentRating': '3811', 'ourRatingDelta': '-10', 'statis
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[21.08.2026 14:55:15,88] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[14:55:16] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Saved snapshot: arena_2026-08-21T11-55-19.json
+Top-1: С…3 (4639)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[14:55:21] --- [SUCCESS] FETCHING LATEST DATA completed in 5.4s
+
+[14:55:21] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-21 11:55:19
+Incremental mode: Processing only 0 files newer than 2026-08-21 11:55:19.
+
+Total new snapshots synced: 0
+[14:55:22] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 0.8s
+
+[14:55:22] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Роман: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+---------------------------------
+[14:55:22] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.5s
+
+[14:55:22] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+[14:55:22] --- [SUCCESS] GENERATING PERSONAL STATS completed in 0.1s
+
+[14:55:22] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 168 tracked players (all registry users)...
+[DEBUG] Fetched 168 users from API
+Squad synchronization complete. 20 new states recorded.
+[14:55:27] --- [SUCCESS] FETCHING SQUADS completed in 4.9s
+
+[14:55:27] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 168 dynamic squad comparison reports.
+[14:55:32] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 4.9s
+
+[14:55:32] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[14:55:46] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 13.6s
+
+[14:55:46] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+Deployment error: [WinError 10053] Программа на вашем хост-компьютере разорвала установленное подключение
+[15:00:52] --- [SUCCESS] DEPLOYING TO SERVER completed in 306.6s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[21.08.2026 15:00:52,88] Syncing with Git... 
