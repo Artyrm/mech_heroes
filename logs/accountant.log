@@ -156609,3 +156609,155 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [21.08.2026 22:10:52,44] Syncing with Git... 
+warning: in the working copy of 'arena/patch_fetch_squads.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arena/patch_fetch_squads_safe.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arena/patch_registry_manager.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arena/patch_registry_manager_v2.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'arena/update_registry_migration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tools/find_missing_uids.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tools/generate_ghosts.py', LF will be replaced by CRLF the next time Git touches it
+[main 0a311c09] Auto-update 21.08.2026 22:10:56,64
+ 57 files changed, 7999 insertions(+), 32 deletions(-)
+ create mode 100644 arena/patch_fetch_squads.py
+ create mode 100644 arena/patch_fetch_squads_safe.py
+ create mode 100644 arena/patch_registry_manager.py
+ create mode 100644 arena/patch_registry_manager_v2.py
+ create mode 100644 arena/reports/squads/125451.html
+ create mode 100644 arena/reports/squads/129821.html
+ create mode 100644 arena/reports/squads/168898.html
+ create mode 100644 arena/reports/squads/168919.html
+ create mode 100644 arena/reports/squads/169027.html
+ create mode 100644 arena/reports/squads/190051.html
+ create mode 100644 arena/reports/squads/208946.html
+ create mode 100644 arena/reports/squads/332921.html
+ create mode 100644 arena/reports/squads/342034.html
+ create mode 100644 arena/reports/squads/349498.html
+ create mode 100644 arena/reports/squads/392873.html
+ create mode 100644 arena/reports/squads/423683.html
+ create mode 100644 arena/reports/squads/449098.html
+ create mode 100644 arena/reports/squads/476983.html
+ create mode 100644 arena/reports/squads/479210.html
+ create mode 100644 arena/reports/squads/491820.html
+ create mode 100644 arena/reports/squads/493938.html
+ create mode 100644 arena/reports/squads/495265.html
+ create mode 100644 arena/reports/squads/495993.html
+ create mode 100644 arena/reports/squads/501436.html
+ create mode 100644 arena/reports/squads/501529.html
+ create mode 100644 arena/reports/squads/505895.html
+ create mode 100644 arena/reports/squads/60611.html
+ create mode 100644 arena/update_registry_migration.py
+ create mode 100644 battle_analytics/13/summary.html
+ create mode 100644 "battle_analytics/30\320\272\320\263/summary.html"
+ create mode 100644 battle_analytics/Expert007/summary.html
+ create mode 100644 battle_analytics/GapeHorn/summary.html
+ create mode 100644 battle_analytics/Korolev77/summary.html
+ create mode 100644 battle_analytics/er/summary.html
+ create mode 100644 battle_analytics/shadow/summary.html
+ create mode 100644 battle_analytics/stik-1/summary.html
+ create mode 100644 battle_analytics/www/summary.html
+ create mode 100644 "battle_analytics/\320\221\320\265\320\273\320\272\320\260/summary.html"
+ create mode 100644 "battle_analytics/\320\224\320\270\320\274\320\276\320\275/summary.html"
+ create mode 100644 "battle_analytics/\320\230\320\262\320\260\320\275/summary.html"
+ create mode 100644 "battle_analytics/\320\234\320\260\320\272\321\201 2008/summary.html"
+ create mode 100644 "battle_analytics/\320\237\320\270\320\277\320\265\321\206\320\270\320\232/summary.html"
+ create mode 100644 "battle_analytics/\320\237\321\200\320\276\321\201\321\202\320\276\320\271/summary.html"
+ create mode 100644 "battle_analytics/\320\240\320\236\320\234\320\220\320\240\320\230\320\236/summary.html"
+ create mode 100644 "battle_analytics/\320\241\320\276\320\275\321\217 \320\240\321\215\320\264/summary.html"
+ create mode 100644 tools/find_missing_uids.py
+ create mode 100644 tools/generate_ghosts.py
+[21.08.2026 22:10:58,06] Pushing to repository... 
+Enumerating objects: 106, done.
+Counting objects:   0% (1/106)Counting objects:   1% (2/106)Counting objects:   2% (3/106)Counting objects:   3% (4/106)Counting objects:   4% (5/106)Counting objects:   5% (6/106)Counting objects:   6% (7/106)Counting objects:   7% (8/106)Counting objects:   8% (9/106)Counting objects:   9% (10/106)Counting objects:  10% (11/106)Counting objects:  11% (12/106)Counting objects:  12% (13/106)Counting objects:  13% (14/106)Counting objects:  14% (15/106)Counting objects:  15% (16/106)Counting objects:  16% (17/106)Counting objects:  17% (19/106)Counting objects:  18% (20/106)Counting objects:  19% (21/106)Counting objects:  20% (22/106)Counting objects:  21% (23/106)Counting objects:  22% (24/106)Counting objects:  23% (25/106)Counting objects:  24% (26/106)Counting objects:  25% (27/106)Counting objects:  26% (28/106)Counting objects:  27% (29/106)Counting objects:  28% (30/106)Counting objects:  29% (31/106)Counting objects:  30% (32/106)Counting objects:  31% (33/106)Counting objects:  32% (34/106)Counting objects:  33% (35/106)Counting objects:  34% (37/106)Counting objects:  35% (38/106)Counting objects:  36% (39/106)Counting objects:  37% (40/106)Counting objects:  38% (41/106)Counting objects:  39% (42/106)Counting objects:  40% (43/106)Counting objects:  41% (44/106)Counting objects:  42% (45/106)Counting objects:  43% (46/106)Counting objects:  44% (47/106)Counting objects:  45% (48/106)Counting objects:  46% (49/106)Counting objects:  47% (50/106)Counting objects:  48% (51/106)Counting objects:  49% (52/106)Counting objects:  50% (53/106)Counting objects:  51% (55/106)Counting objects:  52% (56/106)Counting objects:  53% (57/106)Counting objects:  54% (58/106)Counting objects:  55% (59/106)Counting objects:  56% (60/106)Counting objects:  57% (61/106)Counting objects:  58% (62/106)Counting objects:  59% (63/106)Counting objects:  60% (64/106)Counting objects:  61% (65/106)Counting objects:  62% (66/106)Counting objects:  63% (67/106)Counting objects:  64% (68/106)Counting objects:  65% (69/106)Counting objects:  66% (70/106)Counting objects:  67% (72/106)Counting objects:  68% (73/106)Counting objects:  69% (74/106)Counting objects:  70% (75/106)Counting objects:  71% (76/106)Counting objects:  72% (77/106)Counting objects:  73% (78/106)Counting objects:  74% (79/106)Counting objects:  75% (80/106)Counting objects:  76% (81/106)Counting objects:  77% (82/106)Counting objects:  78% (83/106)Counting objects:  79% (84/106)Counting objects:  80% (85/106)Counting objects:  81% (86/106)Counting objects:  82% (87/106)Counting objects:  83% (88/106)Counting objects:  84% (90/106)Counting objects:  85% (91/106)Counting objects:  86% (92/106)Counting objects:  87% (93/106)Counting objects:  88% (94/106)Counting objects:  89% (95/106)Counting objects:  90% (96/106)Counting objects:  91% (97/106)Counting objects:  92% (98/106)Counting objects:  93% (99/106)Counting objects:  94% (100/106)Counting objects:  95% (101/106)Counting objects:  96% (102/106)Counting objects:  97% (103/106)Counting objects:  98% (104/106)Counting objects:  99% (105/106)Counting objects: 100% (106/106)Counting objects: 100% (106/106), done.
+Delta compression using up to 4 threads
+Compressing objects:   1% (1/67)Compressing objects:   2% (2/67)Compressing objects:   4% (3/67)Compressing objects:   5% (4/67)Compressing objects:   7% (5/67)Compressing objects:   8% (6/67)Compressing objects:  10% (7/67)Compressing objects:  11% (8/67)Compressing objects:  13% (9/67)Compressing objects:  14% (10/67)Compressing objects:  16% (11/67)Compressing objects:  17% (12/67)Compressing objects:  19% (13/67)Compressing objects:  20% (14/67)Compressing objects:  22% (15/67)Compressing objects:  23% (16/67)Compressing objects:  25% (17/67)Compressing objects:  26% (18/67)Compressing objects:  28% (19/67)Compressing objects:  29% (20/67)Compressing objects:  31% (21/67)Compressing objects:  32% (22/67)Compressing objects:  34% (23/67)Compressing objects:  35% (24/67)Compressing objects:  37% (25/67)Compressing objects:  38% (26/67)Compressing objects:  40% (27/67)Compressing objects:  41% (28/67)Compressing objects:  43% (29/67)Compressing objects:  44% (30/67)Compressing objects:  46% (31/67)Compressing objects:  47% (32/67)Compressing objects:  49% (33/67)Compressing objects:  50% (34/67)Compressing objects:  52% (35/67)Compressing objects:  53% (36/67)Compressing objects:  55% (37/67)Compressing objects:  56% (38/67)Compressing objects:  58% (39/67)Compressing objects:  59% (40/67)Compressing objects:  61% (41/67)Compressing objects:  62% (42/67)Compressing objects:  64% (43/67)Compressing objects:  65% (44/67)Compressing objects:  67% (45/67)Compressing objects:  68% (46/67)Compressing objects:  70% (47/67)Compressing objects:  71% (48/67)Compressing objects:  73% (49/67)Compressing objects:  74% (50/67)Compressing objects:  76% (51/67)Compressing objects:  77% (52/67)Compressing objects:  79% (53/67)Compressing objects:  80% (54/67)Compressing objects:  82% (55/67)Compressing objects:  83% (56/67)Compressing objects:  85% (57/67)Compressing objects:  86% (58/67)Compressing objects:  88% (59/67)Compressing objects:  89% (60/67)Compressing objects:  91% (61/67)Compressing objects:  92% (62/67)Compressing objects:  94% (63/67)Compressing objects:  95% (64/67)Compressing objects:  97% (65/67)Compressing objects:  98% (66/67)Compressing objects: 100% (67/67)Compressing objects: 100% (67/67), done.
+Writing objects:   1% (1/87)Writing objects:   2% (2/87)Writing objects:   3% (3/87)Writing objects:   4% (4/87)Writing objects:   5% (5/87)Writing objects:   6% (6/87)Writing objects:   9% (8/87)Writing objects:  11% (10/87)Writing objects:  12% (11/87)Writing objects:  13% (12/87)Writing objects:  14% (13/87)Writing objects:  18% (16/87)Writing objects:  20% (18/87)Writing objects:  21% (19/87)Writing objects:  22% (20/87)Writing objects:  24% (21/87)Writing objects:  25% (22/87)Writing objects:  26% (23/87)Writing objects:  28% (25/87)Writing objects:  29% (26/87)Writing objects:  31% (27/87)Writing objects:  32% (28/87)Writing objects:  33% (29/87)Writing objects:  34% (30/87)Writing objects:  35% (31/87)Writing objects:  37% (33/87)Writing objects:  39% (34/87)Writing objects:  40% (35/87)Writing objects:  41% (36/87)Writing objects:  42% (37/87)Writing objects:  43% (38/87)Writing objects:  44% (39/87)Writing objects:  45% (40/87)Writing objects:  48% (42/87)Writing objects:  49% (43/87)Writing objects:  51% (45/87)Writing objects:  52% (46/87)Writing objects:  54% (47/87)Writing objects:  55% (48/87)Writing objects:  56% (49/87)Writing objects:  57% (50/87)Writing objects:  58% (51/87)Writing objects:  59% (52/87)Writing objects:  60% (53/87)Writing objects:  62% (54/87)Writing objects:  63% (55/87)Writing objects:  64% (56/87)Writing objects:  65% (57/87)Writing objects:  66% (58/87)Writing objects:  67% (59/87)Writing objects:  68% (60/87)Writing objects:  70% (61/87)Writing objects:  71% (62/87)Writing objects:  72% (63/87)Writing objects:  73% (64/87)Writing objects:  74% (65/87)Writing objects:  75% (66/87)Writing objects:  77% (67/87)Writing objects:  78% (68/87)Writing objects:  79% (69/87)Writing objects:  80% (70/87)Writing objects:  81% (71/87)Writing objects:  82% (72/87)Writing objects:  83% (73/87)Writing objects:  85% (74/87)Writing objects:  86% (75/87)Writing objects:  87% (76/87)Writing objects:  88% (77/87)Writing objects:  89% (78/87)Writing objects:  90% (79/87)Writing objects:  91% (80/87)Writing objects:  93% (81/87)Writing objects:  94% (82/87)Writing objects:  95% (83/87)Writing objects:  96% (84/87)Writing objects:  97% (85/87)Writing objects:  98% (86/87)Writing objects: 100% (87/87)Writing objects: 100% (87/87), 68.83 KiB | 417.00 KiB/s, done.
+Total 87 (delta 58), reused 2 (delta 1), pack-reused 0
+remote: Resolving deltas:   0% (0/58)        remote: Resolving deltas:   1% (1/58)        remote: Resolving deltas:   3% (2/58)        remote: Resolving deltas:   5% (3/58)        remote: Resolving deltas:   6% (4/58)        remote: Resolving deltas:   8% (5/58)        remote: Resolving deltas:  10% (6/58)        remote: Resolving deltas:  12% (7/58)        remote: Resolving deltas:  13% (8/58)        remote: Resolving deltas:  15% (9/58)        remote: Resolving deltas:  17% (10/58)        remote: Resolving deltas:  18% (11/58)        remote: Resolving deltas:  20% (12/58)        remote: Resolving deltas:  22% (13/58)        remote: Resolving deltas:  24% (14/58)        remote: Resolving deltas:  25% (15/58)        remote: Resolving deltas:  27% (16/58)        remote: Resolving deltas:  29% (17/58)        remote: Resolving deltas:  31% (18/58)        remote: Resolving deltas:  32% (19/58)        remote: Resolving deltas:  34% (20/58)        remote: Resolving deltas:  36% (21/58)        remote: Resolving deltas:  37% (22/58)        remote: Resolving deltas:  39% (23/58)        remote: Resolving deltas:  41% (24/58)        remote: Resolving deltas:  43% (25/58)        remote: Resolving deltas:  44% (26/58)        remote: Resolving deltas:  46% (27/58)        remote: Resolving deltas:  48% (28/58)        remote: Resolving deltas:  50% (29/58)        remote: Resolving deltas:  51% (30/58)        remote: Resolving deltas:  53% (31/58)        remote: Resolving deltas:  55% (32/58)        remote: Resolving deltas:  56% (33/58)        remote: Resolving deltas:  58% (34/58)        remote: Resolving deltas:  60% (35/58)        remote: Resolving deltas:  62% (36/58)        remote: Resolving deltas:  63% (37/58)        remote: Resolving deltas:  65% (38/58)        remote: Resolving deltas:  67% (39/58)        remote: Resolving deltas:  68% (40/58)        remote: Resolving deltas:  70% (41/58)        remote: Resolving deltas:  72% (42/58)        remote: Resolving deltas:  74% (43/58)        remote: Resolving deltas:  75% (44/58)        remote: Resolving deltas:  77% (45/58)        remote: Resolving deltas:  79% (46/58)        remote: Resolving deltas:  81% (47/58)        remote: Resolving deltas:  82% (48/58)        remote: Resolving deltas:  84% (49/58)        remote: Resolving deltas:  86% (50/58)        remote: Resolving deltas:  87% (51/58)        remote: Resolving deltas:  89% (52/58)        remote: Resolving deltas:  91% (53/58)        remote: Resolving deltas:  93% (54/58)        remote: Resolving deltas:  94% (55/58)        remote: Resolving deltas:  96% (56/58)        remote: Resolving deltas:  98% (57/58)        remote: Resolving deltas: 100% (58/58)        remote: Resolving deltas: 100% (58/58), completed with 17 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   f1636620..0a311c09  main -> main
+[21.08.2026 22:11:04,69] SUCCESS: Data pushed to Git. 
+[21.08.2026 22:11:04,72] PROCESS FINISHED 
+------------------------------------------ 
+[21.08.2026 22:55:01,91] STARTING PROCESS 
+[21.08.2026 22:55:01,97] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {'data': {'sessionID': '227408_86CE8849BDB2B0E6245F255B70A66079', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'spark', 'down': 'goatee_2_red', 'frame': 'default', 'head': 'eu_male', 'middle': 'vr', 'top': 'long_wavy_black'}, 'clanRole': 'General', 'fightTime': '02/08/2026_08:19:35.3350', 'nick': 'VadSJ', 'opponentRating': '3811', 'ourRatingDelta': '-10', 'statis
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[21.08.2026 22:55:13,04] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[22:55:13] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches registry hash), skipping save.
+Top-1: х3 (4639)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[22:55:20] --- [SUCCESS] FETCHING LATEST DATA completed in 6.9s
+
+[22:55:20] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-21 11:55:19
+Incremental mode: Processing only 0 files newer than 2026-08-21 11:55:19.
+
+Total new snapshots synced: 0
+[22:55:21] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 1.0s
+
+[22:55:21] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+�������: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+������: Found 1 battles, 0 new saved and reported.
+08���23�: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+�����: Found 3 battles, 0 new saved and reported.
+---------------------------------
+[22:55:21] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.5s
+
+[22:55:21] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\battle_analytics\personal.html
+[22:55:26] --- [SUCCESS] GENERATING PERSONAL STATS completed in 4.4s
+
+[22:55:26] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Fetched 191 users from API
+Squad synchronization complete. 24 new states recorded.
+[22:55:45] --- [SUCCESS] FETCHING SQUADS completed in 19.1s
+
+[22:55:45] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[22:55:51] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 5.8s
+
+[22:55:51] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[22:56:04] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 13.7s
+
+[22:56:04] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[22:57:24] --- [SUCCESS] DEPLOYING TO SERVER completed in 79.8s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[21.08.2026 22:57:24,52] Syncing with Git... 
