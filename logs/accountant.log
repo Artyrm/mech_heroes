@@ -160904,3 +160904,101 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [23.08.2026 20:09:35,82] Syncing with Git... 
+[main 0cc5d915] Auto-update 23.08.2026 20:09:47,56
+ 6 files changed, 134 insertions(+), 12 deletions(-)
+[23.08.2026 20:09:49,28] Pushing to repository... 
+Enumerating objects: 29, done.
+Counting objects:   3% (1/29)Counting objects:   6% (2/29)Counting objects:  10% (3/29)Counting objects:  13% (4/29)Counting objects:  17% (5/29)Counting objects:  20% (6/29)Counting objects:  24% (7/29)Counting objects:  27% (8/29)Counting objects:  31% (9/29)Counting objects:  34% (10/29)Counting objects:  37% (11/29)Counting objects:  41% (12/29)Counting objects:  44% (13/29)Counting objects:  48% (14/29)Counting objects:  51% (15/29)Counting objects:  55% (16/29)Counting objects:  58% (17/29)Counting objects:  62% (18/29)Counting objects:  65% (19/29)Counting objects:  68% (20/29)Counting objects:  72% (21/29)Counting objects:  75% (22/29)Counting objects:  79% (23/29)Counting objects:  82% (24/29)Counting objects:  86% (25/29)Counting objects:  89% (26/29)Counting objects:  93% (27/29)Counting objects:  96% (28/29)Counting objects: 100% (29/29)Counting objects: 100% (29/29), done.
+Delta compression using up to 4 threads
+Compressing objects:   7% (1/14)Compressing objects:  14% (2/14)Compressing objects:  21% (3/14)Compressing objects:  28% (4/14)Compressing objects:  35% (5/14)Compressing objects:  42% (6/14)Compressing objects:  50% (7/14)Compressing objects:  57% (8/14)Compressing objects:  64% (9/14)Compressing objects:  71% (10/14)Compressing objects:  78% (11/14)Compressing objects:  85% (12/14)Compressing objects:  92% (13/14)Compressing objects: 100% (14/14)Compressing objects: 100% (14/14), done.
+Writing objects:   6% (1/15)Writing objects:  13% (2/15)Writing objects:  20% (3/15)Writing objects:  26% (4/15)Writing objects:  33% (5/15)Writing objects:  40% (6/15)Writing objects:  46% (7/15)Writing objects:  53% (8/15)Writing objects:  60% (9/15)Writing objects:  66% (10/15)Writing objects:  80% (12/15)Writing objects:  86% (13/15)Writing objects:  93% (14/15)Writing objects: 100% (15/15)Writing objects: 100% (15/15), 23.60 KiB | 114.00 KiB/s, done.
+Total 15 (delta 12), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/12)        remote: Resolving deltas:   8% (1/12)        remote: Resolving deltas:  16% (2/12)        remote: Resolving deltas:  25% (3/12)        remote: Resolving deltas:  33% (4/12)        remote: Resolving deltas:  41% (5/12)        remote: Resolving deltas:  50% (6/12)        remote: Resolving deltas:  58% (7/12)        remote: Resolving deltas:  66% (8/12)        remote: Resolving deltas:  75% (9/12)        remote: Resolving deltas:  83% (10/12)        remote: Resolving deltas:  91% (11/12)        remote: Resolving deltas: 100% (12/12)        remote: Resolving deltas: 100% (12/12), completed with 11 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   a13c8799..0cc5d915  main -> main
+[23.08.2026 20:09:59,69] SUCCESS: Data pushed to Git. 
+[23.08.2026 20:09:59,74] PROCESS FINISHED 
+------------------------------------------ 
+[23.08.2026 20:55:01,87] STARTING PROCESS 
+[23.08.2026 20:55:01,90] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {'data': {'sessionID': '227408_2E51500A02E46030420D4D8CD0D48795', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'spark', 'down': 'goatee_2_red', 'frame': 'default', 'head': 'eu_male', 'middle': 'vr', 'top': 'long_wavy_black'}, 'clanRole': 'General', 'fightTime': '02/08/2026_08:19:35.3350', 'nick': 'VadSJ', 'opponentRating': '3811', 'ourRatingDelta': '-10', 'statis
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[23.08.2026 20:55:16,16] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[20:55:16] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Data unchanged (matches registry hash), skipping save.
+Top-1: х3 (4639)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[20:55:23] --- [SUCCESS] FETCHING LATEST DATA completed in 7.3s
+
+[20:55:23] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-21 11:55:19
+Incremental mode: Processing only 0 files newer than 2026-08-21 11:55:19.
+
+Total new snapshots synced: 0
+[20:55:35] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 11.5s
+
+[20:55:35] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Gansta4771: Found 4 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+08���23�: Found 1 battles, 0 new saved and reported.
+�������: Found 1 battles, 0 new saved and reported.
+�����: Found 3 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+������: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[20:55:36] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.8s
+
+[20:55:36] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\battle_analytics\personal.html
+[20:56:26] --- [SUCCESS] GENERATING PERSONAL STATS completed in 50.7s
+
+[20:56:26] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Fetched 191 users from API
+Squad synchronization complete. 19 new states recorded.
+[20:56:56] --- [SUCCESS] FETCHING SQUADS completed in 29.6s
+
+[20:56:56] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[20:57:03] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 7.0s
+
+[20:57:03] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[20:57:21] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 17.6s
+
+[20:57:21] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[21:11:19] --- [SUCCESS] DEPLOYING TO SERVER completed in 838.4s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[23.08.2026 21:11:19,59] Syncing with Git... 
