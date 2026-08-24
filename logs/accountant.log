@@ -162542,3 +162542,102 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [24.08.2026 14:08:54,13] Syncing with Git... 
+[main 63c145a1] Auto-update 24.08.2026 14:08:56,75
+ 8 files changed, 132 insertions(+), 42 deletions(-)
+[24.08.2026 14:08:57,66] Pushing to repository... 
+Enumerating objects: 37, done.
+Counting objects:   2% (1/37)Counting objects:   5% (2/37)Counting objects:   8% (3/37)Counting objects:  10% (4/37)Counting objects:  13% (5/37)Counting objects:  16% (6/37)Counting objects:  18% (7/37)Counting objects:  21% (8/37)Counting objects:  24% (9/37)Counting objects:  27% (10/37)Counting objects:  29% (11/37)Counting objects:  32% (12/37)Counting objects:  35% (13/37)Counting objects:  37% (14/37)Counting objects:  40% (15/37)Counting objects:  43% (16/37)Counting objects:  45% (17/37)Counting objects:  48% (18/37)Counting objects:  51% (19/37)Counting objects:  54% (20/37)Counting objects:  56% (21/37)Counting objects:  59% (22/37)Counting objects:  62% (23/37)Counting objects:  64% (24/37)Counting objects:  67% (25/37)Counting objects:  70% (26/37)Counting objects:  72% (27/37)Counting objects:  75% (28/37)Counting objects:  78% (29/37)Counting objects:  81% (30/37)Counting objects:  83% (31/37)Counting objects:  86% (32/37)Counting objects:  89% (33/37)Counting objects:  91% (34/37)Counting objects:  94% (35/37)Counting objects:  97% (36/37)Counting objects: 100% (37/37)Counting objects: 100% (37/37), done.
+Delta compression using up to 4 threads
+Compressing objects:   5% (1/17)Compressing objects:  11% (2/17)Compressing objects:  17% (3/17)Compressing objects:  23% (4/17)Compressing objects:  29% (5/17)Compressing objects:  35% (6/17)Compressing objects:  41% (7/17)Compressing objects:  47% (8/17)Compressing objects:  52% (9/17)Compressing objects:  58% (10/17)Compressing objects:  64% (11/17)Compressing objects:  70% (12/17)Compressing objects:  76% (13/17)Compressing objects:  82% (14/17)Compressing objects:  88% (15/17)Compressing objects:  94% (16/17)Compressing objects: 100% (17/17)Compressing objects: 100% (17/17), done.
+Writing objects:   5% (1/19)Writing objects:  10% (2/19)Writing objects:  15% (3/19)Writing objects:  21% (4/19)Writing objects:  26% (5/19)Writing objects:  31% (6/19)Writing objects:  36% (7/19)Writing objects:  42% (8/19)Writing objects:  47% (9/19)Writing objects:  52% (10/19)Writing objects:  57% (11/19)Writing objects:  63% (12/19)Writing objects:  68% (13/19)Writing objects:  73% (14/19)Writing objects:  78% (15/19)Writing objects:  84% (16/19)Writing objects:  89% (17/19)Writing objects:  94% (18/19)Writing objects: 100% (19/19)Writing objects: 100% (19/19), 24.40 KiB | 199.00 KiB/s, done.
+Total 19 (delta 15), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/15)        remote: Resolving deltas:   6% (1/15)        remote: Resolving deltas:  13% (2/15)        remote: Resolving deltas:  20% (3/15)        remote: Resolving deltas:  26% (4/15)        remote: Resolving deltas:  33% (5/15)        remote: Resolving deltas:  40% (6/15)        remote: Resolving deltas:  46% (7/15)        remote: Resolving deltas:  53% (8/15)        remote: Resolving deltas:  60% (9/15)        remote: Resolving deltas:  66% (10/15)        remote: Resolving deltas:  73% (11/15)        remote: Resolving deltas:  80% (12/15)        remote: Resolving deltas:  86% (13/15)        remote: Resolving deltas:  93% (14/15)        remote: Resolving deltas: 100% (15/15)        remote: Resolving deltas: 100% (15/15), completed with 14 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   5c58076c..63c145a1  main -> main
+[24.08.2026 14:09:04,36] SUCCESS: Data pushed to Git. 
+[24.08.2026 14:09:04,40] PROCESS FINISHED 
+------------------------------------------ 
+[24.08.2026 14:55:01,75] STARTING PROCESS 
+[24.08.2026 14:55:01,78] Running Python script... 
+DEBUG: perform_refresh failed: 'clanData'
+[DEBUG] Иерархия не найдена. Ответ API (первые 500 симв.): {'data': {'sessionID': '227408_9710201F98FA00E2A7CE545C77F257CC', 'userState': {'abTests': {'interstitial_test': 'no_ads'}, 'analyticsPlatform': 'YandexGamesDesktop', 'arena': {'battlesHistory': [{'avatar': '', 'avatarConfiguration': {'clothes': 'spark', 'down': 'goatee_2_red', 'frame': 'default', 'head': 'eu_male', 'middle': 'vr', 'top': 'long_wavy_black'}, 'clanRole': 'General', 'fightTime': '02/08/2026_08:19:35.3350', 'nick': 'VadSJ', 'opponentRating': '3811', 'ourRatingDelta': '-10', 'statis
+[!] ПРЕДУПРЕЖДЕНИЕ: Клановые данные недоступны (возможно, игрок вне клана). Продолжаем выполнение остальных задач.
+[24.08.2026 14:55:14,17] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[14:55:14] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+Saved snapshot: arena_2026-08-24T11-55-17.json
+Top-1: х3 (4642)
+Requesting latest Arena Top-50 via UseServiceCommand...
+[14:55:19] --- [SUCCESS] FETCHING LATEST DATA completed in 4.9s
+
+[14:55:19] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-24 11:55:17
+Incremental mode: Processing only 0 files newer than 2026-08-24 11:55:17.
+
+Total new snapshots synced: 0
+[14:55:20] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 1.1s
+
+[14:55:20] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Gansta4771: Found 4 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+�����: Found 3 battles, 0 new saved and reported.
+�����: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+�������: Found 1 battles, 0 new saved and reported.
+������: Found 1 battles, 0 new saved and reported.
+08���23�: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[14:55:21] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.6s
+
+[14:55:21] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+  Calculating stats for arena_2026-08-24T11-55-17.json...
+Personal stats generated: G:\Video\!�������\Mech Heroes\���� ����\accountant_bot\battle_analytics\personal.html
+[14:55:27] --- [SUCCESS] GENERATING PERSONAL STATS completed in 6.5s
+
+[14:55:27] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Fetched 191 users from API
+Squad synchronization complete. 10 new states recorded.
+[14:55:34] --- [SUCCESS] FETCHING SQUADS completed in 6.6s
+
+[14:55:34] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[14:55:39] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 5.7s
+
+[14:55:39] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[14:55:54] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 15.0s
+
+[14:55:54] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[15:09:43] --- [SUCCESS] DEPLOYING TO SERVER completed in 828.7s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[24.08.2026 15:09:43,66] Syncing with Git... 
