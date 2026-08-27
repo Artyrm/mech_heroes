@@ -167444,3 +167444,97 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [27.08.2026 10:08:04,61] Syncing with Git... 
+[main 69c1c86e] Auto-update 27.08.2026 10:08:06,74
+ 8 files changed, 121 insertions(+), 43 deletions(-)
+[27.08.2026 10:08:07,67] Pushing to repository... 
+Enumerating objects: 49, done.
+Counting objects:   2% (1/49)Counting objects:   4% (2/49)Counting objects:   6% (3/49)Counting objects:   8% (4/49)Counting objects:  10% (5/49)Counting objects:  12% (6/49)Counting objects:  14% (7/49)Counting objects:  16% (8/49)Counting objects:  18% (9/49)Counting objects:  20% (10/49)Counting objects:  22% (11/49)Counting objects:  24% (12/49)Counting objects:  26% (13/49)Counting objects:  28% (14/49)Counting objects:  30% (15/49)Counting objects:  32% (16/49)Counting objects:  34% (17/49)Counting objects:  36% (18/49)Counting objects:  38% (19/49)Counting objects:  40% (20/49)Counting objects:  42% (21/49)Counting objects:  44% (22/49)Counting objects:  46% (23/49)Counting objects:  48% (24/49)Counting objects:  51% (25/49)Counting objects:  53% (26/49)Counting objects:  55% (27/49)Counting objects:  57% (28/49)Counting objects:  59% (29/49)Counting objects:  61% (30/49)Counting objects:  63% (31/49)Counting objects:  65% (32/49)Counting objects:  67% (33/49)Counting objects:  69% (34/49)Counting objects:  71% (35/49)Counting objects:  73% (36/49)Counting objects:  75% (37/49)Counting objects:  77% (38/49)Counting objects:  79% (39/49)Counting objects:  81% (40/49)Counting objects:  83% (41/49)Counting objects:  85% (42/49)Counting objects:  87% (43/49)Counting objects:  89% (44/49)Counting objects:  91% (45/49)Counting objects:  93% (46/49)Counting objects:  95% (47/49)Counting objects:  97% (48/49)Counting objects: 100% (49/49)Counting objects: 100% (49/49), done.
+Delta compression using up to 4 threads
+Compressing objects:   4% (1/24)Compressing objects:   8% (2/24)Compressing objects:  12% (3/24)Compressing objects:  16% (4/24)Compressing objects:  20% (5/24)Compressing objects:  25% (6/24)Compressing objects:  29% (7/24)Compressing objects:  33% (8/24)Compressing objects:  37% (9/24)Compressing objects:  41% (10/24)Compressing objects:  45% (11/24)Compressing objects:  50% (12/24)Compressing objects:  54% (13/24)Compressing objects:  58% (14/24)Compressing objects:  62% (15/24)Compressing objects:  66% (16/24)Compressing objects:  70% (17/24)Compressing objects:  75% (18/24)Compressing objects:  79% (19/24)Compressing objects:  83% (20/24)Compressing objects:  87% (21/24)Compressing objects:  91% (22/24)Compressing objects:  95% (23/24)Compressing objects: 100% (24/24)Compressing objects: 100% (24/24), done.
+Writing objects:   3% (1/29)Writing objects:   6% (2/29)Writing objects:  10% (3/29)Writing objects:  13% (4/29)Writing objects:  17% (5/29)Writing objects:  20% (6/29)Writing objects:  24% (7/29)Writing objects:  27% (8/29)Writing objects:  34% (10/29)Writing objects:  37% (11/29)Writing objects:  41% (12/29)Writing objects:  44% (13/29)Writing objects:  48% (14/29)Writing objects:  51% (15/29)Writing objects:  55% (16/29)Writing objects:  58% (17/29)Writing objects:  62% (18/29)Writing objects:  65% (19/29)Writing objects:  68% (20/29)Writing objects:  72% (21/29)Writing objects:  75% (22/29)Writing objects:  79% (23/29)Writing objects:  82% (24/29)Writing objects:  86% (25/29)Writing objects:  89% (26/29)Writing objects:  93% (27/29)Writing objects:  96% (28/29)Writing objects: 100% (29/29)Writing objects: 100% (29/29), 6.90 KiB | 3.45 MiB/s, done.
+Total 29 (delta 22), reused 2 (delta 1), pack-reused 0
+remote: Resolving deltas:   0% (0/22)        remote: Resolving deltas:   4% (1/22)        remote: Resolving deltas:   9% (2/22)        remote: Resolving deltas:  13% (3/22)        remote: Resolving deltas:  18% (4/22)        remote: Resolving deltas:  22% (5/22)        remote: Resolving deltas:  27% (6/22)        remote: Resolving deltas:  31% (7/22)        remote: Resolving deltas:  36% (8/22)        remote: Resolving deltas:  40% (9/22)        remote: Resolving deltas:  45% (10/22)        remote: Resolving deltas:  50% (11/22)        remote: Resolving deltas:  54% (12/22)        remote: Resolving deltas:  59% (13/22)        remote: Resolving deltas:  63% (14/22)        remote: Resolving deltas:  68% (15/22)        remote: Resolving deltas:  72% (16/22)        remote: Resolving deltas:  77% (17/22)        remote: Resolving deltas:  81% (18/22)        remote: Resolving deltas:  86% (19/22)        remote: Resolving deltas:  90% (20/22)        remote: Resolving deltas:  95% (21/22)        remote: Resolving deltas: 100% (22/22)        remote: Resolving deltas: 100% (22/22), completed with 14 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   55ff4181..69c1c86e  main -> main
+[27.08.2026 10:08:14,49] SUCCESS: Data pushed to Git. 
+[27.08.2026 10:08:14,51] PROCESS FINISHED 
+------------------------------------------ 
+[27.08.2026 10:55:02,35] STARTING PROCESS 
+[27.08.2026 10:55:02,36] Running Python script... 
+[!] ÐžÐ¨Ð˜Ð‘ÐšÐ FETCH: list index out of range
+[!] ÐŸÐ Ð•Ð”Ð£ÐŸÐ Ð•Ð–Ð”Ð•ÐÐ˜Ð•: ÐšÐ»Ð°Ð½Ð¾Ð²Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð½ÐµÐ´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹ (Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾, Ð¸Ð³Ñ€Ð¾Ðº Ð²Ð½Ðµ ÐºÐ»Ð°Ð½Ð°). ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶Ð°ÐµÐ¼ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¾ÑÑ‚Ð°Ð»ÑŒÐ½Ñ‹Ñ… Ð·Ð°Ð´Ð°Ñ‡.
+[27.08.2026 10:55:04,80] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[10:55:05] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[10:55:06] --- [SUCCESS] FETCHING LATEST DATA completed in 1.1s
+
+[10:55:06] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[10:55:06] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 0.8s
+
+[10:55:06] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Ìåäâåäè\Mech Heroes\Êëàí Îðêè\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Experd: Found 2 battles, 0 new saved and reported.
+Áîðèñ: Found 3 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Àëüôèñò: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Ðóñëàí: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+Ðîìàí: Found 1 battles, 0 new saved and reported.
+08äåê23ã: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[10:55:07] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.5s
+
+[10:55:07] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Ìåäâåäè\Mech Heroes\Êëàí Îðêè\accountant_bot\battle_analytics\personal.html
+[10:55:11] --- [SUCCESS] GENERATING PERSONAL STATS completed in 3.8s
+
+[10:55:11] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Invalid API response: {'requestId': -1, 'error': {'code': 61058, 'message': 'Version is obsolete'}}
+[10:55:11] --- [SUCCESS] FETCHING SQUADS completed in 0.8s
+
+[10:55:11] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[10:55:17] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 5.4s
+
+[10:55:17] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[10:55:31] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 14.4s
+
+[10:55:31] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[11:08:02] --- [SUCCESS] DEPLOYING TO SERVER completed in 750.4s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[27.08.2026 11:08:02,27] Syncing with Git... 
