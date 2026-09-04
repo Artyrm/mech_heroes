@@ -181624,3 +181624,97 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [04.09.2026  3:08:32,14] Syncing with Git... 
+[main 719631d9] Auto-update 04.09.2026  3:08:38,47
+ 3 files changed, 166 insertions(+), 13 deletions(-)
+[04.09.2026  3:08:40,02] Pushing to repository... 
+Enumerating objects: 19, done.
+Counting objects:   5% (1/19)Counting objects:  10% (2/19)Counting objects:  15% (3/19)Counting objects:  21% (4/19)Counting objects:  26% (5/19)Counting objects:  31% (6/19)Counting objects:  36% (7/19)Counting objects:  42% (8/19)Counting objects:  47% (9/19)Counting objects:  52% (10/19)Counting objects:  57% (11/19)Counting objects:  63% (12/19)Counting objects:  68% (13/19)Counting objects:  73% (14/19)Counting objects:  78% (15/19)Counting objects:  84% (16/19)Counting objects:  89% (17/19)Counting objects:  94% (18/19)Counting objects: 100% (19/19)Counting objects: 100% (19/19), done.
+Delta compression using up to 4 threads
+Compressing objects:  11% (1/9)Compressing objects:  22% (2/9)Compressing objects:  33% (3/9)Compressing objects:  44% (4/9)Compressing objects:  55% (5/9)Compressing objects:  66% (6/9)Compressing objects:  77% (7/9)Compressing objects:  88% (8/9)Compressing objects: 100% (9/9)Compressing objects: 100% (9/9), done.
+Writing objects:  10% (1/10)Writing objects:  20% (2/10)Writing objects:  30% (3/10)Writing objects:  40% (4/10)Writing objects:  50% (5/10)Writing objects:  60% (6/10)Writing objects:  70% (7/10)Writing objects:  80% (8/10)Writing objects:  90% (9/10)Writing objects: 100% (10/10)Writing objects: 100% (10/10), 2.06 KiB | 2.06 MiB/s, done.
+Total 10 (delta 8), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/8)        remote: Resolving deltas:  12% (1/8)        remote: Resolving deltas:  25% (2/8)        remote: Resolving deltas:  37% (3/8)        remote: Resolving deltas:  50% (4/8)        remote: Resolving deltas:  62% (5/8)        remote: Resolving deltas:  75% (6/8)        remote: Resolving deltas:  87% (7/8)        remote: Resolving deltas: 100% (8/8)        remote: Resolving deltas: 100% (8/8), completed with 8 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   d71353d6..719631d9  main -> main
+[04.09.2026  3:08:46,33] SUCCESS: Data pushed to Git. 
+[04.09.2026  3:08:46,34] PROCESS FINISHED 
+------------------------------------------ 
+[04.09.2026  3:55:01,86] STARTING PROCESS 
+[04.09.2026  3:55:01,87] Running Python script... 
+[!] ÐžÐ¨Ð˜Ð‘ÐšÐ FETCH: list index out of range
+[!] ÐŸÐ Ð•Ð”Ð£ÐŸÐ Ð•Ð–Ð”Ð•ÐÐ˜Ð•: ÐšÐ»Ð°Ð½Ð¾Ð²Ñ‹Ðµ Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð½ÐµÐ´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ñ‹ (Ð²Ð¾Ð·Ð¼Ð¾Ð¶Ð½Ð¾, Ð¸Ð³Ñ€Ð¾Ðº Ð²Ð½Ðµ ÐºÐ»Ð°Ð½Ð°). ÐŸÑ€Ð¾Ð´Ð¾Ð»Ð¶Ð°ÐµÐ¼ Ð²Ñ‹Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ð¾ÑÑ‚Ð°Ð»ÑŒÐ½Ñ‹Ñ… Ð·Ð°Ð´Ð°Ñ‡.
+[04.09.2026  3:55:02,97] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[03:55:03] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[03:55:03] --- [SUCCESS] FETCHING LATEST DATA completed in 0.7s
+
+[03:55:03] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[03:55:04] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 0.7s
+
+[03:55:04] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Ìåäâåäè\Mech Heroes\Êëàí Îðêè\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+GARRY: Found 1 battles, 0 new saved and reported.
+08äåê23ã: Found 1 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+Ðîìàí: Found 1 battles, 0 new saved and reported.
+Àëüôèñò: Found 1 battles, 0 new saved and reported.
+Ðóñëàí: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Áîðèñ: Found 3 battles, 0 new saved and reported.
+---------------------------------
+[03:55:04] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.4s
+
+[03:55:04] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Ìåäâåäè\Mech Heroes\Êëàí Îðêè\accountant_bot\battle_analytics\personal.html
+[03:55:08] --- [SUCCESS] GENERATING PERSONAL STATS completed in 3.4s
+
+[03:55:08] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Invalid API response: {'requestId': -1, 'error': {'code': 61058, 'message': 'Version is obsolete'}}
+[03:55:09] --- [SUCCESS] FETCHING SQUADS completed in 0.6s
+
+[03:55:09] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[03:55:13] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 4.5s
+
+[03:55:13] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[03:55:25] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 12.4s
+
+[03:55:25] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+
+Deployment successful!
+[04:07:46] --- [SUCCESS] DEPLOYING TO SERVER completed in 740.8s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[04.09.2026  4:07:46,73] Syncing with Git... 
