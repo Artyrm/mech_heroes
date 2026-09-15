@@ -207413,3 +207413,96 @@ Deployment error: [WinError 10060] Попытка установить соединение была безуспешно
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [15.09.2026 17:55:54,54] Syncing with Git... 
+[main 0970c9e7] Auto-update 15.09.2026 17:55:56,61
+ 3 files changed, 98 insertions(+), 5 deletions(-)
+[15.09.2026 17:55:57,52] Pushing to repository... 
+Enumerating objects: 37, done.
+Counting objects:   2% (1/37)Counting objects:   5% (2/37)Counting objects:   8% (3/37)Counting objects:  10% (4/37)Counting objects:  13% (5/37)Counting objects:  16% (6/37)Counting objects:  18% (7/37)Counting objects:  21% (8/37)Counting objects:  24% (9/37)Counting objects:  27% (10/37)Counting objects:  29% (11/37)Counting objects:  32% (12/37)Counting objects:  35% (13/37)Counting objects:  37% (14/37)Counting objects:  40% (15/37)Counting objects:  43% (16/37)Counting objects:  45% (17/37)Counting objects:  48% (18/37)Counting objects:  51% (19/37)Counting objects:  54% (20/37)Counting objects:  56% (21/37)Counting objects:  59% (22/37)Counting objects:  62% (23/37)Counting objects:  64% (24/37)Counting objects:  67% (25/37)Counting objects:  70% (26/37)Counting objects:  72% (27/37)Counting objects:  75% (28/37)Counting objects:  78% (29/37)Counting objects:  81% (30/37)Counting objects:  83% (31/37)Counting objects:  86% (32/37)Counting objects:  89% (33/37)Counting objects:  91% (34/37)Counting objects:  94% (35/37)Counting objects:  97% (36/37)Counting objects: 100% (37/37)Counting objects: 100% (37/37), done.
+Delta compression using up to 4 threads
+Compressing objects:   5% (1/20)Compressing objects:  10% (2/20)Compressing objects:  15% (3/20)Compressing objects:  20% (4/20)Compressing objects:  25% (5/20)Compressing objects:  30% (6/20)Compressing objects:  35% (7/20)Compressing objects:  40% (8/20)Compressing objects:  45% (9/20)Compressing objects:  50% (10/20)Compressing objects:  55% (11/20)Compressing objects:  60% (12/20)Compressing objects:  65% (13/20)Compressing objects:  70% (14/20)Compressing objects:  75% (15/20)Compressing objects:  80% (16/20)Compressing objects:  85% (17/20)Compressing objects:  90% (18/20)Compressing objects:  95% (19/20)Compressing objects: 100% (20/20)Compressing objects: 100% (20/20), done.
+Writing objects:   4% (1/23)Writing objects:   8% (2/23)Writing objects:  13% (3/23)Writing objects:  17% (4/23)Writing objects:  21% (5/23)Writing objects:  26% (6/23)Writing objects:  30% (7/23)Writing objects:  34% (8/23)Writing objects:  39% (9/23)Writing objects:  43% (10/23)Writing objects:  47% (11/23)Writing objects:  52% (12/23)Writing objects:  56% (13/23)Writing objects:  60% (14/23)Writing objects:  65% (15/23)Writing objects:  69% (16/23)Writing objects:  73% (17/23)Writing objects:  78% (18/23)Writing objects:  82% (19/23)Writing objects:  86% (20/23)Writing objects:  91% (21/23)Writing objects:  95% (22/23)Writing objects: 100% (23/23)Writing objects: 100% (23/23), 5.51 KiB | 2.76 MiB/s, done.
+Total 23 (delta 17), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/17)        remote: Resolving deltas:   5% (1/17)        remote: Resolving deltas:  11% (2/17)        remote: Resolving deltas:  17% (3/17)        remote: Resolving deltas:  23% (4/17)        remote: Resolving deltas:  29% (5/17)        remote: Resolving deltas:  35% (6/17)        remote: Resolving deltas:  41% (7/17)        remote: Resolving deltas:  47% (8/17)        remote: Resolving deltas:  52% (9/17)        remote: Resolving deltas:  58% (10/17)        remote: Resolving deltas:  64% (11/17)        remote: Resolving deltas:  70% (12/17)        remote: Resolving deltas:  76% (13/17)        remote: Resolving deltas:  82% (14/17)        remote: Resolving deltas:  88% (15/17)        remote: Resolving deltas:  94% (16/17)        remote: Resolving deltas: 100% (17/17)        remote: Resolving deltas: 100% (17/17), completed with 10 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   941214ec..0970c9e7  main -> main
+[15.09.2026 17:56:03,83] SUCCESS: Data pushed to Git. 
+[15.09.2026 17:56:03,85] PROCESS FINISHED 
+------------------------------------------ 
+[15.09.2026 18:55:02,08] STARTING PROCESS 
+[15.09.2026 18:55:02,10] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: list index out of range
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[15.09.2026 18:55:05,04] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[18:55:05] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[18:55:08] --- [SUCCESS] FETCHING LATEST DATA completed in 3.2s
+
+[18:55:08] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[18:55:19] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 11.2s
+
+[18:55:19] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Роман: Found 1 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[18:55:20] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.8s
+
+[18:55:20] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\personal.html
+[18:56:14] --- [SUCCESS] GENERATING PERSONAL STATS completed in 53.5s
+
+[18:56:14] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Invalid API response: {'requestId': -1, 'error': {'code': 61058, 'message': 'Version is obsolete'}}
+[18:56:15] --- [SUCCESS] FETCHING SQUADS completed in 1.4s
+
+[18:56:15] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[18:56:36] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 21.3s
+
+[18:56:36] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[18:57:00] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 23.6s
+
+[18:57:00] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Uploading arena/reports/suppression_core.png...
+Uploading battle_analytics/personal.html...
+Deployment error: [WinError 10060] Попытка установить соединение была безуспешной, т.к. от другого компьютера за требуемое время не получен нужный отклик, или было разорвано уже установленное соединение из-за неверного отклика уже подключенного компьютера
+[18:58:36] --- [SUCCESS] DEPLOYING TO SERVER completed in 95.7s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[15.09.2026 18:58:36,09] Syncing with Git... 
