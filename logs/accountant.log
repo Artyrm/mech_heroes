@@ -243072,3 +243072,73 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [02.10.2026 19:57:42,85] Syncing with Git... 
+[main eee735b6] Auto-update 02.10.2026 19:57:47,65
+ 5 files changed, 103 insertions(+), 25 deletions(-)
+[02.10.2026 19:57:49,20] Pushing to repository... 
+Enumerating objects: 25, done.
+Counting objects:   4% (1/25)Counting objects:   8% (2/25)Counting objects:  12% (3/25)Counting objects:  16% (4/25)Counting objects:  20% (5/25)Counting objects:  24% (6/25)Counting objects:  28% (7/25)Counting objects:  32% (8/25)Counting objects:  36% (9/25)Counting objects:  40% (10/25)Counting objects:  44% (11/25)Counting objects:  48% (12/25)Counting objects:  52% (13/25)Counting objects:  56% (14/25)Counting objects:  60% (15/25)Counting objects:  64% (16/25)Counting objects:  68% (17/25)Counting objects:  72% (18/25)Counting objects:  76% (19/25)Counting objects:  80% (20/25)Counting objects:  84% (21/25)Counting objects:  88% (22/25)Counting objects:  92% (23/25)Counting objects:  96% (24/25)Counting objects: 100% (25/25)Counting objects: 100% (25/25), done.
+Delta compression using up to 4 threads
+Compressing objects:   9% (1/11)Compressing objects:  18% (2/11)Compressing objects:  27% (3/11)Compressing objects:  36% (4/11)Compressing objects:  45% (5/11)Compressing objects:  54% (6/11)Compressing objects:  63% (7/11)Compressing objects:  72% (8/11)Compressing objects:  81% (9/11)Compressing objects:  90% (10/11)Compressing objects: 100% (11/11)Compressing objects: 100% (11/11), done.
+Writing objects:   7% (1/13)Writing objects:  15% (2/13)Writing objects:  23% (3/13)Writing objects:  30% (4/13)Writing objects:  38% (5/13)Writing objects:  46% (6/13)Writing objects:  53% (7/13)Writing objects:  61% (8/13)Writing objects:  69% (9/13)Writing objects:  76% (10/13)Writing objects:  84% (11/13)Writing objects:  92% (12/13)Writing objects: 100% (13/13)Writing objects: 100% (13/13), 1.94 KiB | 995.00 KiB/s, done.
+Total 13 (delta 10), reused 1 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/10)        remote: Resolving deltas:  10% (1/10)        remote: Resolving deltas:  20% (2/10)        remote: Resolving deltas:  30% (3/10)        remote: Resolving deltas:  40% (4/10)        remote: Resolving deltas:  50% (5/10)        remote: Resolving deltas:  60% (6/10)        remote: Resolving deltas:  70% (7/10)        remote: Resolving deltas:  80% (8/10)        remote: Resolving deltas:  90% (9/10)        remote: Resolving deltas: 100% (10/10)        remote: Resolving deltas: 100% (10/10), completed with 9 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   d5db5c41..eee735b6  main -> main
+[02.10.2026 19:57:55,86] SUCCESS: Data pushed to Git. 
+[02.10.2026 19:57:55,88] PROCESS FINISHED 
+------------------------------------------ 
+[02.10.2026 20:55:02,47] STARTING PROCESS 
+[02.10.2026 20:55:02,49] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: list index out of range
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[02.10.2026 20:55:04,95] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[20:55:05] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[20:55:06] --- [SUCCESS] FETCHING LATEST DATA completed in 1.4s
+
+[20:55:06] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[20:55:16] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 10.1s
+
+[20:55:16] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Роман: Found 1 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[20:55:17] --- [SUCCESS] DISTRIBUTING BATTLES completed in 0.6s
+
+[20:55:17] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\generate_personal_stats.py", line 575, in <module>
+    generate_dossiers(timelines)
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\generate_personal_stats.py", line 392, in generate_dossiers
+    <table><thead>{table_headers}</thead><tbody>{rows}</tbody></table>
+UnboundLocalError: local variable 'table_headers' referenced before assignment
+[20:55:59] --- [ERROR] GENERATING PERSONAL STATS failed with exit code 1 after 42.1s.
+
+!!! Global update aborted due to errors in step: GENERATING PERSONAL STATS
+[02.10.2026 20:55:59,39] ERROR: Arena update failed with code 1 
+[02.10.2026 20:55:59,40] Syncing with Git... 
