@@ -309002,3 +309002,73 @@ Deployment successful!
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [02.11.2026 16:58:05,24] Syncing with Git... 
+[main 2d111695] Auto-update 02.11.2026 16:58:13,35
+ 6 files changed, 125 insertions(+), 39 deletions(-)
+[02.11.2026 16:58:15,17] Pushing to repository... 
+Enumerating objects: 29, done.
+Counting objects:   3% (1/29)Counting objects:   6% (2/29)Counting objects:  10% (3/29)Counting objects:  13% (4/29)Counting objects:  17% (5/29)Counting objects:  20% (6/29)Counting objects:  24% (7/29)Counting objects:  27% (8/29)Counting objects:  31% (9/29)Counting objects:  34% (10/29)Counting objects:  37% (11/29)Counting objects:  41% (12/29)Counting objects:  44% (13/29)Counting objects:  48% (14/29)Counting objects:  51% (15/29)Counting objects:  55% (16/29)Counting objects:  58% (17/29)Counting objects:  62% (18/29)Counting objects:  65% (19/29)Counting objects:  68% (20/29)Counting objects:  72% (21/29)Counting objects:  75% (22/29)Counting objects:  79% (23/29)Counting objects:  82% (24/29)Counting objects:  86% (25/29)Counting objects:  89% (26/29)Counting objects:  93% (27/29)Counting objects:  96% (28/29)Counting objects: 100% (29/29)Counting objects: 100% (29/29), done.
+Delta compression using up to 4 threads
+Compressing objects:   7% (1/14)Compressing objects:  14% (2/14)Compressing objects:  21% (3/14)Compressing objects:  28% (4/14)Compressing objects:  35% (5/14)Compressing objects:  42% (6/14)Compressing objects:  50% (7/14)Compressing objects:  57% (8/14)Compressing objects:  64% (9/14)Compressing objects:  71% (10/14)Compressing objects:  78% (11/14)Compressing objects:  85% (12/14)Compressing objects:  92% (13/14)Compressing objects: 100% (14/14)Compressing objects: 100% (14/14), done.
+Writing objects:   6% (1/15)Writing objects:  13% (2/15)Writing objects:  20% (3/15)Writing objects:  26% (4/15)Writing objects:  33% (5/15)Writing objects:  40% (6/15)Writing objects:  46% (7/15)Writing objects:  60% (9/15)Writing objects:  66% (10/15)Writing objects:  73% (11/15)Writing objects:  80% (12/15)Writing objects:  86% (13/15)Writing objects:  93% (14/15)Writing objects: 100% (15/15)Writing objects: 100% (15/15), 3.45 KiB | 3.45 MiB/s, done.
+Total 15 (delta 13), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas:   0% (0/13)        remote: Resolving deltas:   7% (1/13)        remote: Resolving deltas:  15% (2/13)        remote: Resolving deltas:  23% (3/13)        remote: Resolving deltas:  30% (4/13)        remote: Resolving deltas:  38% (5/13)        remote: Resolving deltas:  46% (6/13)        remote: Resolving deltas:  53% (7/13)        remote: Resolving deltas:  61% (8/13)        remote: Resolving deltas:  69% (9/13)        remote: Resolving deltas:  76% (10/13)        remote: Resolving deltas:  84% (11/13)        remote: Resolving deltas:  92% (12/13)        remote: Resolving deltas: 100% (13/13)        remote: Resolving deltas: 100% (13/13), completed with 11 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   5661f50a..2d111695  main -> main
+[02.11.2026 16:58:22,96] SUCCESS: Data pushed to Git. 
+[02.11.2026 16:58:22,98] PROCESS FINISHED 
+------------------------------------------ 
+[02.11.2026 17:55:02,11] STARTING PROCESS 
+[02.11.2026 17:55:02,19] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: list index out of range
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[02.11.2026 17:55:05,28] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[17:55:08] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[17:55:14] --- [SUCCESS] FETCHING LATEST DATA completed in 5.8s
+
+[17:55:14] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[17:55:24] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 9.9s
+
+[17:55:24] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+VadSJ: Found 6 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+Роман: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[17:55:26] --- [SUCCESS] DISTRIBUTING BATTLES completed in 2.5s
+
+[17:55:26] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Traceback (most recent call last):
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\generate_personal_stats.py", line 575, in <module>
+    generate_dossiers(timelines)
+  File "G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\generate_personal_stats.py", line 392, in generate_dossiers
+    <table><thead>{table_headers}</thead><tbody>{rows}</tbody></table>
+UnboundLocalError: local variable 'table_headers' referenced before assignment
+[17:56:27] --- [ERROR] GENERATING PERSONAL STATS failed with exit code 1 after 60.7s.
+
+!!! Global update aborted due to errors in step: GENERATING PERSONAL STATS
+[02.11.2026 17:56:27,64] ERROR: Arena update failed with code 1 
+[02.11.2026 17:56:27,66] Syncing with Git... 
