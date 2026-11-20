@@ -347918,3 +347918,85 @@ Deployment error: [WinError 10060] Попытка установить соединение была безуспешно
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [20.11.2026 21:00:03,57] Syncing with Git... 
+[main f510ec67] Auto-update 20.11.2026 21:00:13,47
+ 5 files changed, 106 insertions(+), 45 deletions(-)
+[20.11.2026 21:00:16,67] Pushing to repository... 
+fatal: unable to access 'https://github.com/Artyrm/mech_heroes.git/': Failed to connect to github.com port 443 after 21559 ms: Couldn't connect to server
+[20.11.2026 21:00:38,82] SUCCESS: Data pushed to Git. 
+[20.11.2026 21:00:38,87] PROCESS FINISHED 
+------------------------------------------ 
+[20.11.2026 21:55:02,43] STARTING PROCESS 
+[20.11.2026 21:55:02,49] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: list index out of range
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[20.11.2026 21:55:04,73] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[21:55:05] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[21:55:10] --- [SUCCESS] FETCHING LATEST DATA completed in 5.1s
+
+[21:55:10] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[21:55:17] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 7.5s
+
+[21:55:17] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+08дек23г: Found 1 battles, 0 new saved and reported.
+Роман: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+---------------------------------
+[21:55:19] --- [SUCCESS] DISTRIBUTING BATTLES completed in 1.8s
+
+[21:55:19] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\personal.html
+[21:55:59] --- [SUCCESS] GENERATING PERSONAL STATS completed in 40.2s
+
+[21:55:59] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Invalid API response: {'requestId': -1, 'error': {'code': 61058, 'message': 'Version is obsolete'}}
+[21:56:03] --- [SUCCESS] FETCHING SQUADS completed in 4.1s
+
+[21:56:03] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[21:56:21] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 17.6s
+
+[21:56:21] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[21:56:38] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 17.0s
+
+[21:56:38] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Deployment error: [WinError 10060] Попытка установить соединение была безуспешной, т.к. от другого компьютера за требуемое время не получен нужный отклик, или было разорвано уже установленное соединение из-за неверного отклика уже подключенного компьютера
+[21:56:59] --- [SUCCESS] DEPLOYING TO SERVER completed in 21.4s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[20.11.2026 21:56:59,87] Syncing with Git... 
