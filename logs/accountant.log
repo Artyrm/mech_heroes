@@ -352568,3 +352568,85 @@ Deployment error: [WinError 10060] Попытка установить соединение была безуспешно
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [23.11.2026  1:58:12,39] Syncing with Git... 
+[main 3b314032] Auto-update 23.11.2026  1:58:27,39
+ 5 files changed, 120 insertions(+), 27 deletions(-)
+[23.11.2026  1:58:29,51] Pushing to repository... 
+fatal: unable to access 'https://github.com/Artyrm/mech_heroes.git/': Failed to connect to github.com port 443 after 21152 ms: Couldn't connect to server
+[23.11.2026  1:58:51,01] SUCCESS: Data pushed to Git. 
+[23.11.2026  1:58:51,04] PROCESS FINISHED 
+------------------------------------------ 
+[23.11.2026  2:56:23,05] STARTING PROCESS 
+[23.11.2026  2:56:30,42] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: list index out of range
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[23.11.2026  2:58:13,19] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[02:58:19] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[03:00:21] --- [SUCCESS] FETCHING LATEST DATA completed in 122.2s
+
+[03:00:21] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[03:04:10] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 229.2s
+
+[03:04:10] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Руслан: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+Роман: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+Борис: Found 3 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+---------------------------------
+[03:13:01] --- [SUCCESS] DISTRIBUTING BATTLES completed in 530.7s
+
+[03:13:01] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\personal.html
+[03:19:30] --- [SUCCESS] GENERATING PERSONAL STATS completed in 389.0s
+
+[03:19:30] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] API exception: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.27.1/directcommand?userid=227408 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000028CF9D952B0>: Failed to establish a new connection: [WinError 10060] РџРѕРїС‹С‚РєР° СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ Р±С‹Р»Р° Р±РµР·СѓСЃРїРµС€РЅРѕР№, С‚.Рє. РѕС‚ РґСЂСѓРіРѕРіРѕ РєРѕРјРїСЊСЋС‚РµСЂР° Р·Р° С‚СЂРµР±СѓРµРјРѕРµ РІСЂРµРјСЏ РЅРµ РїРѕР»СѓС‡РµРЅ РЅСѓР¶РЅС‹Р№ РѕС‚РєР»РёРє, РёР»Рё Р±С‹Р»Рѕ СЂР°Р·РѕСЂРІР°РЅРѕ СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РёР·-Р·Р° РЅРµРІРµСЂРЅРѕРіРѕ РѕС‚РєР»РёРєР° СѓР¶Рµ РїРѕРґРєР»СЋС‡РµРЅРЅРѕРіРѕ РєРѕРјРїСЊСЋС‚РµСЂР°'))
+[03:19:55] --- [SUCCESS] FETCHING SQUADS completed in 25.3s
+
+[03:19:55] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[03:20:46] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 51.0s
+
+[03:20:46] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[03:31:47] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 660.8s
+
+[03:31:47] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Deployment error: [WinError 10065] Сделана попытка выполнить операцию на сокете для недоступного хоста
+[03:31:48] --- [SUCCESS] DEPLOYING TO SERVER completed in 0.6s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[23.11.2026  3:31:48,51] Syncing with Git... 
