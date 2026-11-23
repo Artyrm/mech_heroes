@@ -354001,3 +354001,94 @@ Deployment error: [WinError 10060] Попытка установить соединение была безуспешно
    Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
 ==================================================
 [23.11.2026 17:58:41,81] Syncing with Git... 
+[main 63c8ecff] Auto-update 23.11.2026 17:59:31,92
+ 5 files changed, 122 insertions(+), 29 deletions(-)
+[23.11.2026 17:59:34,96] Pushing to repository... 
+Enumerating objects: 27, done.
+Counting objects:   3% (1/27)Counting objects:   7% (2/27)Counting objects:  11% (3/27)Counting objects:  14% (4/27)Counting objects:  18% (5/27)Counting objects:  22% (6/27)Counting objects:  25% (7/27)Counting objects:  29% (8/27)Counting objects:  33% (9/27)Counting objects:  37% (10/27)Counting objects:  40% (11/27)Counting objects:  44% (12/27)Counting objects:  48% (13/27)Counting objects:  51% (14/27)Counting objects:  55% (15/27)Counting objects:  59% (16/27)Counting objects:  62% (17/27)Counting objects:  66% (18/27)Counting objects:  70% (19/27)Counting objects:  74% (20/27)Counting objects:  77% (21/27)Counting objects:  81% (22/27)Counting objects:  85% (23/27)Counting objects:  88% (24/27)Counting objects:  92% (25/27)Counting objects:  96% (26/27)Counting objects: 100% (27/27)Counting objects: 100% (27/27), done.
+Delta compression using up to 4 threads
+Compressing objects:   8% (1/12)Compressing objects:  16% (2/12)Compressing objects:  25% (3/12)Compressing objects:  33% (4/12)Compressing objects:  41% (5/12)Compressing objects:  50% (6/12)Compressing objects:  58% (7/12)Compressing objects:  66% (8/12)Compressing objects:  75% (9/12)Compressing objects:  83% (10/12)Compressing objects:  91% (11/12)Compressing objects: 100% (12/12)Compressing objects: 100% (12/12), done.
+Writing objects:   7% (1/14)Writing objects:  14% (2/14)Writing objects:  21% (3/14)Writing objects:  28% (4/14)Writing objects:  35% (5/14)Writing objects:  42% (6/14)Writing objects:  50% (7/14)Writing objects:  57% (8/14)Writing objects:  64% (9/14)Writing objects:  71% (10/14)Writing objects:  78% (11/14)Writing objects:  85% (12/14)Writing objects:  92% (13/14)Writing objects: 100% (14/14)Writing objects: 100% (14/14), 3.28 KiB | 1.09 MiB/s, done.
+Total 14 (delta 12), reused 1 (delta 1), pack-reused 0
+remote: Resolving deltas:   0% (0/12)        remote: Resolving deltas:   8% (1/12)        remote: Resolving deltas:  16% (2/12)        remote: Resolving deltas:  25% (3/12)        remote: Resolving deltas:  33% (4/12)        remote: Resolving deltas:  41% (5/12)        remote: Resolving deltas:  50% (6/12)        remote: Resolving deltas:  58% (7/12)        remote: Resolving deltas:  66% (8/12)        remote: Resolving deltas:  75% (9/12)        remote: Resolving deltas:  83% (10/12)        remote: Resolving deltas:  91% (11/12)        remote: Resolving deltas: 100% (12/12)        remote: Resolving deltas: 100% (12/12), completed with 10 local objects.        
+To https://github.com/Artyrm/mech_heroes.git
+   efca23cb..63c8ecff  main -> main
+[23.11.2026 17:59:55,43] SUCCESS: Data pushed to Git. 
+[23.11.2026 18:00:02,25] PROCESS FINISHED 
+------------------------------------------ 
+[23.11.2026 18:55:02,60] STARTING PROCESS 
+[23.11.2026 18:55:02,63] Running Python script... 
+[!] РћРЁРР‘РљРђ FETCH: HTTPSConnectionPool(host='tanks.ya.patternmasters.ru', port=443): Max retries exceeded with url: /1.27.1/init?userid=227408 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x0000020FFFB52CA0>: Failed to establish a new connection: [WinError 10060] РџРѕРїС‹С‚РєР° СѓСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРѕРµРґРёРЅРµРЅРёРµ Р±С‹Р»Р° Р±РµР·СѓСЃРїРµС€РЅРѕР№, С‚.Рє. РѕС‚ РґСЂСѓРіРѕРіРѕ РєРѕРјРїСЊСЋС‚РµСЂР° Р·Р° С‚СЂРµР±СѓРµРјРѕРµ РІСЂРµРјСЏ РЅРµ РїРѕР»СѓС‡РµРЅ РЅСѓР¶РЅС‹Р№ РѕС‚РєР»РёРє, РёР»Рё Р±С‹Р»Рѕ СЂР°Р·РѕСЂРІР°РЅРѕ СѓР¶Рµ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРµ СЃРѕРµРґРёРЅРµРЅРёРµ РёР·-Р·Р° РЅРµРІРµСЂРЅРѕРіРѕ РѕС‚РєР»РёРєР° СѓР¶Рµ РїРѕРґРєР»СЋС‡РµРЅРЅРѕРіРѕ РєРѕРјРїСЊСЋС‚РµСЂР°'))
+[!] РџР Р•Р”РЈРџР Р•Р–Р”Р•РќРР•: РљР»Р°РЅРѕРІС‹Рµ РґР°РЅРЅС‹Рµ РЅРµРґРѕСЃС‚СѓРїРЅС‹ (РІРѕР·РјРѕР¶РЅРѕ, РёРіСЂРѕРє РІРЅРµ РєР»Р°РЅР°). РџСЂРѕРґРѕР»Р¶Р°РµРј РІС‹РїРѕР»РЅРµРЅРёРµ РѕСЃС‚Р°Р»СЊРЅС‹С… Р·Р°РґР°С‡.
+[23.11.2026 18:55:28,84] Running Arena Update... 
+==================================================
+      ARENA ANALYTICS GLOBAL UPDATE & DEPLOY
+==================================================
+
+[18:55:29] >>> [STEP] FETCHING LATEST DATA
+Executing: arena/fetch_arena.py
+Connecting to game API...
+API Error: {'code': 61058, 'message': 'Version is obsolete'}
+[18:55:36] --- [SUCCESS] FETCHING LATEST DATA completed in 6.8s
+
+[18:55:36] >>> [STEP] SYNCING FROM INIT DUMPS
+Executing: arena/sync_from_init.py
+Latest existing snapshot time: 2026-08-26 07:55:23
+Incremental mode: Processing only 0 files newer than 2026-08-26 07:55:23.
+
+Total new snapshots synced: 0
+[18:55:46] --- [SUCCESS] SYNCING FROM INIT DUMPS completed in 10.1s
+
+[18:55:46] >>> [STEP] DISTRIBUTING BATTLES
+Executing: battle_analytics/fetch_and_store_battles.py
+INFO: Reusing last dump from arena step: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\arena\last_init_dump.json
+INFO: Detected 9 unique players in history.
+
+--- BATTLE PROCESSING SUMMARY ---
+Борис: Found 3 battles, 0 new saved and reported.
+GARRY: Found 1 battles, 0 new saved and reported.
+08дек23г: Found 1 battles, 0 new saved and reported.
+Experd: Found 2 battles, 0 new saved and reported.
+Gansta4771: Found 4 battles, 0 new saved and reported.
+Руслан: Found 1 battles, 0 new saved and reported.
+Альфист: Found 1 battles, 0 new saved and reported.
+Роман: Found 1 battles, 0 new saved and reported.
+VadSJ: Found 6 battles, 0 new saved and reported.
+---------------------------------
+[18:55:50] --- [SUCCESS] DISTRIBUTING BATTLES completed in 3.9s
+
+[18:55:50] >>> [STEP] GENERATING PERSONAL STATS
+Executing: battle_analytics/generate_personal_stats.py
+Processing 50 snapshots for personal stats...
+Personal stats generated: G:\Video\!Медведи\Mech Heroes\Клан Орки\accountant_bot\battle_analytics\personal.html
+[18:56:27] --- [SUCCESS] GENERATING PERSONAL STATS completed in 36.9s
+
+[18:56:27] >>> [STEP] FETCHING SQUADS
+Executing: arena/fetch_squads.py
+Fetching squads for 191 tracked players (all registry users)...
+[DEBUG] Invalid API response: {'requestId': -1, 'error': {'code': 61058, 'message': 'Version is obsolete'}}
+[18:56:28] --- [SUCCESS] FETCHING SQUADS completed in 1.0s
+
+[18:56:28] >>> [STEP] GENERATING SQUAD REPORTS
+Executing: arena/generate_squad_reports.py
+Generated 191 dynamic squad comparison reports.
+[18:56:54] --- [SUCCESS] GENERATING SQUAD REPORTS completed in 25.8s
+
+[18:56:54] >>> [STEP] GENERATING HTML DASHBOARD
+Executing: arena/generate_dashboard.py
+Processing 100 snapshots for Dashboard...
+Orcspower dashboard generated: arena/reports/orcspower.html. 100 snapshots inlined.
+[18:58:30] --- [SUCCESS] GENERATING HTML DASHBOARD completed in 96.8s
+
+[18:58:30] >>> [STEP] DEPLOYING TO SERVER
+Executing: deploy.py
+Connecting to 89.169.30.106...
+Uploading arena/reports/orcspower.html...
+Deployment error: [WinError 10060] Попытка установить соединение была безуспешной, т.к. от другого компьютера за требуемое время не получен нужный отклик, или было разорвано уже установленное соединение из-за неверного отклика уже подключенного компьютера
+[18:58:53] --- [SUCCESS] DEPLOYING TO SERVER completed in 22.4s
+
+==================================================
+   ALL STEPS COMPLETED SUCCESSFULLY!
+   Arena Report: http://ovalhalla.ru/my/mech/orcspower.html
+==================================================
+[23.11.2026 18:58:53,39] Syncing with Git... 
